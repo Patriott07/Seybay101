@@ -25,21 +25,31 @@ public class NpcEntranceManager : MonoBehaviour
         targetTiket = objekTiket.position;
         skalaAsliNpc = posisiNpc.localScale;
 
-        // 1. NPC mulai dengan ukuran sangat kecil (jauh di belakang)
-        Vector3 skalaKecil = skalaAsliNpc * 0.1f;
-        posisiNpc.localScale = skalaKecil;
+        // --- CEK STATUS KEMBALI DARI KOPER ---
+        if (PlayerPrefs.HasKey("Paspor_PosX") || PlayerPrefs.HasKey("Tiket_PosX"))
+        {
+            // JIKA KEMBALI DARI KOPER:
+            posisiNpc.localScale = skalaAsliNpc;
 
-        // --- BARIS BARU (SOLUSI) ---
-        // 2. MATIKAN (Sembunyikan) kertas dan tiket agar meja benar-benar kosong
-        dokumenKertas.gameObject.SetActive(false);
-        objekTiket.gameObject.SetActive(false);
+            dokumenKertas.gameObject.SetActive(true);
+            objekTiket.gameObject.SetActive(true);
+        }
+        else
+        {
+            // JIKA NPC BARU DATANG:
+            Vector3 skalaKecil = skalaAsliNpc * 0.1f;
+            posisiNpc.localScale = skalaKecil;
 
-        StartCoroutine(AdeganNpcMasuk(skalaKecil));
+            dokumenKertas.gameObject.SetActive(false);
+            objekTiket.gameObject.SetActive(false);
+
+            StartCoroutine(AdeganNpcMasuk(skalaKecil));
+        }
     }
 
     IEnumerator AdeganNpcMasuk(Vector3 skalaKecil)
     {
-        // --- FASE A: NPC MUNCUL DARI BELAKANG (ZOOM IN) ---
+        // --- FASE A: NPC MUNCUL DARI BELAKANG ---
         float time = 0;
         while (time < 1)
         {
@@ -48,21 +58,15 @@ public class NpcEntranceManager : MonoBehaviour
             yield return null;
         }
 
-        // NPC diam menatap pemain sejenak
         yield return new WaitForSeconds(waktuTungguSodor);
 
         // --- FASE B: MENYODORKAN KERTAS KE MEJA ---
-
-        // 1. Posisikan kertas di titik tengah NPC
         dokumenKertas.position = new Vector3(posisiNpc.position.x, posisiNpc.position.y, targetDokumen.z);
         objekTiket.position = new Vector3(posisiNpc.position.x, posisiNpc.position.y, targetTiket.z);
 
-        // --- BARIS BARU (SOLUSI) ---
-        // 2. NYALAKAN (Munculkan) kertas dan tiket kembali
         dokumenKertas.gameObject.SetActive(true);
         objekTiket.gameObject.SetActive(true);
 
-        // 3. Animasi meluncur ke posisi aslinya di meja
         time = 0;
         Vector3 titikAwalDokumen = dokumenKertas.position;
         Vector3 titikAwalTiket = objekTiket.position;
@@ -79,6 +83,18 @@ public class NpcEntranceManager : MonoBehaviour
     // --- FASE C: FUNGSI UNTUK MENGUSIR NPC ---
     public void UsirNpc(bool isApprove)
     {
+        // 1. Hapus memori posisi dokumen agar NPC selanjutnya mulai dari awal
+        PlayerPrefs.DeleteKey("Paspor_PosX");
+        PlayerPrefs.DeleteKey("Paspor_PosY");
+
+        PlayerPrefs.DeleteKey("Tiket_PosX");
+        PlayerPrefs.DeleteKey("Tiket_PosY");
+
+        // 2. Hapus status koper (jika kamu pakai alur satu arah)
+        PlayerPrefs.DeleteKey("KoperSudahDicek");
+
+        PlayerPrefs.Save();
+
         StartCoroutine(AnimasiNpcPergi(isApprove));
     }
 
@@ -98,5 +114,18 @@ public class NpcEntranceManager : MonoBehaviour
         }
 
         Debug.Log("NPC sudah pergi dari layar!");
+
+        // --- PANGGIL FUNGSI RANDOM NPC DI SINI ---
+        PanggilNpcBaru();
+    }
+
+    // --- WADAH FUNGSI UNTUK PROGRAMMER NPC ---
+    public void PanggilNpcBaru()
+    {
+        Debug.Log("Menyiapkan NPC Acak Selanjutnya...");
+
+        // TEMPAT KERJA TEMANMU:
+        // Masukkan logika merandom sprite, mereset data identitas, dll di dalam fungsi ini.
+        // Setelah diacak, panggil kembali Scene/Animasi Masuk.
     }
 }

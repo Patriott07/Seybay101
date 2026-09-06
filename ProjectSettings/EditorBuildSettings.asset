@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Ptorotype/Mekanik Koper.unity
+    guid: abf8e0b1e14b4424e95d0afa539e890d
+  - enabled: 1
+    path: Assets/Scenes/Ptorotype/Khabib Job Desk.unity
+    guid: 547a645291e8898459399c5c77fc1c53
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
