@@ -45,7 +45,7 @@ public class StampHybridController : MonoBehaviour
 
     void OnMouseDrag()
     {
-        Debug.Log("DOWN");
+        // Debug.Log("DOWN");
         if (sedangDiproses)
             return;
         Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
