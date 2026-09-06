@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Polishing.meta
 guid: b0a2716864ed59a40843d956e2bde96a
+========
+guid: 8cc6e094bb449b14e9ca83e032a97614
+>>>>>>>> e39b90e40a328faf8c95eb2dd6408bf4360c0078:Assets/Prefab.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

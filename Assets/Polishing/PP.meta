@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Polishing/PP.meta
 guid: 6e55d5672bdc1824c8d111f93e7e9a50
+========
+guid: 6ab70aee4d56447429c680537fbf93ed
+>>>>>>>> e39b90e40a328faf8c95eb2dd6408bf4360c0078:Assets/TextMesh Pro/Fonts.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
