@@ -51,9 +51,8 @@ public class Timer : MonoBehaviour
 
     // Fungsi 2: Start dengan parameter (Dipanggil dari script lain)
     // Contoh pemanggilan: Timer.Singleton.StartTimer(5.5f);
-    public void StartTimer(float targetEndTime)
+    public void StartTimer()
     {
-        endTime = targetEndTime;
         isRunning = true;
     }
 
