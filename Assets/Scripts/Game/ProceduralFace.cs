@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class Test : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class Test : MonoBehaviour
 
     [SerializeField]
     Face face;
+
+    void Start ()
+    {
+        ProceduralGenerateFace();
+    }
 
    void Update()
     {
