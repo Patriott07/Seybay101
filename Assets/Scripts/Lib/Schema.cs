@@ -27,6 +27,8 @@ namespace Schema.data
         public string documentNumber; // Unique random
         public string ownerName; // sesuaikan sama country
         public bool sameOwnerPhoto; // keknya perlu dimofikasi (lebih ke isSamePhotoPerson)
+        public string sex;
+        public string bodOwner;
         public string expiryDate; // Format: DD-MM-YYYY
         public string hexaCardColor; // #FF0000 tiap negara punya hexa card masing-masing
         public string countryName; // asal negara

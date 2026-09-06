@@ -18,7 +18,7 @@ public class StampHybridController : MonoBehaviour
     public Transform locationStamp;
 
     private Vector3 posisiAwal;
-    private Camera cam;
+    public Camera cam;
     private bool sedangDiproses = false;
 
     private SpriteRenderer spriteRenderer;
@@ -26,7 +26,7 @@ public class StampHybridController : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main;
+        // cam = Camera.main;
         posisiAwal = transform.position;
 
         spriteRenderer = GetComponent<SpriteRenderer>();

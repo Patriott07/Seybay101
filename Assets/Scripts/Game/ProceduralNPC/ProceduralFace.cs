@@ -31,10 +31,20 @@ public class Test : MonoBehaviour
 
    void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            ProceduralGenerateFace();
-        }
+        // if (Input.GetKeyDown(KeyCode.S))
+        // {
+        //     ProceduralGenerateFace();
+        // }
+    }
+
+    void OnEnable()
+    {
+        GameEvent.GenerateNewNPCView += ProceduralGenerateFace;
+    }
+
+    void OnDisable()
+    {
+        GameEvent.GenerateNewNPCView -= ProceduralGenerateFace;
     }
 
     void ProceduralGenerateFace()

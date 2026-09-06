@@ -1,6 +1,6 @@
+using TMPro;
 using UnityEditorInternal;
 using UnityEngine;
-using TMPro;
 
 public class Timer : MonoBehaviour
 {
@@ -8,15 +8,14 @@ public class Timer : MonoBehaviour
 
     public float elapsedTime = 0f;
     public float endTime = 0f; // Batas waktu timer akan berhenti
-    
-    public bool isRunning = false; 
-    public TextMeshProUGUI timerText;
 
+    public bool isRunning = false;
+    public TextMeshProUGUI timerText;
 
     void Awake()
     {
         if (Singleton == null)
-        {  
+        {
             Singleton = this;
         }
         else
@@ -39,12 +38,13 @@ public class Timer : MonoBehaviour
             }
         }
 
-        timerText.text = elapsedTime.ToString();
+        if (timerText != null)
+            timerText.text = elapsedTime.ToString();
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            StartTimer(endTime);
-        }
+        // if (Input.GetKeyDown(KeyCode.A))
+        // {
+        //     StartTimer(endTime);
+        // }
     }
 
     // Fungsi 1: Start biasa (jalan terus tanpa henti, atau pakai nilai endTime dari Inspector)
@@ -62,7 +62,7 @@ public class Timer : MonoBehaviour
     {
         isRunning = false;
         Debug.Log("Timer end in: " + elapsedTime + " second");
-        
+
         // Anda bisa tambahkan event/fungsi lain di sini saat timer selesai
     }
 }

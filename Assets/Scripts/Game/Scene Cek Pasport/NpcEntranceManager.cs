@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Schema.data;
 using UnityEngine;
 
 public class NpcEntranceManager : MonoBehaviour
@@ -58,6 +59,12 @@ public class NpcEntranceManager : MonoBehaviour
         float time = 0;
 
         posisiNpc.localScale = skalaKecil;
+
+        // randomize look NPC
+        GameEvent.GenerateNewNPCView?.Invoke();
+
+        // randomize doc passport
+        GameEvent.GenerateNewPassportData?.Invoke();
 
         // Paksa posisinya kembali tepat ke titik spawn GameObject 'npcPosSpawn' di dunia nyata
         if (npcPosSpawn != null)
@@ -125,7 +132,6 @@ public class NpcEntranceManager : MonoBehaviour
         PlayerPrefs.DeleteKey("KoperSudahDicek");
 
         PlayerPrefs.Save();
-
         AnimasiNpcPergi(isApprove);
     }
 
@@ -160,6 +166,21 @@ public class NpcEntranceManager : MonoBehaviour
                 StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
                 Debug.Log("NPC sudah pergi dari layar!");
             });
+    }
+
+    void OnEnable()
+    {
+        GameEvent.SpawnNPCOnStartDay += CallSpawnAnotherNPC;
+    }
+
+    void OnDisable()
+    {
+        GameEvent.SpawnNPCOnStartDay -= CallSpawnAnotherNPC;
+    }
+
+    void CallSpawnAnotherNPC(float d)
+    {
+        StartCoroutine(SpawnAnotherNPC(d));
     }
 
     IEnumerator SpawnAnotherNPC(float d)
