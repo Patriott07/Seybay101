@@ -490,17 +490,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 214969527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 818dafa24de8ba145a1c43d87ce8da1e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e5856cfc0aef374aa9ee5d8b5ab7966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcTransform: {fileID: 110771894}
-  paperDocument: {fileID: 1774866566}
-  ticketObject: {fileID: 985044512}
-  entranceSpeed: 1
-  swayWaitTime: 1
-  paperSlideSpeed: 2
-  departureSpeed: 1
-  departureDistance: 20
+  npcPosSpawn: {fileID: 0}
+  posisiNpc: {fileID: 0}
+  dokumenKertas: {fileID: 0}
+  objekTiket: {fileID: 0}
+  kecepatanMasuk: 2.5
+  waktuTungguSodor: 1
+  kecepatanSodorKertas: 4
+  kecepatanPergi: 3
+  jarakPergi: 15
 --- !u!4 &214969529
 Transform:
   m_ObjectHideFlags: 0

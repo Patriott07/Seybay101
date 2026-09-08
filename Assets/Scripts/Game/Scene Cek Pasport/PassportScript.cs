@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PassportScript : MonoBehaviour
 {
+    public static PassportScript Instance;
+
     [Header("Proprty UI ref")]
     public TMP_Text textID;
     public TMP_Text textName,
@@ -16,6 +18,12 @@ public class PassportScript : MonoBehaviour
     [Header("Database")]
     public List<NamePool> dataName;
     public PassportSchema currentData;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     void UpdateViewPassword(PassportSchema data)
     {
@@ -46,9 +54,12 @@ public class PassportScript : MonoBehaviour
         Passdata.countryName = "IND";
         Passdata.expiryDate = GenerateExpireDate();
         Passdata.bodOwner = GenerateBodOwner();
-        
+
         currentData = Passdata;
         UpdateViewPassword(Passdata);
+
+        int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
+        ViolationSystem.ApplyViolationsToPassport(currentData, currentDay);
     }
 
     string GenerateID()
@@ -58,7 +69,16 @@ public class PassportScript : MonoBehaviour
 
     string GenerateSex()
     {
-        return Random.Range(1, 5) > 2.5 ? "F" : "M";
+        if (Random.Range(1, 5) > 2.5)
+        {
+            GameEvent.OnSetGander?.Invoke(Gender.Woman);
+            return "F";
+        }
+        else
+        {
+            GameEvent.OnSetGander?.Invoke(Gender.Man);
+            return "M";
+        }
     }
 
     string GenerateBodOwner()
@@ -87,12 +107,14 @@ public class PassportScript : MonoBehaviour
     {
         if (isFemale)
         {
-            return dataName[0].femaleNames[Random.Range(0, dataName[0].femaleNames.Count)] + " "
+            return dataName[0].femaleNames[Random.Range(0, dataName[0].femaleNames.Count)]
+                + " "
                 + dataName[0].femaleNames[Random.Range(0, dataName[0].femaleNames.Count)];
         }
         else
         {
-            return dataName[0].maleNames[Random.Range(0, dataName[0].maleNames.Count)] + " "
+            return dataName[0].maleNames[Random.Range(0, dataName[0].maleNames.Count)]
+                + " "
                 + dataName[0].maleNames[Random.Range(0, dataName[0].maleNames.Count)];
         }
     }

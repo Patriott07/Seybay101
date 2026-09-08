@@ -1,14 +1,15 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager Instance;
 
     [Header("Pengaturan Nilai Awal (Harian)")]
-    public int modalAwalUang = 1500;
+    public int money = 1500;
+    public int trust = 100;
     public int maxTrustHarian = 100;
-    public int batasWarningTrust = 30; // Munculkan warning jika trust <= 30
+    public int batasWarningTrust = 30;
 
     [Header("Pengaturan Skor Trust")]
     public int rewardTrustBenar = 10;
@@ -22,10 +23,7 @@ public class EconomyManager : MonoBehaviour
     [Header("Referensi UI")]
     public TextMeshProUGUI textUangHUD;
     public TextMeshProUGUI textTrustHUD;
-
-    [Header("Pengaturan Warning Teks")]
-    public TextMeshProUGUI textWarningTrust; // Diubah dari GameObject Panel menjadi TextMeshProUGUI
-    [TextArea]
+    public TextMeshProUGUI textWarningTrust;
     public string pesanWarning = "PERINGATAN: Tingkat Kepercayaan Kritis! (< 30%)";
 
     private void Awake()
@@ -44,78 +42,73 @@ public class EconomyManager : MonoBehaviour
 
     private void Start()
     {
-        // Jika belum ada data sama sekali, inisialisasi nilai awal
-        if (!PlayerPrefs.HasKey("CurrentUang"))
-        {
-            ResetDataGame();
-        }
+        ResetDataGame();
+        LoadFromSave();
         UpdateUI();
     }
 
-    // --- FUNGSI RESET TOTAL (UNTUK DEBUGGING) ---
-    [ContextMenu("Reset Game Data (Debug)")]
     public void ResetDataGame()
     {
-        PlayerPrefs.SetInt("CurrentUang", modalAwalUang);
-        PlayerPrefs.SetInt("CurrentTrust", maxTrustHarian);
-        PlayerPrefs.Save();
-
+        money = 1500;
+        trust = maxTrustHarian;
         UpdateUI();
-        Debug.Log("<color=cyan>[DEBUG] Data Uang & Trust berhasil di-reset ke nilai awal!</color>");
+        Debug.Log("[DEBUG] Data Uang & Trust berhasil di-reset ke nilai awal!");
     }
 
-    // --- FUNGSI RESET SETIAP PAGI ---
+    private void LoadFromSave()
+    {
+        if (SaveManager.Instance != null && SaveManager.Instance.HasSave())
+        {
+            SaveManager.Instance.LoadSave();
+        }
+    }
+
     public void MulaiHariBaru()
     {
-        PlayerPrefs.SetInt("CurrentTrust", maxTrustHarian);
-        PlayerPrefs.Save();
-
+        trust = maxTrustHarian;
+        SaveManager.Instance?.SaveGame();
         UpdateUI();
         Debug.Log("Hari Baru Dimulai! Trust direset ke 100.");
     }
 
-    // --- FUNGSI UANG ---
     public void TambahUang()
     {
-        int uang = PlayerPrefs.GetInt("CurrentUang", modalAwalUang);
-        PlayerPrefs.SetInt("CurrentUang", uang + rewardUangBenar);
-        PlayerPrefs.Save();
+        money += rewardUangBenar;
         UpdateUI();
     }
 
     public void KurangiUang()
     {
-        int uang = PlayerPrefs.GetInt("CurrentUang", modalAwalUang);
-        PlayerPrefs.SetInt("CurrentUang", Mathf.Max(0, uang - penaltyUangSalah));
-        PlayerPrefs.Save();
+        money = Mathf.Max(0, money - penaltyUangSalah);
         UpdateUI();
     }
 
-    // --- FUNGSI TRUST ---
     public void TambahTrust()
     {
-        int trust = PlayerPrefs.GetInt("CurrentTrust", maxTrustHarian);
         trust = Mathf.Clamp(trust + rewardTrustBenar, 0, maxTrustHarian);
-        PlayerPrefs.SetInt("CurrentTrust", trust);
-        PlayerPrefs.Save();
         UpdateUI();
         CekWarningTrust();
+        LoseCondition.Instance?.CheckLoseCondition();
     }
 
     public void KurangiTrust(int jumlahPenalty)
     {
-        int trust = PlayerPrefs.GetInt("CurrentTrust", maxTrustHarian);
         trust = Mathf.Clamp(trust - jumlahPenalty, 0, maxTrustHarian);
-        PlayerPrefs.SetInt("CurrentTrust", trust);
-        PlayerPrefs.Save();
         UpdateUI();
         CekWarningTrust();
+        LoseCondition.Instance?.CheckLoseCondition();
+    }
+
+    public void ResetTrustToMax()
+    {
+        trust = maxTrustHarian;
+        UpdateUI();
+        CekWarningTrust();
+        Debug.Log("Trust direset ke 100.");
     }
 
     private void CekWarningTrust()
     {
-        int trust = PlayerPrefs.GetInt("CurrentTrust", maxTrustHarian);
-
         if (textWarningTrust != null)
         {
             if (trust <= batasWarningTrust)
@@ -132,12 +125,8 @@ public class EconomyManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        int trustSekarang = PlayerPrefs.GetInt("CurrentTrust", maxTrustHarian);
-
-        if (textUangHUD != null) textUangHUD.text = "$" + PlayerPrefs.GetInt("CurrentUang", modalAwalUang);
-        if (textTrustHUD != null) textTrustHUD.text = trustSekarang + "%";
-
-        // Pastikan status warning ikut diperbarui setiap UI direfresh
+        if (textUangHUD != null) textUangHUD.text = "$" + money;
+        if (textTrustHUD != null) textTrustHUD.text = trust + "%";
         CekWarningTrust();
     }
 }

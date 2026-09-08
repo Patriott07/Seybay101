@@ -184,4 +184,19 @@ namespace Schema.data
         public bool isOrganic;
         public bool isContraband;
     }
+
+    [System.Serializable]
+    public class StorySchema
+    {
+        public int Day; // Hari aktif (1 - 10)
+        public List<string> preDayText;
+        public List<string> onDeskText;
+        public List<string> afterShiftText;
+    }
+
+    public enum Gender
+    {
+        Man,
+        Woman,
+    }
 }

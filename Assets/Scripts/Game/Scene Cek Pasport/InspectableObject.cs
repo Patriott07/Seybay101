@@ -18,12 +18,20 @@ public class InspectableObject : MonoBehaviour
     private bool sedangAnimasi = false;
     private SpriteRenderer spriteRenderer;
 
+    private float clickThreshold = 0.3f; // Batas waktu maksimal antara klik 1 dan klik 2 (dalam detik)
+    private float lastClickTime = 0f;
+
+    Draggable draggableScript;
+
     void Start()
     {
+        draggableScript = GetComponent<Draggable>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         skalaAwal = transform.localScale;
         urutanLayerAwal = spriteRenderer.sortingOrder;
     }
+
+    public bool GetIsInspect() => isInspected;
 
     void Update()
     {
@@ -36,19 +44,35 @@ public class InspectableObject : MonoBehaviour
         if (sedangAnimasi)
             return;
 
-        if (!isInspected)
-        {
-            // Benda diangkat untuk diinspeksi
-            // Kita simpan posisinya SAAT INI (di meja) agar ia tahu jalan pulang
-            posisiMeja = transform.position;
+        // Cegah document billboard diinspect langsung -> taruh meja baru bisa
+        if (draggableScript != null && draggableScript.isOnDesk == false)
+            return;
 
-            // Kita naikkan layernya menjadi 50 agar tidak tertutup stempel/NPC saat dizoom
-            StartCoroutine(AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true));
+        // --- LOGIKA DOUBLE CLICK ---
+        float timeSinceLastClick = Time.time - lastClickTime;
+
+        if (timeSinceLastClick <= clickThreshold)
+        {
+            // === INI ADALAH DOUBLE CLICK ===
+            if (!isInspected)
+            {
+                posisiMeja = transform.position;
+                StartCoroutine(
+                    AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true)
+                );
+            }
+            else
+            {
+                StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
+            }
+
+            // Reset waktu klik agar tidak terhitung triple click
+            lastClickTime = 0f;
         }
         else
         {
-            // Benda dikembalikan ke meja
-            StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
+            // Jika ini baru klik pertama, simpan waktunya
+            lastClickTime = Time.time;
         }
     }
 
@@ -69,7 +93,7 @@ public class InspectableObject : MonoBehaviour
         // bg.
         if (openBG)
             bg.DOFade(0.92f, 0.5f).SetDelay(0.3f);
-        else 
+        else
             bg.DOFade(0, 0.15f);
 
         while (time < 1)

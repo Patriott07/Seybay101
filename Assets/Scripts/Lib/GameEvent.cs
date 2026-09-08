@@ -8,4 +8,5 @@ public class GameEvent : MonoBehaviour
     public static Action<float> SpawnNPCOnStartDay;
     public static Action GenerateNewNPCView;
     public static Action GenerateNewPassportData;
+    public static Action<Gender> OnSetGander;
 }

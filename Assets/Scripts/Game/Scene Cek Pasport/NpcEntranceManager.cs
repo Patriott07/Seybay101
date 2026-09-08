@@ -24,6 +24,7 @@ public class NpcEntranceManager : MonoBehaviour
     private Vector3 targetDokumen;
     private Vector3 targetTiket;
     private Vector3 skalaAsliNpc;
+    private Coroutine coroutineSpawnNpc;
 
     void Start()
     {
@@ -60,11 +61,12 @@ public class NpcEntranceManager : MonoBehaviour
 
         posisiNpc.localScale = skalaKecil;
 
+        // randomize doc passport
+        GameEvent.GenerateNewPassportData?.Invoke();
+
         // randomize look NPC
         GameEvent.GenerateNewNPCView?.Invoke();
 
-        // randomize doc passport
-        GameEvent.GenerateNewPassportData?.Invoke();
 
         // Paksa posisinya kembali tepat ke titik spawn GameObject 'npcPosSpawn' di dunia nyata
         if (npcPosSpawn != null)
@@ -151,7 +153,8 @@ public class NpcEntranceManager : MonoBehaviour
             .OnComplete(() =>
             {
                 float arahX = isApprove ? jarakPergi : -jarakPergi;
-                Vector3 targetPergi = posisiAwalNpc + new Vector3(isApprove ? arahX : arahX / 2, 0, 0);
+                Vector3 targetPergi =
+                    posisiAwalNpc + new Vector3(isApprove ? arahX : arahX / 2, 0, 0);
 
                 // while (time < 1)
                 // {
@@ -162,8 +165,14 @@ public class NpcEntranceManager : MonoBehaviour
 
                 GameEvent.DeleteMarkTicket?.Invoke();
 
-                posisiNpc.DOMove(targetPergi, isApprove ? kecepatanPergi : kecepatanPergi/2);
-                StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
+                posisiNpc.DOMove(targetPergi, isApprove ? kecepatanPergi : kecepatanPergi / 2);
+                if (GameManager.Instance.isCanSpawnNpc)
+                    coroutineSpawnNpc = StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
+                else
+                {
+                    StopCoroutine(coroutineSpawnNpc);
+                    GameManager.Instance.EndShiftAndLoadScene();
+                }
                 Debug.Log("NPC sudah pergi dari layar!");
             });
     }
