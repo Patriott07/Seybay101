@@ -1,16 +1,31 @@
 using System.Collections.Generic;
 using Schema.data;
-using UnityEngine;
+
+// =============================================
+// ABSTRACT BASE CLASS — All violation types inherit from this
+// =============================================
+// Each concrete violation overrides:
+//   - Apply()     : Modifies PassportSchema fields to create the violation
+//   - GetViolationDetail() : Returns human-readable description of the violation
+// =============================================
 public abstract class RuleViolation
 {
-    public string ruleID;
-    public string title;
-    public string description;
+    public string ruleID;       // Unique identifier for this violation type
+    public string title;        // Short title shown to player (e.g., "Expired Passport")
+    public string description;  // Longer description of what the violation means
 
+    // Override in each subclass to define how the violation modifies the passport
     public abstract void Apply(PassportSchema passport);
+
+    // Override in each subclass to return a detail string for display/reporting
     public abstract string GetViolationDetail(PassportSchema passport);
 }
 
+// =============================================
+// BASE RULES — Available from Day 1 onwards
+// =============================================
+
+// Rule 1: Passport has expired (expiryDate set to past year 1960-2044)
 public class ExpiredPassportViolation : RuleViolation
 {
     public ExpiredPassportViolation()
@@ -20,6 +35,7 @@ public class ExpiredPassportViolation : RuleViolation
         description = "Passport sudah kedaluwarsa";
     }
 
+    // Sets expiryDate to a random past date (pre-2044), making the passport expired
     public override void Apply(PassportSchema passport)
     {
         string day = Random.Range(1, 31).ToString();
@@ -34,6 +50,7 @@ public class ExpiredPassportViolation : RuleViolation
     }
 }
 
+// Rule 2: Ticket and passport info don't match (country/district changed to invalid values)
 public class InfoMismatchViolation : RuleViolation
 {
     public InfoMismatchViolation()
@@ -43,6 +60,7 @@ public class InfoMismatchViolation : RuleViolation
         description = "Informasi tiket dan passport tidak selaras";
     }
 
+    // Sets countryName to "XXX" and districtHome to "Unknown District" — indicates mismatch
     public override void Apply(PassportSchema passport)
     {
         passport.countryName = "XXX";
@@ -55,6 +73,7 @@ public class InfoMismatchViolation : RuleViolation
     }
 }
 
+// Rule 3: Passport doesn't meet standards (photo mismatch + invalid document)
 public class StandardViolation : RuleViolation
 {
     public StandardViolation()
@@ -64,6 +83,7 @@ public class StandardViolation : RuleViolation
         description = "Passport tidak memenuhi standar (photo mismatch / invalid)";
     }
 
+    // Sets sameOwnerPhoto = false and isValid = false — passport fails inspection
     public override void Apply(PassportSchema passport)
     {
         passport.sameOwnerPhoto = false;
@@ -76,6 +96,11 @@ public class StandardViolation : RuleViolation
     }
 }
 
+// =============================================
+// DAY 2+ RULES — Each adds new violation type on top of previous day's rules
+// =============================================
+
+// Day 2 — Bribery: NPC tries to bribe the officer
 public class NewRule_Day2 : RuleViolation
 {
     public NewRule_Day2()
@@ -85,6 +110,7 @@ public class NewRule_Day2 : RuleViolation
         description = "NPC mencoba menyuap untuk melewati inspeksi";
     }
 
+    // Sets hexaCardColor to red (#FF0000) — visual indicator of suspicious card
     public override void Apply(PassportSchema passport)
     {
         passport.hexaCardColor = "#FF0000";
@@ -96,6 +122,7 @@ public class NewRule_Day2 : RuleViolation
     }
 }
 
+// Day 3 — Suspicious Origin: NPC comes from restricted district
 public class NewRule_Day3 : RuleViolation
 {
     public NewRule_Day3()
@@ -105,6 +132,7 @@ public class NewRule_Day3 : RuleViolation
         description = "Asal daerah mencurigakan";
     }
 
+    // Sets districtHome to "Restricted Zone" — indicates NPC from high-risk area
     public override void Apply(PassportSchema passport)
     {
         passport.districtHome = "Restricted Zone";
@@ -116,6 +144,7 @@ public class NewRule_Day3 : RuleViolation
     }
 }
 
+// Day 5 — Counterfeit Document: Document number is fake
 public class NewRule_Day5 : RuleViolation
 {
     public NewRule_Day5()
@@ -125,6 +154,7 @@ public class NewRule_Day5 : RuleViolation
         description = "Dokumen palsu terdeteksi";
     }
 
+    // Prefixes documentNumber with "FAKE" — makes it immediately identifiable as counterfeit
     public override void Apply(PassportSchema passport)
     {
         passport.documentNumber = "FAKE" + Random.Range(1000, 9999);
@@ -136,6 +166,7 @@ public class NewRule_Day5 : RuleViolation
     }
 }
 
+// Day 7 — Blacklist Entry: NPC is on a blacklist
 public class NewRule_Day7 : RuleViolation
 {
     public NewRule_Day7()
@@ -145,6 +176,7 @@ public class NewRule_Day7 : RuleViolation
         description = "NPC masuk dalam daftar hitam";
     }
 
+    // Sets ownerName to "BLACKLISTED" — immediately flags NPC as prohibited
     public override void Apply(PassportSchema passport)
     {
         passport.ownerName = "BLACKLISTED";
@@ -156,6 +188,7 @@ public class NewRule_Day7 : RuleViolation
     }
 }
 
+// Day 9 — Mutation Marker: Special marker detected on the card
 public class NewRule_Day9 : RuleViolation
 {
     public NewRule_Day9()
@@ -165,6 +198,7 @@ public class NewRule_Day9 : RuleViolation
         description = "Tanda mutasi terdeteksi pada dokumen";
     }
 
+    // Sets hexaCardColor to green (#00FF00) — mutation indicator
     public override void Apply(PassportSchema passport)
     {
         passport.hexaCardColor = "#00FF00";
