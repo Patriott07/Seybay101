@@ -64,6 +64,9 @@ public class NpcEntranceManager : MonoBehaviour
         // randomize doc passport
         GameEvent.GenerateNewPassportData?.Invoke();
 
+        // randomize boarding pass (ticket appears when NPC hands over passport)
+        GameEvent.GenerateNewBoardingPass?.Invoke();
+
         // randomize look NPC
         GameEvent.GenerateNewNPCView?.Invoke();
 
