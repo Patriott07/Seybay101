@@ -21,7 +21,9 @@ public class LuggageManager : MonoBehaviour
     [Header("Database Barang (Prefabs)")]
     public List<GameObject> prefabBarangLegal;
     public List<GameObject> prefabBarangTerlarang;
-    public Transform[] titikSpawn;
+
+    [Header("Area Zona Spawn (Box Collider 2D)")]
+    public BoxCollider2D areaSpawn;
 
     private float totalBerat = 0f;
     private List<LuggageItem> barangAktif = new List<LuggageItem>();
@@ -29,6 +31,36 @@ public class LuggageManager : MonoBehaviour
     void Start()
     {
         SembunyikanInfoBarang();
+    }
+
+    // --- FITUR BARU: Mengecek berat koper secara real-time setiap frame ---
+    void Update()
+    {
+        if (barangAktif.Count > 0)
+        {
+            HitungBeratRealtime();
+        }
+    }
+
+    private void HitungBeratRealtime()
+    {
+        float beratSekarang = 0f;
+
+        foreach (LuggageItem item in barangAktif)
+        {
+            // Cek ke script LuggageItem: Apakah barang ini masih valid di dalam koper?
+            if (item != null && item.ApakahDiDalamKoper())
+            {
+                beratSekarang += item.dataBarang.itemWeight;
+            }
+        }
+
+        // Cek jika ada perubahan berat (menggunakan threshold kecil agar tidak update UI sia-sia)
+        if (Mathf.Abs(totalBerat - beratSekarang) > 0.01f)
+        {
+            totalBerat = beratSekarang;
+            UpdateUIBerat();
+        }
     }
 
     public void GenerateBarangNPC()
@@ -44,11 +76,7 @@ public class LuggageManager : MonoBehaviour
         totalBerat = 0f;
         barangAktif.Clear();
 
-        if (aturanHariIni == null)
-        {
-            Debug.LogError("Aturan Hari Ini belum dimasukkan ke Luggage Manager!");
-            return;
-        }
+        if (aturanHariIni == null || areaSpawn == null) return;
 
         List<GameObject> barangDiSpawn = new List<GameObject>();
 
@@ -81,28 +109,36 @@ public class LuggageManager : MonoBehaviour
             barangDiSpawn[randomIndex] = temp;
         }
 
+        Vector2 ukuranZona = areaSpawn.size;
+        Vector2 offsetZona = areaSpawn.offset;
+        Vector3 posisiZonaLokal = areaSpawn.transform.localPosition;
+
         for (int i = 0; i < barangDiSpawn.Count; i++)
         {
-            if (i < titikSpawn.Length)
-            {
-                GameObject barangBaru = Instantiate(barangDiSpawn[i], titikSpawn[i].position, Quaternion.identity, containerBarang.transform);
-                LuggageItem itemScript = barangBaru.GetComponent<LuggageItem>();
+            GameObject barangBaru = Instantiate(barangDiSpawn[i], containerBarang.transform);
 
-                if (itemScript != null)
-                {
-                    totalBerat += itemScript.dataBarang.itemWeight;
-                    barangAktif.Add(itemScript);
-                }
+            float randomX = Random.Range(-ukuranZona.x / 2f, ukuranZona.x / 2f) + offsetZona.x;
+            float randomY = Random.Range(-ukuranZona.y / 2f, ukuranZona.y / 2f) + offsetZona.y;
+
+            barangBaru.transform.localPosition = posisiZonaLokal + new Vector3(randomX, randomY, 0f);
+
+            // --- DIPERBAIKI: Barang di-spawn secara tegak lurus (tidak miring) ---
+            barangBaru.transform.localRotation = Quaternion.identity;
+
+            LuggageItem itemScript = barangBaru.GetComponent<LuggageItem>();
+            if (itemScript != null)
+            {
+                // HAPUS penambahan totalBerat di sini, karena sekarang diurus otomatis oleh HitungBeratRealtime()
+                barangAktif.Add(itemScript);
             }
         }
-
-        UpdateUIBerat();
     }
 
     public void UpdateUIBerat()
     {
         if (aturanHariIni != null && aturanHariIni.gunakanBatasBerat && totalBerat > aturanHariIni.batasBeratMaksimal)
         {
+            // Teks menjadi merah jika koper kelebihan muatan (Overweight)
             textBeratKoper.color = Color.red;
         }
         else
@@ -142,8 +178,8 @@ public class LuggageManager : MonoBehaviour
             if (item == null) continue;
 
             bool diAtasMeja = Vector3.Distance(item.transform.position, item.GetPosisiAwal()) > 1.5f;
-
             bool isIlegal = item.dataBarang.isContraband;
+
             if (aturanHariIni != null && aturanHariIni.larangBarangOrganik && item.dataBarang.isOrganic)
             {
                 isIlegal = true;
@@ -153,26 +189,19 @@ public class LuggageManager : MonoBehaviour
             {
                 if (isIlegal)
                 {
-                    // --- KEPUTUSAN BENAR: Sita Barang Ilegal ---
-                    Debug.Log($"<color=green>[BENAR] {item.dataBarang.itemName} disita! Trust +10, Uang +50</color>");
-
                     if (EconomyManager.Instance != null)
                     {
-                        EconomyManager.Instance.TambahTrust(); // Otomatis +10 (sesuai settingan EconomyManager)
-                        EconomyManager.Instance.TambahUang();  // Otomatis +50 (sesuai settingan EconomyManager)
+                        EconomyManager.Instance.TambahTrust();
+                        EconomyManager.Instance.TambahUang();
                     }
-
                     itemDisitaBenar.Add(item);
                 }
                 else
                 {
-                    // --- KEPUTUSAN SALAH: Barang Legal Malah Disita ---
-                    Debug.Log($"<color=red>[SALAH] {item.dataBarang.itemName} legal malah disita! Trust -1, Uang -25</color>");
-
                     if (EconomyManager.Instance != null)
                     {
-                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustSalahSita); // -1 Trust
-                        EconomyManager.Instance.KurangiUang(); // -25 Uang
+                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustSalahSita);
+                        EconomyManager.Instance.KurangiUang();
                     }
                 }
             }
@@ -180,26 +209,15 @@ public class LuggageManager : MonoBehaviour
             {
                 if (isIlegal)
                 {
-                    // --- KEPUTUSAN SALAH: Barang Ilegal Lolos ---
-                    Debug.Log($"<color=orange>[TERLEWAT] {item.dataBarang.itemName} ilegal lolos! Trust -5, Uang -25</color>");
-
                     if (EconomyManager.Instance != null)
                     {
-                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustLolos); // -5 Trust
-                        EconomyManager.Instance.KurangiUang(); // -25 Uang
+                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustLolos);
+                        EconomyManager.Instance.KurangiUang();
                     }
-                }
-                else
-                {
-                    // --- KEPUTUSAN BENAR: Biarkan Barang Legal di Koper ---
-                    // Tidak ada penalti/reward khusus, atau bisa disesuaikan jika mau.
                 }
             }
         }
 
-        Debug.Log("-------------------------------------------------");
-
-        // --- JALANKAN ANIMASI HILANG DAN TUNGGU SAMPAI BENAR-BENAR SELESAI ---
         if (itemDisitaBenar.Count > 0)
         {
             foreach (LuggageItem item in itemDisitaBenar)
@@ -209,18 +227,12 @@ public class LuggageManager : MonoBehaviour
                     StartCoroutine(item.AnimasiKeluar());
                 }
             }
-
             yield return new WaitForSeconds(0.5f);
         }
 
-        // Pindah ke scene selanjutnya setelah evaluasi dan animasi selesai
         if (!string.IsNullOrEmpty(namaSceneSelanjutnya))
         {
             SceneManager.LoadScene(namaSceneSelanjutnya);
-        }
-        else
-        {
-            Debug.LogWarning("Nama Scene selanjutnya belum diisi di Inspector!");
         }
     }
 }

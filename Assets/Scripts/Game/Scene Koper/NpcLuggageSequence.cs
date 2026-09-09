@@ -5,9 +5,10 @@ public class NpcLuggageSequence : MonoBehaviour
 {
     [Header("Referensi Objek")]
     public Transform npcKarakter;
-    public Transform koper;
+    public Transform koper; // Pastikan ini diisi dengan "Koper_Bawah"
     public AnimasiKoperSimple scriptKoper;
-    public LuggageManager luggageManager; // Referensi untuk memunculkan barang
+
+    // LuggageManager DIHAPUS dari sini karena sudah diurus otomatis oleh AnimasiKoperSimple
 
     [Header("Titik Target")]
     public Transform titikMejaKoper;
@@ -67,16 +68,11 @@ public class NpcLuggageSequence : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE C: BUKA KOPER & MUNCULKAN BARANG ---
+        // --- FASE C: BUKA KOPER ---
         yield return new WaitForSeconds(jedaSebelumBuka);
 
-        // 1. Koper animasi berayun buka
+        // 1. Koper animasi mengecil, ganti sprite, dan membesar
+        // (Barang dan Doc akan otomatis dipanggil di dalam fungsi ini saat koper selesai membesar)
         scriptKoper.ToggleKoper();
-
-        // 2. Munculkan isi barang tepat setelah koper dibuka
-        if (luggageManager != null)
-        {
-            luggageManager.GenerateBarangNPC();
-        }
     }
 }

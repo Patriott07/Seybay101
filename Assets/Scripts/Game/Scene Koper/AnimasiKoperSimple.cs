@@ -3,24 +3,44 @@ using UnityEngine;
 
 public class AnimasiKoperSimple : MonoBehaviour
 {
-    [Header("Referensi Objek")]
-    public Transform engselTutup;
+    [Header("Referensi Koper Utama")]
+    public Transform objekKoperUtama;
+
+    [Header("Referensi Objek 2D")]
+    public GameObject koperTutup;
+    public GameObject koperBuka;
+
+    [Header("Isi Koper")]
     public GameObject containerBarang;
+    public GameObject dokumenKoper;
 
-    // --- TAMBAHAN BARU ---
-    public GameObject dokumenKoper; // Tempat memasukkan objek Doc dari Hierarchy
-
-    [Header("Pengaturan Animasi")]
-    public float waktuAnimasi = 0.5f;
-    public float sudutBukaX = 180f;
+    [Header("Pengaturan Animasi & Juice")]
+    public float waktuAnimasi = 0.25f;
+    public float waktuBouncing = 0.1f;
+    public float multiplierBouncing = 1.15f; // Efek melar membesar
+    public float tinggiLompatan = 0.3f; // BARU: Seberapa tinggi koper melompat dari meja
+    public Vector3 skalaKecil = Vector3.zero;
 
     private bool isTerbuka = false;
     private bool sedangAnimasi = false;
     private bool sudahGenerateBarang = false;
 
+    private Vector3 skalaAsli;
+    private Vector3 posisiAsli; // BARU: Untuk menyimpan koordinat nempel di meja
+
     void Start()
     {
-        // Pastikan barang dan dokumen tersembunyi saat mulai
+        if (objekKoperUtama == null) objekKoperUtama = this.transform;
+
+        skalaAsli = objekKoperUtama.localScale;
+        if (skalaAsli.x < 0.1f) skalaAsli = new Vector3(1f, 1f, 1f);
+
+        // Simpan titik mendarat awal koper
+        posisiAsli = objekKoperUtama.localPosition;
+
+        if (koperTutup != null) koperTutup.SetActive(true);
+        if (koperBuka != null) koperBuka.SetActive(false);
+
         if (containerBarang != null) containerBarang.SetActive(false);
         if (dokumenKoper != null) dokumenKoper.SetActive(false);
     }
@@ -28,43 +48,59 @@ public class AnimasiKoperSimple : MonoBehaviour
     public void ToggleKoper()
     {
         if (sedangAnimasi) return;
-        StartCoroutine(ProsesBukaEngsel3D());
+        StartCoroutine(ProsesTransisi2DPositionalBounce());
     }
 
-    IEnumerator ProsesBukaEngsel3D()
+    IEnumerator ProsesTransisi2DPositionalBounce()
     {
         sedangAnimasi = true;
 
-        // JIKA MAU TUTUP KOPER
-        if (isTerbuka)
+        if (isTerbuka && dokumenKoper != null)
         {
-            // Sembunyikan barang dan dokumen SEBELUM animasi tutup dimulai
-            if (containerBarang != null) containerBarang.SetActive(false);
-            if (dokumenKoper != null) dokumenKoper.SetActive(false);
+            DokumenKoperZoom docZoom = dokumenKoper.GetComponent<DokumenKoperZoom>();
+            if (docZoom != null) docZoom.bisaDiklik = false;
         }
 
-        float time = 0;
-        Quaternion rotasiAwal = engselTutup.localRotation;
-        Quaternion targetRotasi = isTerbuka ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(sudutBukaX, 0, 0);
+        Vector3 skalaMemantul = skalaAsli * multiplierBouncing;
+        // Titik tertinggi saat koper terangkat
+        Vector3 posisiPuncak = posisiAsli + new Vector3(0, tinggiLompatan, 0);
 
+        // --- FASE 1: MELOMPAT NAIK (Terangkat dari meja) ---
+        float time = 0;
         while (time < 1)
         {
-            time += Time.deltaTime / waktuAnimasi;
-            engselTutup.localRotation = Quaternion.Lerp(rotasiAwal, targetRotasi, time);
+            time += Time.deltaTime / waktuBouncing;
+            objekKoperUtama.localScale = Vector3.Lerp(skalaAsli, skalaMemantul, time);
+            objekKoperUtama.localPosition = Vector3.Lerp(posisiAsli, posisiPuncak, time);
             yield return null;
         }
 
-        engselTutup.localRotation = targetRotasi;
+        // --- FASE 2: MENGHEMPAS TURUN & MENGECIL (Terbanting ke meja) ---
+        time = 0;
+        while (time < 1)
+        {
+            time += Time.deltaTime / waktuAnimasi;
+            float smoothTime = Mathf.SmoothStep(0f, 1f, time);
+            objekKoperUtama.localScale = Vector3.Lerp(skalaMemantul, skalaKecil, smoothTime);
+            objekKoperUtama.localPosition = Vector3.Lerp(posisiPuncak, posisiAsli, smoothTime);
+            yield return null;
+        }
+
+        // Pastikan nempel di meja dengan skala 0
+        objekKoperUtama.localScale = skalaKecil;
+        objekKoperUtama.localPosition = posisiAsli;
+
+        // --- FASE 3: GANTI GAMBAR & MUNCULKAN ISI ---
         isTerbuka = !isTerbuka;
 
-        // JIKA KOPER BARU SAJA SELESAI TERBUKA
+        if (koperTutup != null) koperTutup.SetActive(!isTerbuka);
+        if (koperBuka != null) koperBuka.SetActive(isTerbuka);
+
         if (isTerbuka)
         {
-            // 1. Munculkan barang dan dokumen SETELAH animasi selesai
             if (containerBarang != null) containerBarang.SetActive(true);
             if (dokumenKoper != null) dokumenKoper.SetActive(true);
 
-            // 2. Generate Barang (Jika belum)
             if (!sudahGenerateBarang)
             {
                 LuggageManager manager = FindObjectOfType<LuggageManager>();
@@ -74,8 +110,41 @@ public class AnimasiKoperSimple : MonoBehaviour
                     sudahGenerateBarang = true;
                 }
             }
+        }
+        else
+        {
+            if (containerBarang != null) containerBarang.SetActive(false);
+            if (dokumenKoper != null) dokumenKoper.SetActive(false);
+        }
 
-            // 3. Izinkan dokumen diklik
+        // --- FASE 4: MEMBESAR & MELOMPAT NAIK ---
+        time = 0;
+        while (time < 1)
+        {
+            time += Time.deltaTime / waktuAnimasi;
+            float smoothTime = Mathf.SmoothStep(0f, 1f, time);
+            objekKoperUtama.localScale = Vector3.Lerp(skalaKecil, skalaMemantul, smoothTime);
+            objekKoperUtama.localPosition = Vector3.Lerp(posisiAsli, posisiPuncak, smoothTime);
+            yield return null;
+        }
+
+        // --- FASE 5: JATUH KE MEJA (Settle) ---
+        time = 0;
+        while (time < 1)
+        {
+            time += Time.deltaTime / waktuBouncing;
+            objekKoperUtama.localScale = Vector3.Lerp(skalaMemantul, skalaAsli, time);
+            objekKoperUtama.localPosition = Vector3.Lerp(posisiPuncak, posisiAsli, time);
+            yield return null;
+        }
+
+        // Kunci posisi akhir agar pas di meja
+        objekKoperUtama.localScale = skalaAsli;
+        objekKoperUtama.localPosition = posisiAsli;
+
+        // --- SELESAI ---
+        if (isTerbuka)
+        {
             if (dokumenKoper != null)
             {
                 DokumenKoperZoom docZoom = dokumenKoper.GetComponent<DokumenKoperZoom>();
