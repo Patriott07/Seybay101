@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Schema.data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PassportScript : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PassportScript : MonoBehaviour
         textExp,
         textSex,
         textBod;
+
+    public GameObject realImagePass, fakeImagePass;
 
     [Header("Database")]
     public List<NamePool> dataName;

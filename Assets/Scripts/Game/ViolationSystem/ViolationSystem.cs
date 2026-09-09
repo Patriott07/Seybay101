@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Schema.data;
+using UnityEngine;
 
 // =============================================
 // VIOLATION SYSTEM — Core engine for generating NPC violations

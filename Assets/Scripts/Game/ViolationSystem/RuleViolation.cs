@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Schema.data;
-
+using UnityEngine;
 // =============================================
 // ABSTRACT BASE CLASS — All violation types inherit from this
 // =============================================

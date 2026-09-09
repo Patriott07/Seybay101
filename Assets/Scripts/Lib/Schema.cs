@@ -50,7 +50,8 @@ namespace Schema.data
     {
         public string passNumber; // nomor uniq contoh “AR-28491“ Azure rocket
         public string destination; // "Seybay Outpost";
-        public string estimationTime; // 2 Day / 48 Hours (fix gabisa diganti2)
+        // public string estimationTime; // 2 Day / 48 Hours (fix gabisa diganti2)
+        public string seat;
         public string passengerName; // namanya sesuai ga sama passport
         public string idPassengerCard; // nomer document pada boarding ticket
         public string departureDate; // tanggal keberangkatan

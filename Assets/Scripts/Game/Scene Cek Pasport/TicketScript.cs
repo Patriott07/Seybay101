@@ -46,11 +46,12 @@ public class TicketScript : MonoBehaviour
         bool isNameValid = Random.Range(0f, 1f) > TICKET_NAMEPASSEGER_INVALID_CHANCE;
 
         BoardingPassSchema ticketData = new BoardingPassSchema();
+        
         ticketData.passNumber = GeneratePassNumber(isTicketValid);
         ticketData.passengerName = GeneratePassengerName(isNameValid, passport.ownerName);
         ticketData.seatClass = GenerateSeatClass();
         ticketData.seat = GenerateSeatNumber(ticketData.seatClass);
-        ticketData.idPassengerCard = GenerateIDCard(isTicketValid);
+        ticketData.idPassengerCard = GenerateIDCard(isTicketValid, passport.documentNumber);
         ticketData.departureDate = GenerateDepartureDate(isTicketValid);
         ticketData.isValid = isTicketValid;
         // ticketData.estimationTime = GenerateEstimationTime();
@@ -87,8 +88,12 @@ public class TicketScript : MonoBehaviour
             return realname;
         else
         {
-            var dataname = PassportScript.dataName[Random.Range(0, PassportScript.dataName.Count)];
-            return Random.Range(0,1f) > 0.5 ? dataname.maleNames[Random.Range(0, dataname.maleNames.Count)] : dataname.femaleNames[Random.Range(0, dataname.femaleNames.Count)];
+            var dataname = PassportScript.Instance.dataName[
+                Random.Range(0, PassportScript.Instance.dataName.Count)
+            ];
+            return Random.Range(0, 1f) > 0.5
+                ? dataname.maleNames[Random.Range(0, dataname.maleNames.Count)]
+                : dataname.femaleNames[Random.Range(0, dataname.femaleNames.Count)];
         }
     }
 
@@ -109,12 +114,13 @@ public class TicketScript : MonoBehaviour
     }
 
     // Generates ID card — valid tickets have "ID-XXXX", invalid have "ID-FAKE"
-    private string GenerateIDCard(bool isValid)
+    private string GenerateIDCard(bool isValid, string idPassport)
     {
         if (isValid)
-            return "ID-" + Random.Range(1000, 9999);
+            return idPassport;
         else
-            return "ID-FAKE-" + Random.Range(100, 999);
+            return "ID-" + Random.Range(1000, 9999);
+        // return "ID-FAKE-" + Random.Range(100, 999);
     }
 
     // Generates departure date — invalid tickets might have expired dates
