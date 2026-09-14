@@ -40,13 +40,14 @@ public class LoseCondition : MonoBehaviour
             loseCanvasGroup.blocksRaycasts = false;
             loseCanvasGroup.interactable = false;
         }
+        AudioManager.Instance.PlaySfxLose();
     }
 
     public void CheckLoseCondition(int currentTrust)
     {
         if (currentTrust <= 0)
         {
-            // TriggerLose();
+            AudioManager.Instance.PlaySfxLose();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

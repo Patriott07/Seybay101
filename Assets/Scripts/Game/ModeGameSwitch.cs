@@ -62,6 +62,7 @@ public class ModeGameSwitch : MonoBehaviour
 
     void ToggleMode()
     {
+        AudioManager.Instance.PlaySfxMenuToggle();
         switch (currentMode)
         {
             case InspectionMode.Passport:

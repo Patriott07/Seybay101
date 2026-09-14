@@ -13,4 +13,6 @@ public class GameSaveState
     public bool purhaceTicketForNasya;
     public bool purhaceTicketForVirly;
     public bool purhaceTicketForKraisa;
+    public int penalty;            // Total penalty money tersimpan
+    public int trust;              // Trust remaining saat ini
 }

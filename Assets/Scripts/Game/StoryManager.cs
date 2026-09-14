@@ -95,6 +95,7 @@ public class StoryManager : MonoBehaviour
 
     public void OnPreDayComplete()
     {
+        AudioManager.Instance.PlaySfxSceneTransition();
         if (GameManager.Instance != null)
         {
             SceneManager.LoadScene(mainDeskSceneName);
@@ -103,6 +104,7 @@ public class StoryManager : MonoBehaviour
 
     public void OnAfterShiftComplete()
     {
+        AudioManager.Instance.PlaySfxSceneTransition();
         if (GameManager.Instance != null)
         {
             SceneManager.LoadScene(recapSceneName);

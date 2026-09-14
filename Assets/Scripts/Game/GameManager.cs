@@ -67,17 +67,20 @@ public class GameManager : MonoBehaviour
 
     public void ResetDay()
     {
+        AudioManager.Instance.PlaySfxSceneTransition();
         SceneManager.LoadScene("Day" + currentDay);
         Debug.Log("Day direset.");
     }
 
     public void EndShiftAndLoadScene()
     {
+        SaveManager.Instance?.SaveGame();
         SceneManager.LoadScene("RecapDay");
     }
 
     public void NextDay()
     {
+        AudioManager.Instance.PlaySfxSceneTransition();
         // currentDay++;
         SaveManager.Instance?.SaveGame();
         SceneManager.LoadScene("AfterShift");

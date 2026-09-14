@@ -59,10 +59,13 @@ public class InspectableObject : MonoBehaviour
                 StartCoroutine(
                     AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true)
                 );
+
+                AudioManager.Instance.PlaySfxTicket();
             }
             else
             {
                 StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
+                AudioManager.Instance.PlaySfxTicket();
             }
 
             // Reset waktu klik agar tidak terhitung triple click

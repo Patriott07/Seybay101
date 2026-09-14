@@ -48,6 +48,8 @@ public class TicketScript : MonoBehaviour
     // Called when NPC arrives — generates boarding pass data
     public void GenerateData(PassportSchema passport)
     {
+        // AudioManager.Instance.PlaySfxTicket();
+
         // int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
         // bool isTicketValid = UnityEngine.Random.Range(0f, 1f) > TICKET_INVALID_CHANCE;
         // bool isNameValid = UnityEngine.Random.Range(0f, 1f) > TICKET_NAMEPASSEGER_INVALID_CHANCE;
@@ -133,8 +135,8 @@ public class TicketScript : MonoBehaviour
     // Generates departure date — invalid tickets might have expired dates
     private DateTime GenerateDepartureDate(bool isValid)
     {
-        int day = UnityEngine.Random.Range(1, 31);
-        int month = UnityEngine.Random.Range(1, 12);
+        int day = GameManager.Instance.GetCurrentDay();
+        int month = 8;
 
         // if (isValid)
         //     return  day + "/" + month + "/2046";

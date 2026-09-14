@@ -67,14 +67,16 @@ public class EconomyManager : MonoBehaviour
     public void MulaiHariBaru()
     {
         trust = maxTrustHarian;
+        punish = 0;
         SaveManager.Instance?.SaveGame();
         HUDManager.Instance.UpdateStat(trust);
-        Debug.Log("Hari Baru Dimulai! Trust direset ke 100.");
+        Debug.Log("Hari Baru Dimulai! Trust direset ke 100, penalty direset.");
     }
 
     public void TambahUang()
     {
         money += rewardUangBenar;
+        AudioManager.Instance.PlaySfxCoin();
         Debug.Log($"Current money : {money}");
         HUDManager.Instance.UpdateStat(trust);
     }
@@ -82,6 +84,8 @@ public class EconomyManager : MonoBehaviour
     public void KurangiUang(int count)
     {
         punish += count;
+        AudioManager.Instance.PlaySfxCoin();
+        SaveManager.Instance?.SaveGame();
         HUDManager.Instance.UpdateStat(trust);
         Debug.Log($"Punishment money : {count}");
         Debug.Log($"Current money : {money - punish}");
@@ -99,7 +103,7 @@ public class EconomyManager : MonoBehaviour
     {
         trust -= jumlahPenalty;
         HUDManager.Instance.UpdateStat(trust);
-        
+        SaveManager.Instance?.SaveGame();
         LoseCondition.Instance?.CheckLoseCondition(trust);
     }
 
@@ -107,9 +111,13 @@ public class EconomyManager : MonoBehaviour
     {
         trust = maxTrustHarian;
         HUDManager.Instance.UpdateStat(trust);
-        
+        SaveManager.Instance?.SaveGame();
         Debug.Log("Trust direset ke 100.");
     }
+
+    public int GetNetMoney() => money - punish;
+
+    public int GetPenalty() => punish;
 
     // private void CekWarningTrust()
     // {

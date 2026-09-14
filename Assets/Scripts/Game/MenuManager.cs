@@ -20,6 +20,7 @@ public class MenuManager : MonoBehaviour
     }
     public void ToggleMenu()
     {
+        AudioManager.Instance.PlaySfxMenuToggle();
         if (menuAnimator == null)
         {
             Debug.LogWarning("Animator belum di-assign di Inspector!");
@@ -28,16 +29,12 @@ public class MenuManager : MonoBehaviour
 
         if (!isOpen)
         {
-            // Jika posisi tertutup, jalankan animasi BUKA
             menuAnimator.Play(animOpen, 0, 0);
             isOpen = true;
             tableCollider.enabled = true;
         }
         else
         {
-            // Jika posisi terbuka, jalankan animasi TUTUP
-            // menuAnimator.ResetTrigger(animOpen);
-            // menuAnimator.SetTrigger(animClose);
             menuAnimator.Play(animClose, 0, 0);
             isOpen = false;
             tableCollider.enabled = false;

@@ -22,6 +22,7 @@ public class Draggable : MonoBehaviour
     void OnMouseDown()
     {
         isSnapping = false;
+        AudioManager.Instance.PlaySfxPaper();
 
         if (inspectableObjectScript.GetIsInspect())
             return;

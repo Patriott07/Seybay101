@@ -91,6 +91,7 @@ public class StampHybridController : MonoBehaviour
 
     IEnumerator SiklusAnimasiKeputusan(bool isApprove, Vector3 posisiZona)
     {
+        AudioManager.Instance.PlaySfxMenuToggle();
         sedangDiproses = true;
 
         // cek apakah di scene ada ticket
@@ -153,7 +154,7 @@ public class StampHybridController : MonoBehaviour
         // Tahan sebentar di bawah
         yield return new WaitForSeconds(0.4f);
 
-        // 3. Tarik balik stempel ke posisi semula (Menggunakan DOTween agar mulus tanpa blink)
+        // 3. Tarik balik stempel ke posisi semula
         yield return transform.DOMove(posisiAwal, 0.25f).SetEase(Ease.OutQuad).WaitForCompletion();
 
         // Kembalikan layer sorting
@@ -163,7 +164,11 @@ public class StampHybridController : MonoBehaviour
         scriptTiket.PaksaZoomOut();
         yield return new WaitForSeconds(0.5f);
 
-        // --- Suruh NPC Pergi! ---
+        if (isApprove)
+            AudioManager.Instance.PlaySfxApprove();
+        else
+            AudioManager.Instance.PlaySfxReject();
+
         if (npcManager != null)
         {
             npcManager.UsirNpc(isApprove);
@@ -257,7 +262,7 @@ public class StampHybridController : MonoBehaviour
                 EconomyManager.Instance.TambahTrust(5);
             else
             {
-                EconomyManager.Instance.KurangiTrust(penalty * 10);
+                EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
         }
         else
@@ -267,7 +272,7 @@ public class StampHybridController : MonoBehaviour
                 EconomyManager.Instance.TambahTrust(5);
             else
             {
-                EconomyManager.Instance.KurangiTrust(penalty * 10);
+                EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
         }
     }

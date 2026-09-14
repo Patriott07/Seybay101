@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Ptorotype/AlphaPlaytestingImplementAudio.unity
+    guid: ffc26cd058e861b4fab3879e3c0eff6d
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
@@ -17,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ptorotype/AlphaPlaytesting.unity
     guid: ff50b1ff42508ab41b833be46d0a3550
+  - enabled: 1
+    path: Assets/Scenes/Ptorotype/RecapDay.unity
+    guid: 83fd3402c83e650408b238d8d62029b8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

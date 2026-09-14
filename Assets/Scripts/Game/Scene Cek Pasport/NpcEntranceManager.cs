@@ -62,6 +62,7 @@ public class NpcEntranceManager : MonoBehaviour
 
     IEnumerator AdeganNpcMasuk(Vector3 skalaKecil)
     {
+        // AudioManager.Instance.PlaySfxNpcSpawn();
         // --- FASE A: NPC MUNCUL DARI BELAKANG ---
         float time = 0;
         // yield return new WaitForSeconds(2f);
@@ -104,13 +105,16 @@ public class NpcEntranceManager : MonoBehaviour
         // --- FASE B: MENYODORKAN KERTAS KE MEJA ---
 
         // 1. Posisikan kertas di titik tengah NPC
+        
+         AudioManager.Instance.PlaySfxPaper();
+        
         dokumenKertas.DOScale(new Vector3(2, 2f, 1), 0.8f);
         dokumenKertas.position = new Vector3(
             posisiNpc.position.x,
             posisiNpc.position.y,
             targetDokumen.z
         );
-
+        
         objekTiket.DOScale(new Vector3(1.5f, 1.4f, 1), 0.8f);
         objekTiket.position = new Vector3(
             posisiNpc.position.x,

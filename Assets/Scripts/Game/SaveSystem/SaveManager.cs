@@ -9,7 +9,7 @@ using Schema.data;
 // =============================================
 // Save file location: Application.persistentDataPath/game_save.json
 // Uses JsonUtility.ToJson/FromJson — no encryption
-// Saves only: money, day, and ticket purchase status
+// Saves only: money, day, ticket purchase status, penalty, and trust
 // =============================================
 public class SaveManager : MonoBehaviour
 {
@@ -32,6 +32,11 @@ public class SaveManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public GameSaveState GetSaveData()
+    {
+        return currentSave;
     }
 
     #region SAVE / LOAD
@@ -78,14 +83,16 @@ public class SaveManager : MonoBehaviour
     #region DATA CAPTURE
 
     // Captures current game state into currentSave for serialization
-    // Only captures: day and money (not trust — trust resets daily)
+    // Captures: day, money, penalty, and trust
     private void CaptureData()
     {
         currentSave.currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
 
         if (EconomyManager.Instance != null)
         {
-            currentSave.playerCash = EconomyManager.Instance.money; // Read money variable
+            currentSave.playerCash = EconomyManager.Instance.money;
+            currentSave.penalty = EconomyManager.Instance.punish;
+            currentSave.trust = EconomyManager.Instance.trust;
         }
     }
 
@@ -101,27 +108,27 @@ public class SaveManager : MonoBehaviour
             purhaceTicketForNasya = false,
             purhaceTicketForVirly = false,
             purhaceTicketForKraisa = false,
+            penalty = 0,
+            trust = 100,
         };
     }
 
-    #endregion
-
-    #region APPLY DATA
-
     // Applies loaded save data back to game objects
-    // Restores money to EconomyManager and day to GameManager
+    // Restores money, penalty, trust to EconomyManager and day to GameManager
     private void ApplyData()
     {
         if (currentSave == null) return;
 
         if (EconomyManager.Instance != null)
         {
-            EconomyManager.Instance.money = currentSave.playerCash; // Restore saved money
+            EconomyManager.Instance.money = currentSave.playerCash;
+            EconomyManager.Instance.punish = currentSave.penalty;
+            EconomyManager.Instance.trust = currentSave.trust;
         }
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.SetCurrentDay(currentSave.currentDay); // Restore saved day
+            GameManager.Instance.SetCurrentDay(currentSave.currentDay);
         }
     }
 
@@ -180,6 +187,6 @@ public class SaveManager : MonoBehaviour
     public string GetSaveStatus()
     {
         if (currentSave == null) return "No save data";
-        return $"Day: {currentSave.currentDay} | Cash: ${currentSave.playerCash} | Tickets: {currentSave.purchasedTickets}";
+        return $"Day: {currentSave.currentDay} | Cash: ${currentSave.playerCash} | Tickets: {currentSave.purchasedTickets} | Penalty: ${currentSave.penalty} | Trust: {currentSave.trust}%";
     }
 }

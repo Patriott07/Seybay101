@@ -48,6 +48,8 @@ public class NpcLuggageSequence : MonoBehaviour
 
     IEnumerator JalankanAdegan()
     {
+        AudioManager.Instance.PlaySfxNpcSpawn();
+
         // --- FASE A: NPC MUNCUL DARI JAUH ---
         float time = 0;
         // Vector3 skalaKecilNpc = npcKarakter.localScale;
@@ -72,7 +74,7 @@ public class NpcLuggageSequence : MonoBehaviour
         Vector3 skalaKecilKoper = koper.localScale;
 
         while (time < 1)
-        { 
+        {
             time += Time.deltaTime * kecepatanGeserKoper;
             koper.position = Vector3.Lerp(posisiAwalKoper, titikMejaKoper.position, time);
             koper.localScale = Vector3.Lerp(skalaKecilKoper, skalaAsliKoper, time);
@@ -80,10 +82,10 @@ public class NpcLuggageSequence : MonoBehaviour
         }
 
         // --- FASE C: BUKA KOPER ---
-        // yield return new WaitForSeconds(jedaSebelumBuka); 
+        // yield return new WaitForSeconds(jedaSebelumBuka);
 
         // 1. Koper animasi mengecil, ganti sprite, dan membesar
         // (Barang dan Doc akan otomatis dipanggil di dalam fungsi ini saat koper selesai membesar)
-        // scriptKoper.ToggleKoper();
+        scriptKoper.ToggleKoper();
     }
 }

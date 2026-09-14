@@ -34,6 +34,7 @@ public class DokumenKoperZoom : MonoBehaviour
     void OnMouseDown()
     {
         if (!bisaDiklik || sedangAnimasi) return;
+        AudioManager.Instance.PlaySfxPaper();
 
         isZoomed = !isZoomed;
         StartCoroutine(ProsesZoom(isZoomed));

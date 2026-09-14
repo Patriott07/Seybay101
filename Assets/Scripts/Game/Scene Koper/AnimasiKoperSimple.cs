@@ -70,6 +70,7 @@ public class AnimasiKoperSimple : MonoBehaviour
 
     IEnumerator ProsesTransisi2DPositionalBounce()
     {
+        // AudioManager.Instance.PlaySfxLuggageOpen();
         sedangAnimasi = true;
 
         if (isTerbuka && dokumenKoper != null)
@@ -79,14 +80,9 @@ public class AnimasiKoperSimple : MonoBehaviour
                 docZoom.bisaDiklik = false;
         }
 
-        // ← TAMBAHKAN INI: langsung set scale ke skalaAsli agar tidak terlihat 0
-        // transform.localScale = skalaAsli;
-
         Vector3 skalaMemantul = skalaAsli * multiplierBouncing;
-        // Titik tertinggi saat koper terangkat
         Vector3 posisiPuncak = posisiAsli + new Vector3(0, tinggiLompatan, 0);
 
-        // --- FASE 1: MELOMPAT NAIK (Terangkat dari meja) ---
         float time = 0;
         while (time < 1)
         {
@@ -96,7 +92,6 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE 2: MENGHEMPAS TURUN & MENGECIL (Terbanting ke meja) ---
         time = 0;
         while (time < 1)
         {
@@ -107,11 +102,9 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // Pastikan nempel di meja dengan skala 0
         objekKoperUtama.localScale = skalaKecil;
         objekKoperUtama.localPosition = posisiAsli;
 
-        // --- FASE 3: GANTI GAMBAR & MUNCULKAN ISI ---
         isTerbuka = !isTerbuka;
 
         if (koperTutup != null)
@@ -138,13 +131,13 @@ public class AnimasiKoperSimple : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlaySfxLuggageClose();
             if (containerBarang != null)
                 containerBarang.SetActive(false);
             if (dokumenKoper != null)
                 dokumenKoper.SetActive(false);
         }
 
-        // --- FASE 4: MEMBESAR & MELOMPAT NAIK ---
         time = 0;
         while (time < 1)
         {
@@ -155,7 +148,6 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE 5: JATUH KE MEJA (Settle) ---
         time = 0;
         while (time < 1)
         {
@@ -165,11 +157,9 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // Kunci posisi akhir agar pas di meja
         objekKoperUtama.localScale = skalaAsli;
         objekKoperUtama.localPosition = posisiAsli;
 
-        // --- SELESAI ---
         if (isTerbuka)
         {
             if (dokumenKoper != null)
