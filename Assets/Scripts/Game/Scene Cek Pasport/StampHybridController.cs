@@ -1,5 +1,7 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 public class StampHybridController : MonoBehaviour
 {
@@ -13,9 +15,10 @@ public class StampHybridController : MonoBehaviour
     public GameObject approveMarkPrefab;
     public GameObject rejectMarkPrefab;
     public float kecepatanAnimasi = 8f;
+    public Transform locationStamp;
 
     private Vector3 posisiAwal;
-    private Camera cam;
+    public Camera cam;
     private bool sedangDiproses = false;
 
     private SpriteRenderer spriteRenderer;
@@ -23,16 +26,28 @@ public class StampHybridController : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main;
+        // cam = Camera.main;
         posisiAwal = transform.position;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         layerAwal = spriteRenderer.sortingOrder;
     }
 
+    void OnEnable()
+    {
+        GameEvent.DeleteMarkTicket += DeleteMarkTicket;
+    }
+
+    void OnDisable()
+    {
+        GameEvent.DeleteMarkTicket -= DeleteMarkTicket;
+    }
+
     void OnMouseDrag()
     {
-        if (sedangDiproses) return;
+        // Debug.Log("DOWN");
+        if (sedangDiproses)
+            return;
         Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;
         transform.position = mousePos;
@@ -40,7 +55,8 @@ public class StampHybridController : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (sedangDiproses) return;
+        if (sedangDiproses)
+            return;
 
         Collider2D[] hits = Physics2D.OverlapPointAll(transform.position);
         bool dilepasDiZona = false;
@@ -68,67 +84,88 @@ public class StampHybridController : MonoBehaviour
     }
 
     IEnumerator SiklusAnimasiKeputusan(bool isApprove, Vector3 posisiZona)
+{
+    sedangDiproses = true;
+
+    transform.position = posisiZona;
+    scriptTiket.PaksaZoomIn();
+
+    yield return new WaitForSeconds(0.5f);
+
+    // 1. Gerakan awal dari tombol kembali ke posisiAwal (Lerp manual Anda)
+    float time = 0;
+    Vector3 titikDiTombol = transform.position;
+    while (time < 1)
     {
-        sedangDiproses = true;
+        time += Time.deltaTime * kecepatanAnimasi;
+        transform.position = Vector3.Lerp(titikDiTombol, posisiAwal, time);
+        yield return null;
+    }
 
-        transform.position = posisiZona;
-        scriptTiket.PaksaZoomIn();
+    yield return new WaitForSeconds(0.1f);
 
-        yield return new WaitForSeconds(0.8f);
+    // Ubah layer agar berada di atas kertas
+    spriteRenderer.sortingOrder = 60;
 
-        float time = 0;
-        Vector3 titikDiTombol = transform.position;
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanAnimasi;
-            transform.position = Vector3.Lerp(titikDiTombol, posisiAwal, time);
-            yield return null;
-        }
+    // Tentukan titik target stempel di atas kertas
+    Vector3 targetTerbang = locationStamp.position + new Vector3(0f, 0f, -1f);
+    Vector3 posisiAncangAncang = targetTerbang + new Vector3(0f, 1.5f, 0f);
+    
+    // Pindah ke posisi ancang-ancang di atas kertas
+    transform.position = posisiAncangAncang;
+    yield return new WaitForSeconds(0.1f);
 
-        yield return new WaitForSeconds(0.1f);
+    // 2. GERAKAN "SMASH" (Membanting ke bawah dengan DOTween)
+    yield return transform.DOMove(targetTerbang, 0.15f).SetEase(Ease.InQuad).WaitForCompletion();
 
-        spriteRenderer.sortingOrder = 60;
+    // --- 💥 EFEK IMPACT / HANTAMAN ---
+    // Efek penyok/membal kecil saat stempel menghantam kertas
+    transform.DOPunchScale(transform.localScale + new Vector3(0.3f, -0.3f, 0f), 0.15f, 10, 1);
 
-        time = 0;
-        Vector3 targetTerbang = scriptTiket.titikInspeksi.position + new Vector3(0f, 0f, -1f);
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanAnimasi;
-            transform.position = Vector3.Lerp(posisiAwal, targetTerbang, time);
-            yield return null;
-        }
+    // Munculkan Tinta Stempel
+    GameObject prefabTinta = isApprove ? approveMarkPrefab : rejectMarkPrefab;
+    GameObject cetakan = Instantiate(
+        prefabTinta,
+        locationStamp.position,
+        Quaternion.identity,
+        locationStamp
+    );
 
-        GameObject prefabTinta = isApprove ? approveMarkPrefab : rejectMarkPrefab;
-        GameObject cetakan = Instantiate(prefabTinta, scriptTiket.transform.position, Quaternion.identity, scriptTiket.transform);
+    cetakan.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+    cetakan.GetComponent<SpriteRenderer>().sortingOrder = 51;
+    
+    // Efek pop tinta muncul basah
+    // cetakan.transform.localScale = Vector3.zero;
+    // cetakan.transform.DOScale(1f, 0.1f).SetEase(Ease.OutBack);
 
-        cetakan.transform.localPosition = new Vector3(0f, 0f, -0.1f);
-        cetakan.GetComponent<SpriteRenderer>().sortingOrder = 51;
+    // Tahan sebentar di bawah
+    yield return new WaitForSeconds(0.4f);
 
-        yield return new WaitForSeconds(0.6f);
+    // 3. Tarik balik stempel ke posisi semula (Menggunakan DOTween agar mulus tanpa blink)
+    yield return transform.DOMove(posisiAwal, 0.25f).SetEase(Ease.OutQuad).WaitForCompletion();
 
-        time = 0;
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanAnimasi;
-            transform.position = Vector3.Lerp(targetTerbang, posisiAwal, time);
-            yield return null;
-        }
+    // Kembalikan layer sorting
+    spriteRenderer.sortingOrder = layerAwal;
 
-        spriteRenderer.sortingOrder = layerAwal;
+    yield return new WaitForSeconds(0.3f);
+    scriptTiket.PaksaZoomOut();
+    yield return new WaitForSeconds(0.5f);
 
-        scriptTiket.PaksaZoomOut();
-        yield return new WaitForSeconds(0.8f);
+    // --- Suruh NPC Pergi! ---
+    if (npcManager != null)
+    {
+        npcManager.UsirNpc(isApprove);
+    }
+    else
+    {
+        Debug.LogWarning("Kamu belum memasukkan Game Manager ke kolom Npc Manager di Inspector Stempel!");
+    }
 
-        // --- BARIS BARU: Suruh NPC Pergi! ---
-        if (npcManager != null)
-        {
-            npcManager.UsirNpc(isApprove);
-        }
-        else
-        {
-            Debug.LogWarning("Kamu belum memasukkan Game Manager ke kolom Npc Manager di Inspector Stempel!");
-        }
+    sedangDiproses = false;
+}
 
-        sedangDiproses = false;
+    void DeleteMarkTicket()
+    {
+        Destroy(locationStamp.GetChild(0).gameObject);
     }
 }

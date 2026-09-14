@@ -1,8 +1,14 @@
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
+using Schema.data;
 using UnityEngine;
 
 public class NpcEntranceManager : MonoBehaviour
 {
+    [Header("NPC setting")]
+    public Transform npcPosSpawn;
+
     [Header("Objek yang Digerakkan")]
     public Transform posisiNpc;
     public Transform dokumenKertas;
@@ -18,6 +24,7 @@ public class NpcEntranceManager : MonoBehaviour
     private Vector3 targetDokumen;
     private Vector3 targetTiket;
     private Vector3 skalaAsliNpc;
+    private Coroutine coroutineSpawnNpc;
 
     void Start()
     {
@@ -51,6 +58,29 @@ public class NpcEntranceManager : MonoBehaviour
     {
         // --- FASE A: NPC MUNCUL DARI BELAKANG ---
         float time = 0;
+
+        posisiNpc.localScale = skalaKecil;
+
+        // randomize doc passport
+        GameEvent.GenerateNewPassportData?.Invoke();
+
+        // randomize boarding pass (ticket appears when NPC hands over passport)
+        GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
+
+        // randomize look NPC
+        GameEvent.GenerateNewNPCView?.Invoke();
+
+
+        // Paksa posisinya kembali tepat ke titik spawn GameObject 'npcPosSpawn' di dunia nyata
+        if (npcPosSpawn != null)
+        {
+            posisiNpc.position = npcPosSpawn.position;
+        }
+        else
+        {
+            posisiNpc.localPosition = Vector3.zero; // Cadangan jika spawner kosong
+        }
+
         while (time < 1)
         {
             time += Time.deltaTime * kecepatanMasuk;
@@ -61,8 +91,21 @@ public class NpcEntranceManager : MonoBehaviour
         yield return new WaitForSeconds(waktuTungguSodor);
 
         // --- FASE B: MENYODORKAN KERTAS KE MEJA ---
-        dokumenKertas.position = new Vector3(posisiNpc.position.x, posisiNpc.position.y, targetDokumen.z);
-        objekTiket.position = new Vector3(posisiNpc.position.x, posisiNpc.position.y, targetTiket.z);
+
+        // 1. Posisikan kertas di titik tengah NPC
+        dokumenKertas.DOScale(new Vector3(2, 2f, 1), 0.8f);
+        dokumenKertas.position = new Vector3(
+            posisiNpc.position.x,
+            posisiNpc.position.y,
+            targetDokumen.z
+        );
+
+        objekTiket.DOScale(new Vector3(1.5f, 1.4f, 1), 0.8f);
+        objekTiket.position = new Vector3(
+            posisiNpc.position.x,
+            posisiNpc.position.y,
+            targetTiket.z
+        );
 
         dokumenKertas.gameObject.SetActive(true);
         objekTiket.gameObject.SetActive(true);
@@ -94,38 +137,68 @@ public class NpcEntranceManager : MonoBehaviour
         PlayerPrefs.DeleteKey("KoperSudahDicek");
 
         PlayerPrefs.Save();
-
-        StartCoroutine(AnimasiNpcPergi(isApprove));
+        AnimasiNpcPergi(isApprove);
     }
 
-    IEnumerator AnimasiNpcPergi(bool isApprove)
+    void AnimasiNpcPergi(bool isApprove)
     {
-        float time = 0;
+        // float time = 0;
         Vector3 posisiAwalNpc = posisiNpc.position;
 
-        float arahX = isApprove ? jarakPergi : -jarakPergi;
-        Vector3 targetPergi = posisiAwalNpc + new Vector3(arahX, 0, 0);
+        dokumenKertas.DOMove(posisiAwalNpc, 0.8f);
+        dokumenKertas.DOScale(0, 0.6f);
 
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanPergi;
-            posisiNpc.position = Vector3.Lerp(posisiAwalNpc, targetPergi, time);
-            yield return null;
-        }
+        objekTiket.DOScale(0, 0.6f).SetDelay(0.4f);
 
-        Debug.Log("NPC sudah pergi dari layar!");
+        objekTiket
+            .DOMove(posisiAwalNpc, 0.8f)
+            .SetDelay(0.4f)
+            .OnComplete(() =>
+            {
+                float arahX = isApprove ? jarakPergi : -jarakPergi;
+                Vector3 targetPergi =
+                    posisiAwalNpc + new Vector3(isApprove ? arahX : arahX / 2, 0, 0);
 
-        // --- PANGGIL FUNGSI RANDOM NPC DI SINI ---
-        PanggilNpcBaru();
+                // while (time < 1)
+                // {
+                //     time += Time.deltaTime * kecepatanPergi;
+                //     posisiNpc.position = Vector3.Lerp(posisiAwalNpc, targetPergi, time);
+                //     yield return null;
+                // }
+
+                GameEvent.DeleteMarkTicket?.Invoke();
+
+                posisiNpc.DOMove(targetPergi, isApprove ? kecepatanPergi : kecepatanPergi / 2);
+                if (GameManager.Instance.isCanSpawnNpc)
+                    coroutineSpawnNpc = StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
+                else
+                {
+                    StopCoroutine(coroutineSpawnNpc);
+                    GameManager.Instance.EndShiftAndLoadScene();
+                }
+                Debug.Log("NPC sudah pergi dari layar!");
+            });
     }
 
-    // --- WADAH FUNGSI UNTUK PROGRAMMER NPC ---
-    public void PanggilNpcBaru()
+    void OnEnable()
     {
-        Debug.Log("Menyiapkan NPC Acak Selanjutnya...");
+        GameEvent.SpawnNPCOnStartDay += CallSpawnAnotherNPC;
+    }
 
-        // TEMPAT KERJA TEMANMU:
-        // Masukkan logika merandom sprite, mereset data identitas, dll di dalam fungsi ini.
-        // Setelah diacak, panggil kembali Scene/Animasi Masuk.
+    void OnDisable()
+    {
+        GameEvent.SpawnNPCOnStartDay -= CallSpawnAnotherNPC;
+    }
+
+    void CallSpawnAnotherNPC(float d)
+    {
+        StartCoroutine(SpawnAnotherNPC(d));
+    }
+
+    IEnumerator SpawnAnotherNPC(float d)
+    {
+        yield return new WaitForSeconds(d);
+        Vector3 skalaKecil = skalaAsliNpc * 0.1f;
+        StartCoroutine(AdeganNpcMasuk(skalaKecil));
     }
 }

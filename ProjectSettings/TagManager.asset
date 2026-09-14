@@ -4,8 +4,10 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Desk
   - ZoneYes
   - ZoneNo
+  - Billboard
   layers:
   - Default
   - TransparentFX
@@ -13,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Identity
   - 
   - 
   - 
@@ -40,8 +42,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Bg
+    uniqueID: 275797837
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: UI
+    uniqueID: 3911463017
+    locked: 0
   m_RenderingLayers:
   - Default
+  - Identity
