@@ -11,9 +11,7 @@ public class LuggageItem : MonoBehaviour
     private bool sedangAnimasiPulang = false;
     private bool isHovered = false;
 
-    // --- KUNCI PERBAIKAN DRAG: Menyimpan selisih jarak klik ---
     private Vector3 offsetDrag;
-
     private Camera cam;
     private SpriteRenderer spriteRenderer;
     private int layerAwal;
@@ -24,8 +22,22 @@ public class LuggageItem : MonoBehaviour
     {
         cam = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // --- KUNCI PERBAIKAN: Sinkronisasi Fisika dan Visual (Tanpa Bug) ---
+        // Kita ambil urutan spawn barang ini di dalam koper
+        int urutanTumpukan = transform.GetSiblingIndex();
+
+        // 1. Jadikan urutan tersebut sebagai layer visual (yang belakangan spawn = di atas)
+        spriteRenderer.sortingOrder = urutanTumpukan;
         layerAwal = spriteRenderer.sortingOrder;
 
+        // 2. Majukan sumbu Z-nya sedikit demi sedikit ke arah kamera.
+        // Ini memaksa sistem klik fisik Unity percaya bahwa barang ini benar-benar ada di depan.
+        Vector3 posLokal = transform.localPosition;
+        posLokal.z = urutanTumpukan * -0.01f;
+        transform.localPosition = posLokal;
+
+        // Simpan posisi amannya
         posisiAwalKoperLokal = transform.localPosition;
         manager = FindObjectOfType<LuggageManager>();
     }
@@ -40,6 +52,7 @@ public class LuggageItem : MonoBehaviour
                 {
                     sedangDigeser = false;
                     if (manager != null) manager.SembunyikanInfoBarang();
+                    KembalikanPosisiZ(); // Reset kedalaman Z jika klik kanan di udara
                 }
                 StartCoroutine(PulangKeKoper());
             }
@@ -56,15 +69,28 @@ public class LuggageItem : MonoBehaviour
         isHovered = false;
     }
 
+    private Vector3 DapatkanPosisiMouse()
+    {
+        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
+        titikMouse.z = transform.position.z;
+        return titikMouse;
+    }
+
     void OnMouseDown()
     {
         if (sedangAnimasiPulang) return;
         sedangDigeser = true;
-        spriteRenderer.sortingOrder = 100;
 
-        // --- HITUNG OFFSET SAAT PERTAMA KALI DIKLIK ---
-        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
-        offsetDrag = transform.position - titikMouse;
+        // Naikkan layer gambar ke paling depan saat dipegang
+        spriteRenderer.sortingOrder = layerAwal + 1000;
+
+        // Tarik fisik barang ke paling depan kamera (Z = -5) agar tidak menyangkut barang lain
+        Vector3 tempPos = transform.position;
+        tempPos.z = -5f;
+        transform.position = tempPos;
+
+        // Hitung selisih jarak penjepit (Offset) akurat
+        offsetDrag = transform.position - DapatkanPosisiMouse();
 
         if (manager != null)
         {
@@ -74,19 +100,18 @@ public class LuggageItem : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (sedangAnimasiPulang) return;
-
-        // --- TERAPKAN OFFSET SAAT BARANG DISERET ---
-        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
-
-        // Posisi barang sekarang = Posisi Mouse + Selisih jarak klik awal
-        transform.position = new Vector3(titikMouse.x + offsetDrag.x, titikMouse.y + offsetDrag.y, transform.position.z);
+        if (sedangAnimasiPulang || !sedangDigeser) return;
+        transform.position = DapatkanPosisiMouse() + offsetDrag;
     }
 
     void OnMouseUp()
     {
+        if (!sedangDigeser) return;
         sedangDigeser = false;
+
+        // Kembalikan gambar ke tumpukan semula
         spriteRenderer.sortingOrder = layerAwal;
+        KembalikanPosisiZ(); // Kembalikan fisik ke tumpukan semula
 
         if (manager != null)
         {
@@ -94,10 +119,19 @@ public class LuggageItem : MonoBehaviour
         }
     }
 
+    // Fungsi pembantu untuk mengembalikan kedalaman Z barang
+    private void KembalikanPosisiZ()
+    {
+        Vector3 tempPos = transform.localPosition;
+        tempPos.z = posisiAwalKoperLokal.z;
+        transform.localPosition = tempPos;
+    }
+
     IEnumerator PulangKeKoper()
     {
         sedangAnimasiPulang = true;
         isHovered = false;
+        sedangDigeser = false;
 
         float time = 0;
         Vector3 posisiSekarang = transform.localPosition;

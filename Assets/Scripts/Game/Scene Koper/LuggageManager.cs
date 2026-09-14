@@ -15,8 +15,10 @@ public class LuggageManager : MonoBehaviour
     public TextMeshProUGUI textAturanBerat;
     public GameObject containerBarang;
 
-    [Header("Pengaturan Pindah Scene")]
-    public string namaSceneSelanjutnya = "NamaSceneBerikutnya";
+    [Header("Navigasi Meja (Canvas/UI Panel)")]
+    public GameObject panelKoper;
+    public GameObject panelDoc; // Kosongin aja di inspector
+    public GameObject panelPaspor;
 
     [Header("Database Barang (Prefabs)")]
     public List<GameObject> prefabBarangLegal;
@@ -27,35 +29,32 @@ public class LuggageManager : MonoBehaviour
 
     private float totalBerat = 0f;
     private List<LuggageItem> barangAktif = new List<LuggageItem>();
+    private bool isEvaluating = false;
 
     void Start()
     {
         SembunyikanInfoBarang();
+
+        // 1. PENTING: Panel Doc HARUS dinyalakan dari awal! 
+        // Jika dimatikan, script MenuManager.cs akan ikut mati dan tombol TAB tidak akan berfungsi.
+        if (panelDoc != null) panelDoc.SetActive(true);
+
+        // 2. Pastikan mulai dari layar Paspor
+        KeScenePaspor();
     }
 
-    // --- FITUR BARU: Mengecek berat koper secara real-time setiap frame ---
     void Update()
     {
-        if (barangAktif.Count > 0)
-        {
-            HitungBeratRealtime();
-        }
+        if (barangAktif.Count > 0) HitungBeratRealtime();
     }
 
     private void HitungBeratRealtime()
     {
         float beratSekarang = 0f;
-
         foreach (LuggageItem item in barangAktif)
         {
-            // Cek ke script LuggageItem: Apakah barang ini masih valid di dalam koper?
-            if (item != null && item.ApakahDiDalamKoper())
-            {
-                beratSekarang += item.dataBarang.itemWeight;
-            }
+            if (item != null && item.ApakahDiDalamKoper()) beratSekarang += item.dataBarang.itemWeight;
         }
-
-        // Cek jika ada perubahan berat (menggunakan threshold kecil agar tidak update UI sia-sia)
         if (Mathf.Abs(totalBerat - beratSekarang) > 0.01f)
         {
             totalBerat = beratSekarang;
@@ -63,14 +62,48 @@ public class LuggageManager : MonoBehaviour
         }
     }
 
+    // --- SOLUSI FINAL: Navigasi yang Akur ---
+    public void KeSceneKoper()
+    {
+        if (panelKoper != null) panelKoper.SetActive(true);
+        if (panelPaspor != null) panelPaspor.SetActive(false);
+    }
+
+    public void KeScenePaspor()
+    {
+        if (panelKoper != null) panelKoper.SetActive(false);
+        if (panelPaspor != null) panelPaspor.SetActive(true);
+    }
+    // --------------------------------------------------
+
+    public void PanggilNextNPC()
+    {
+        if (isEvaluating) return;
+        StartCoroutine(RutinitasNextNPC());
+    }
+
+    private IEnumerator RutinitasNextNPC()
+    {
+        isEvaluating = true;
+
+        bool bawaBarangIlegal = false;
+        yield return StartCoroutine(ProsesEvaluasiDanAnimasiKeluar(result => bawaBarangIlegal = result));
+
+        NpcLuggageSequence sutradara = FindObjectOfType<NpcLuggageSequence>();
+
+        if (sutradara != null)
+        {
+            yield return StartCoroutine(sutradara.NPCKeluar(bawaBarangIlegal, this));
+        }
+
+        isEvaluating = false;
+    }
+
     public void GenerateBarangNPC()
     {
         foreach (Transform child in containerBarang.transform)
         {
-            if (child.GetComponent<LuggageItem>() != null)
-            {
-                Destroy(child.gameObject);
-            }
+            if (child.GetComponent<LuggageItem>() != null) Destroy(child.gameObject);
         }
 
         totalBerat = 0f;
@@ -79,27 +112,19 @@ public class LuggageManager : MonoBehaviour
         if (aturanHariIni == null || areaSpawn == null) return;
 
         List<GameObject> barangDiSpawn = new List<GameObject>();
-
         int totalBarang = Random.Range(aturanHariIni.minJumlahBarang, aturanHariIni.maxJumlahBarang + 1);
         int jumlahTerlarang = 0;
 
         if (Random.Range(0f, 100f) <= aturanHariIni.peluangBarangTerlarang)
-        {
             jumlahTerlarang = Random.Range(1, aturanHariIni.maxBarangTerlarang + 1);
-        }
 
         int jumlahLegal = totalBarang - jumlahTerlarang;
 
         for (int i = 0; i < jumlahLegal; i++)
-        {
-            if (prefabBarangLegal.Count > 0)
-                barangDiSpawn.Add(prefabBarangLegal[Random.Range(0, prefabBarangLegal.Count)]);
-        }
+            if (prefabBarangLegal.Count > 0) barangDiSpawn.Add(prefabBarangLegal[Random.Range(0, prefabBarangLegal.Count)]);
+
         for (int i = 0; i < jumlahTerlarang; i++)
-        {
-            if (prefabBarangTerlarang.Count > 0)
-                barangDiSpawn.Add(prefabBarangTerlarang[Random.Range(0, prefabBarangTerlarang.Count)]);
-        }
+            if (prefabBarangTerlarang.Count > 0) barangDiSpawn.Add(prefabBarangTerlarang[Random.Range(0, prefabBarangTerlarang.Count)]);
 
         for (int i = 0; i < barangDiSpawn.Count; i++)
         {
@@ -116,62 +141,30 @@ public class LuggageManager : MonoBehaviour
         for (int i = 0; i < barangDiSpawn.Count; i++)
         {
             GameObject barangBaru = Instantiate(barangDiSpawn[i], containerBarang.transform);
-
             float randomX = Random.Range(-ukuranZona.x / 2f, ukuranZona.x / 2f) + offsetZona.x;
             float randomY = Random.Range(-ukuranZona.y / 2f, ukuranZona.y / 2f) + offsetZona.y;
 
             barangBaru.transform.localPosition = posisiZonaLokal + new Vector3(randomX, randomY, 0f);
-
-            // --- DIPERBAIKI: Barang di-spawn secara tegak lurus (tidak miring) ---
             barangBaru.transform.localRotation = Quaternion.identity;
 
             LuggageItem itemScript = barangBaru.GetComponent<LuggageItem>();
-            if (itemScript != null)
-            {
-                // HAPUS penambahan totalBerat di sini, karena sekarang diurus otomatis oleh HitungBeratRealtime()
-                barangAktif.Add(itemScript);
-            }
+            if (itemScript != null) barangAktif.Add(itemScript);
         }
     }
 
     public void UpdateUIBerat()
     {
-        if (aturanHariIni != null && aturanHariIni.gunakanBatasBerat && totalBerat > aturanHariIni.batasBeratMaksimal)
-        {
-            // Teks menjadi merah jika koper kelebihan muatan (Overweight)
-            textBeratKoper.color = Color.red;
-        }
-        else
-        {
-            textBeratKoper.color = Color.white;
-        }
-
+        textBeratKoper.color = (aturanHariIni != null && aturanHariIni.gunakanBatasBerat && totalBerat > aturanHariIni.batasBeratMaksimal) ? Color.red : Color.white;
         textBeratKoper.text = "Berat: " + totalBerat.ToString("F1") + " kg";
     }
 
-    public void ToggleModeKoper(bool isModeKoperAktif)
-    {
-        containerBarang.SetActive(isModeKoperAktif);
-    }
+    public void SembunyikanInfoBarang() { if (textInfoBarang != null) textInfoBarang.text = ""; }
+    public void TampilkanInfoBarang(string nama, float berat) { if (textInfoBarang != null) textInfoBarang.text = nama + " (" + berat.ToString("F1") + " kg)"; }
 
-    public void TampilkanInfoBarang(string nama, float berat)
-    {
-        if (textInfoBarang != null) textInfoBarang.text = nama + " (" + berat.ToString("F1") + " kg)";
-    }
-
-    public void SembunyikanInfoBarang()
-    {
-        if (textInfoBarang != null) textInfoBarang.text = "";
-    }
-
-    public void EvaluasiInspeksi()
-    {
-        StartCoroutine(ProsesEvaluasiDanAnimasiKeluar());
-    }
-
-    private IEnumerator ProsesEvaluasiDanAnimasiKeluar()
+    private IEnumerator ProsesEvaluasiDanAnimasiKeluar(System.Action<bool> callbackBawaIlegal)
     {
         List<LuggageItem> itemDisitaBenar = new List<LuggageItem>();
+        bool adaIlegal = false;
 
         foreach (LuggageItem item in barangAktif)
         {
@@ -185,54 +178,38 @@ public class LuggageManager : MonoBehaviour
                 isIlegal = true;
             }
 
+            if (isIlegal) adaIlegal = true;
+
             if (diAtasMeja)
             {
                 if (isIlegal)
                 {
-                    if (EconomyManager.Instance != null)
-                    {
-                        EconomyManager.Instance.TambahTrust();
-                        EconomyManager.Instance.TambahUang();
-                    }
+                    if (EconomyManager.Instance != null) { EconomyManager.Instance.TambahTrust(); EconomyManager.Instance.TambahUang(); }
                     itemDisitaBenar.Add(item);
                 }
                 else
                 {
-                    if (EconomyManager.Instance != null)
-                    {
-                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustSalahSita);
-                        EconomyManager.Instance.KurangiUang();
-                    }
+                    if (EconomyManager.Instance != null) { EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustSalahSita); EconomyManager.Instance.KurangiUang(); }
                 }
             }
             else
             {
                 if (isIlegal)
                 {
-                    if (EconomyManager.Instance != null)
-                    {
-                        EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustLolos);
-                        EconomyManager.Instance.KurangiUang();
-                    }
+                    if (EconomyManager.Instance != null) { EconomyManager.Instance.KurangiTrust(EconomyManager.Instance.penaltyTrustLolos); EconomyManager.Instance.KurangiUang(); }
                 }
             }
         }
+
+        callbackBawaIlegal(adaIlegal);
 
         if (itemDisitaBenar.Count > 0)
         {
             foreach (LuggageItem item in itemDisitaBenar)
             {
-                if (item != null)
-                {
-                    StartCoroutine(item.AnimasiKeluar());
-                }
+                if (item != null) StartCoroutine(item.AnimasiKeluar());
             }
             yield return new WaitForSeconds(0.5f);
-        }
-
-        if (!string.IsNullOrEmpty(namaSceneSelanjutnya))
-        {
-            SceneManager.LoadScene(namaSceneSelanjutnya);
         }
     }
 }
