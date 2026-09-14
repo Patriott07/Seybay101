@@ -24,14 +24,25 @@ public class NpcLuggageSequence : MonoBehaviour
     void Start()
     {
         skalaAsliNpc = npcKarakter.localScale;
-        skalaAsliKoper = koper.localScale;
+        skalaAsliKoper = new Vector3(0.80555f, 0.80555f, 0.80555f);
 
         // Sembunyikan koper sebelum NPC datang
         koper.gameObject.SetActive(false);
+    }
 
-        // Siapkan ukuran NPC kecil (jauh)
-        npcKarakter.localScale = skalaAsliNpc * 0.1f;
+    void OnEnable()
+    {
+        GameEvent.OnKoperIsEnable += StartAnim;
+    }
 
+    void OnDisable()
+    {
+        GameEvent.OnKoperIsEnable -= StartAnim;
+        
+    }
+
+    void StartAnim()
+    {
         StartCoroutine(JalankanAdegan());
     }
 
@@ -39,17 +50,17 @@ public class NpcLuggageSequence : MonoBehaviour
     {
         // --- FASE A: NPC MUNCUL DARI JAUH ---
         float time = 0;
-        Vector3 skalaKecilNpc = npcKarakter.localScale;
+        // Vector3 skalaKecilNpc = npcKarakter.localScale;
 
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanMasuk;
-            npcKarakter.localScale = Vector3.Lerp(skalaKecilNpc, skalaAsliNpc, time);
-            yield return null;
-        }
+        // while (time < 1)
+        // {
+        //     time += Time.deltaTime * kecepatanMasuk;
+        //     npcKarakter.localScale = Vector3.Lerp(skalaKecilNpc, skalaAsliNpc, time);
+        //     yield return null;
+        // }
 
         // Jeda sejenak setelah NPC sampai di loket
-        yield return new WaitForSeconds(0.5f);
+        // yield return new WaitForSeconds(0.5f);
 
         // --- FASE B: MENGELUARKAN KOPER KE MEJA ---
         koper.position = npcKarakter.position;
@@ -61,7 +72,7 @@ public class NpcLuggageSequence : MonoBehaviour
         Vector3 skalaKecilKoper = koper.localScale;
 
         while (time < 1)
-        {
+        { 
             time += Time.deltaTime * kecepatanGeserKoper;
             koper.position = Vector3.Lerp(posisiAwalKoper, titikMejaKoper.position, time);
             koper.localScale = Vector3.Lerp(skalaKecilKoper, skalaAsliKoper, time);
@@ -69,10 +80,10 @@ public class NpcLuggageSequence : MonoBehaviour
         }
 
         // --- FASE C: BUKA KOPER ---
-        yield return new WaitForSeconds(jedaSebelumBuka);
+        // yield return new WaitForSeconds(jedaSebelumBuka); 
 
         // 1. Koper animasi mengecil, ganti sprite, dan membesar
         // (Barang dan Doc akan otomatis dipanggil di dalam fungsi ini saat koper selesai membesar)
-        scriptKoper.ToggleKoper();
+        // scriptKoper.ToggleKoper();
     }
 }

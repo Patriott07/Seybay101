@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,7 @@ namespace Schema.data
         public bool sameOwnerPhoto; // keknya perlu dimofikasi (lebih ke isSamePhotoPerson)
         public string sex;
         public string bodOwner;
-        public string expiryDate; // Format: DD-MM-YYYY
+        public DateTime expiryDate; // Format: DD-MM-YYYY
         public string hexaCardColor; // #FF0000 tiap negara punya hexa card masing-masing
         public string countryName; // asal negara
         public string districtHome; // kota rumah
@@ -54,7 +55,7 @@ namespace Schema.data
         public string seat;
         public string passengerName; // namanya sesuai ga sama passport
         public string idPassengerCard; // nomer document pada boarding ticket
-        public string departureDate; // tanggal keberangkatan
+        public DateTime departureDate; // tanggal keberangkatan
 
         // Kelas penerbangan
         public SeatClass seatClass;

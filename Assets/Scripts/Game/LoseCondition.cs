@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LoseCondition : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class LoseCondition : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -39,20 +40,14 @@ public class LoseCondition : MonoBehaviour
             loseCanvasGroup.blocksRaycasts = false;
             loseCanvasGroup.interactable = false;
         }
-
-       
-
     }
 
-    public void CheckLoseCondition()
+    public void CheckLoseCondition(int currentTrust)
     {
-        if (isLoseTriggered) return;
-        if (EconomyManager.Instance == null) return;
-
-        int currentTrust = EconomyManager.Instance.trust;
         if (currentTrust <= 0)
         {
-            TriggerLose();
+            // TriggerLose();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

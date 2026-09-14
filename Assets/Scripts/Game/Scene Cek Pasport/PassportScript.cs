@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Schema.data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(-100)]
 public class PassportScript : MonoBehaviour
 {
     public static PassportScript Instance;
@@ -16,7 +18,8 @@ public class PassportScript : MonoBehaviour
         textSex,
         textBod;
 
-    public GameObject realImagePass, fakeImagePass;
+    public GameObject realImagePass,
+        fakeImagePass;
 
     [Header("Database")]
     public List<NamePool> dataName;
@@ -24,16 +27,18 @@ public class PassportScript : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
-    void UpdateViewPassword(PassportSchema data)
+    public void UpdateViewPassport(PassportSchema data)
     {
         textID.text = data.documentNumber;
         textName.text = data.ownerName;
         textCountry.text = data.countryName;
-        textExp.text = data.expiryDate;
+        textExp.text = data.expiryDate.ToString("dd/MM/yyyy");
         textSex.text = data.sex;
         textBod.text = data.bodOwner;
     }
@@ -59,20 +64,18 @@ public class PassportScript : MonoBehaviour
         Passdata.bodOwner = GenerateBodOwner();
 
         currentData = Passdata;
-        UpdateViewPassword(Passdata);
-
-        int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
-        ViolationSystem.ApplyViolationsToPassport(currentData, currentDay);
+        
+        UpdateViewPassport(currentData);
     }
 
-    string GenerateID()
+    public string GenerateID()
     {
-        return "ART0" + Random.Range(1111, 9999);
+        return "ART0" + UnityEngine.Random.Range(1111, 9999);
     }
 
     string GenerateSex()
     {
-        if (Random.Range(1, 5) > 2.5)
+        if (UnityEngine.Random.Range(1, 5) > 2.5)
         {
             GameEvent.OnSetGander?.Invoke(Gender.Woman);
             return "F";
@@ -86,39 +89,45 @@ public class PassportScript : MonoBehaviour
 
     string GenerateBodOwner()
     {
-        string day = Random.Range(1, 31).ToString();
-        string month = Random.Range(1, 12).ToString();
+        string day = UnityEngine.Random.Range(1, 31).ToString();
+        string month = UnityEngine.Random.Range(1, 12).ToString();
 
-        int age = Random.Range(19, 54);
+        int age = UnityEngine.Random.Range(19, 54);
         return day + "/" + month + "/" + (2045 - age).ToString();
     }
 
-    string GenerateExpireDate()
+  
+    DateTime GenerateExpireDate()
     {
-        bool isValid = Random.Range(1, 5) > 2.5 ? true : false;
+        
+        // bool isValid = UnityEngine.Random.Range(1, 5) > 2.5 ? true : false;
 
-        string day = Random.Range(1, 31).ToString();
-        string month = Random.Range(1, 12).ToString();
+        int day = UnityEngine.Random.Range(1, 31);
+        int month = UnityEngine.Random.Range(1, 12);
+        return new DateTime(UnityEngine.Random.Range(2046, 2066), month, day);
 
-        if (isValid)
-            return day + "/" + month + "/" + Random.Range(2046, 2066).ToString();
-        else
-            return day + "/" + month + "/" + Random.Range(1960, 2044).ToString();
+        // if (isValid)
+        // else
+        //     return new DateTime(UnityEngine.Random.Range(1960, 2044), month, day);
     }
 
-    string GenerateOwnerName(bool isFemale)
+    public string GenerateOwnerName(bool isFemale)
     {
         if (isFemale)
         {
-            return dataName[0].femaleNames[Random.Range(0, dataName[0].femaleNames.Count)]
+            return dataName[0].femaleNames[
+                    UnityEngine.Random.Range(0, dataName[0].femaleNames.Count)
+                ]
                 + " "
-                + dataName[0].femaleNames[Random.Range(0, dataName[0].femaleNames.Count)];
+                + dataName[0].femaleNames[
+                    UnityEngine.Random.Range(0, dataName[0].femaleNames.Count)
+                ];
         }
         else
         {
-            return dataName[0].maleNames[Random.Range(0, dataName[0].maleNames.Count)]
+            return dataName[0].maleNames[UnityEngine.Random.Range(0, dataName[0].maleNames.Count)]
                 + " "
-                + dataName[0].maleNames[Random.Range(0, dataName[0].maleNames.Count)];
+                + dataName[0].maleNames[UnityEngine.Random.Range(0, dataName[0].maleNames.Count)];
         }
     }
 }

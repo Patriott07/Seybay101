@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using Schema.data;
+using NUnit.Framework;
 
 public class ProceduralFace : MonoBehaviour
 {
@@ -40,6 +41,15 @@ public class ProceduralFace : MonoBehaviour
 
     public Gender currentGender;
     private FaceContainer currentFace;
+    
+    [Header("Helper Passport visual")]
+    [SerializeField] private bool _isPersonReal;
+    public SpriteRenderer baseFaceRendererPhoto;
+    public SpriteRenderer hairRendererPhoto;
+    public SpriteRenderer eyesRendererPhoto;
+    public SpriteRenderer noseRendererPhoto;
+    public SpriteRenderer mouthRendererPhoto;
+
 
     void Start()
     {
@@ -64,15 +74,21 @@ public class ProceduralFace : MonoBehaviour
     {
         if (baseFaceRenderer != null)
             baseFaceRenderer.color = RandomSkinTone();
+        if(_isPersonReal) baseFaceRendererPhoto.color = baseFaceRenderer.color;
 
         if (hairRenderer != null)
             hairRenderer.color = RandomHairColor();
+        if(_isPersonReal) hairRendererPhoto.color = hairRenderer.color;
 
         if (noseRenderer != null)
             noseRenderer.color = baseFaceRenderer.color;
+        if(_isPersonReal) noseRendererPhoto.color = noseRenderer.color;
+            
 
         if (mouthRenderer != null)
             mouthRenderer.color = RandomLipColor();   
+            
+        if(_isPersonReal) mouthRendererPhoto.color = mouthRenderer.color;
     }
 
     Color RandomSkinTone()
@@ -205,11 +221,20 @@ public class ProceduralFace : MonoBehaviour
         if (currentFace == null)
             return;
 
+        
+
         baseFaceRenderer.sprite = GetRandom(currentFace.baseFace);
+        if(_isPersonReal) baseFaceRendererPhoto.sprite = baseFaceRenderer.sprite;
         hairRenderer.sprite = GetRandom(currentFace.hair);
+        if(_isPersonReal) hairRendererPhoto.sprite = hairRenderer.sprite;
         eyesRenderer.sprite = GetRandom(currentFace.eyes);
+        if(_isPersonReal) eyesRendererPhoto.sprite = eyesRenderer.sprite;
         noseRenderer.sprite = GetRandom(currentFace.nose);
+        if(_isPersonReal) noseRendererPhoto.sprite = noseRenderer.sprite;
         mouthRenderer.sprite = GetRandom(currentFace.mouth);
+        if(_isPersonReal) mouthRendererPhoto.sprite = mouthRenderer.sprite;
+
+
         // bodyClothesRenderer.sprite = GetRandom(currentFace.bodyClothes);
         // shoesRenderer.sprite = GetRandom(currentFace.shoes);
         // accessoriesRenderer.sprite = GetRandom(currentFace.accessories);

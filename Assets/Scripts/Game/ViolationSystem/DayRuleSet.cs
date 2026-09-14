@@ -33,7 +33,7 @@ public class Day1RuleSet : DayRuleSet
         {
             new ExpiredPassportViolation(),     // Rule 1: Passport expired check
             new InfoMismatchViolation(),          // Rule 2: Ticket & passport must match
-            new StandardViolation()               // Rule 3: Photo & validity standard
+            new TicketDateValid()               // Rule 3: Ticket Date valid
         };
     }
 }

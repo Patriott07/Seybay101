@@ -23,20 +23,19 @@ public class InspectableObject : MonoBehaviour
 
     Draggable draggableScript;
 
+    void Awake()
+    {
+        skalaAwal = transform.localScale;
+    }
+
     void Start()
     {
         draggableScript = GetComponent<Draggable>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        skalaAwal = transform.localScale;
         urutanLayerAwal = spriteRenderer.sortingOrder;
     }
 
     public bool GetIsInspect() => isInspected;
-
-    void Update()
-    {
-        // if(Input.GetMouseButtonDown(0)) OnMouseDown();
-    }
 
     void OnMouseDown()
     {

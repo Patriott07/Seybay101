@@ -108,8 +108,8 @@ MonoBehaviour:
     xrayMaskSprite: {fileID: 0}
     gridPosition: {x: 0, y: 0}
     isMetallic: 0
-    isOrganic: 1
-    isContraband: 0
+    isOrganic: 0
+    isContraband: 1
     itemWeight: 3
 --- !u!61 &914989059484478946
 BoxCollider2D:
@@ -145,7 +145,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.030016541, y: 0.03301823}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -155,5 +155,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.13, y: 0.62}
+  m_Size: {x: 1.442172, y: 0.890149}
   m_EdgeRadius: 0

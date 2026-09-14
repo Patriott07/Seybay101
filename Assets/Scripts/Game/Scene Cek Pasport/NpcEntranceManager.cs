@@ -40,17 +40,23 @@ public class NpcEntranceManager : MonoBehaviour
 
             dokumenKertas.gameObject.SetActive(true);
             objekTiket.gameObject.SetActive(true);
+
+            // Regenerate passport data so currentData is not null
+            GameEvent.GenerateNewPassportData?.Invoke();
+            GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
         }
         else
         {
             // JIKA NPC BARU DATANG:
-            Vector3 skalaKecil = skalaAsliNpc * 0.1f;
+            Vector3 skalaKecil = skalaAsliNpc * 0f;
             posisiNpc.localScale = skalaKecil;
 
-            dokumenKertas.gameObject.SetActive(false);
-            objekTiket.gameObject.SetActive(false);
+            dokumenKertas.localScale = Vector3.zero;
+            objekTiket.localScale = Vector3.zero;
+            // dokumenKertas.gameObject.SetActive(false);
+            // objekTiket.gameObject.SetActive(false);
 
-            StartCoroutine(AdeganNpcMasuk(skalaKecil));
+            StartCoroutine(SpawnAnotherNPC(0f));
         }
     }
 
@@ -58,8 +64,11 @@ public class NpcEntranceManager : MonoBehaviour
     {
         // --- FASE A: NPC MUNCUL DARI BELAKANG ---
         float time = 0;
+        // yield return new WaitForSeconds(2f);
 
-        posisiNpc.localScale = skalaKecil;
+        // posisiNpc.localScale = skalaKecil;
+
+        posisiNpc.localScale = Vector3.zero;
 
         // randomize doc passport
         GameEvent.GenerateNewPassportData?.Invoke();
@@ -70,6 +79,8 @@ public class NpcEntranceManager : MonoBehaviour
         // randomize look NPC
         GameEvent.GenerateNewNPCView?.Invoke();
 
+        // Apply Violation tileset to override property
+        GameManager.Instance.DoViolationGenerateSetup();
 
         // Paksa posisinya kembali tepat ke titik spawn GameObject 'npcPosSpawn' di dunia nyata
         if (npcPosSpawn != null)
@@ -109,6 +120,24 @@ public class NpcEntranceManager : MonoBehaviour
 
         dokumenKertas.gameObject.SetActive(true);
         objekTiket.gameObject.SetActive(true);
+
+
+        yield return new WaitForSeconds(0.3f);
+
+
+        // // randomize doc passport
+        // GameEvent.GenerateNewPassportData?.Invoke();
+
+        // // randomize boarding pass (ticket appears when NPC hands over passport)
+        // GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
+
+        // // randomize look NPC
+        // GameEvent.GenerateNewNPCView?.Invoke();
+
+        // // Apply Violation tileset to override property
+        // GameManager.Instance.DoViolationGenerateSetup();
+
+
 
         time = 0;
         Vector3 titikAwalDokumen = dokumenKertas.position;
@@ -169,6 +198,7 @@ public class NpcEntranceManager : MonoBehaviour
                 GameEvent.DeleteMarkTicket?.Invoke();
 
                 posisiNpc.DOMove(targetPergi, isApprove ? kecepatanPergi : kecepatanPergi / 2);
+                
                 if (GameManager.Instance.isCanSpawnNpc)
                     coroutineSpawnNpc = StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
                 else

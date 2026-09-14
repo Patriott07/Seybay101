@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Schema.data;
 using TMPro;
@@ -13,6 +14,7 @@ using UnityEngine;
 public class TicketScript : MonoBehaviour
 {
     [Header("UI References")]
+    public static TicketScript Instance;
     public TMP_Text textID; // passNumber
     public TMP_Text textName; // passengerName
     public TMP_Text textClassSeat; // seatClass (Economy/Business/FirstClass)
@@ -29,7 +31,12 @@ public class TicketScript : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         // Subscribe to boarding pass generation event
+    }
+
+    void OnEnable()
+    {
         GameEvent.GenerateNewBoardingPass += GenerateData;
     }
 
@@ -41,19 +48,19 @@ public class TicketScript : MonoBehaviour
     // Called when NPC arrives — generates boarding pass data
     public void GenerateData(PassportSchema passport)
     {
-        int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
-        bool isTicketValid = Random.Range(0f, 1f) > TICKET_INVALID_CHANCE;
-        bool isNameValid = Random.Range(0f, 1f) > TICKET_NAMEPASSEGER_INVALID_CHANCE;
+        // int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
+        // bool isTicketValid = UnityEngine.Random.Range(0f, 1f) > TICKET_INVALID_CHANCE;
+        // bool isNameValid = UnityEngine.Random.Range(0f, 1f) > TICKET_NAMEPASSEGER_INVALID_CHANCE;
 
         BoardingPassSchema ticketData = new BoardingPassSchema();
         
-        ticketData.passNumber = GeneratePassNumber(isTicketValid);
-        ticketData.passengerName = GeneratePassengerName(isNameValid, passport.ownerName);
+        ticketData.passNumber = GeneratePassNumber(true);
+        ticketData.passengerName = GeneratePassengerName(true, passport.ownerName);
         ticketData.seatClass = GenerateSeatClass();
         ticketData.seat = GenerateSeatNumber(ticketData.seatClass);
-        ticketData.idPassengerCard = GenerateIDCard(isTicketValid, passport.documentNumber);
-        ticketData.departureDate = GenerateDepartureDate(isTicketValid);
-        ticketData.isValid = isTicketValid;
+        ticketData.idPassengerCard = GenerateIDCard(true, passport.documentNumber);
+        ticketData.departureDate = GenerateDepartureDate(true);
+        ticketData.isValid = true;
         // ticketData.estimationTime = GenerateEstimationTime();
         ticketData.destination = "Seybay Outpost";
 
@@ -62,26 +69,26 @@ public class TicketScript : MonoBehaviour
     }
 
     // Updates all UI text fields with boarding pass data
-    private void UpdateView(BoardingPassSchema data)
+    public void UpdateView(BoardingPassSchema data)
     {
         textID.text = data.passNumber;
         textName.text = data.passengerName;
         textClassSeat.text = data.seatClass.ToString();
         textSeat.text = data.seat;
         textPassport.text = data.idPassengerCard;
-        textDate.text = data.departureDate;
+        textDate.text = data.departureDate.ToString("dd/MM/yyyy");
     }
 
     // Generates pass number — valid tickets have format "TKT-XXXX", invalid have "FAKE-XXXX"
     private string GeneratePassNumber(bool isValid)
     {
         if (isValid)
-            return "TKT-" + Random.Range(1000, 9999);
+            return "TKT-" + UnityEngine.Random.Range(1000, 9999);
         else
-            return "FAKE-" + Random.Range(1000, 9999);
+            return "FAKE-" + UnityEngine.Random.Range(1000, 9999);
     }
 
-    // Generates random passenger name
+    // Generates UnityEngine.Random passenger name
     private string GeneratePassengerName(bool isValid, string realname)
     {
         if (isValid)
@@ -89,18 +96,18 @@ public class TicketScript : MonoBehaviour
         else
         {
             var dataname = PassportScript.Instance.dataName[
-                Random.Range(0, PassportScript.Instance.dataName.Count)
+                UnityEngine.Random.Range(0, PassportScript.Instance.dataName.Count)
             ];
-            return Random.Range(0, 1f) > 0.5
-                ? dataname.maleNames[Random.Range(0, dataname.maleNames.Count)]
-                : dataname.femaleNames[Random.Range(0, dataname.femaleNames.Count)];
+            return UnityEngine.Random.Range(0, 1f) > 0.5
+                ? dataname.maleNames[UnityEngine.Random.Range(0, dataname.maleNames.Count)]
+                : dataname.femaleNames[UnityEngine.Random.Range(0, dataname.femaleNames.Count)];
         }
     }
 
-    // Random seat class
+    // UnityEngine.Random seat class
     private SeatClass GenerateSeatClass()
     {
-        return (SeatClass)Random.Range(0, 3);
+        return (SeatClass)UnityEngine.Random.Range(0, 3);
     }
 
     // Generates seat number based on class
@@ -110,7 +117,7 @@ public class TicketScript : MonoBehaviour
             seatClass == SeatClass.Economy ? "E"
             : seatClass == SeatClass.Business ? "B"
             : "F";
-        return prefix + Random.Range(1, 60).ToString("D2");
+        return prefix + UnityEngine.Random.Range(1, 60).ToString("D2");
     }
 
     // Generates ID card — valid tickets have "ID-XXXX", invalid have "ID-FAKE"
@@ -119,27 +126,32 @@ public class TicketScript : MonoBehaviour
         if (isValid)
             return idPassport;
         else
-            return "ID-" + Random.Range(1000, 9999);
-        // return "ID-FAKE-" + Random.Range(100, 999);
+            return "ID-" + UnityEngine.Random.Range(1000, 9999);
+        // return "ID-FAKE-" + UnityEngine.Random.Range(100, 999);
     }
 
     // Generates departure date — invalid tickets might have expired dates
-    private string GenerateDepartureDate(bool isValid)
+    private DateTime GenerateDepartureDate(bool isValid)
     {
-        string day = Random.Range(1, 31).ToString();
-        string month = Random.Range(1, 12).ToString();
+        int day = UnityEngine.Random.Range(1, 31);
+        int month = UnityEngine.Random.Range(1, 12);
 
-        if (isValid)
-            return day + "/" + month + "/2046";
+        // if (isValid)
+        //     return  day + "/" + month + "/2046";
+        // else
+        //     return day + "/" + month + "/" + UnityEngine.Random.Range(1960, 2044);
+         if (isValid)
+            return new DateTime(UnityEngine.Random.Range(2046, 2066), month, day);
         else
-            return day + "/" + month + "/" + Random.Range(1960, 2044);
+            return new DateTime(UnityEngine.Random.Range(1960, 2044), month, day);
+  
     }
 
     // Generates estimation time
     private string GenerateEstimationTime()
     {
         string[] times = { "2 Day", "48 Hours", "3 Day", "24 Hours" };
-        return times[Random.Range(0, times.Length)];
+        return times[UnityEngine.Random.Range(0, times.Length)];
     }
 
     // Returns whether current ticket is valid

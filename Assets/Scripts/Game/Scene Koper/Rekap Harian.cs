@@ -27,7 +27,7 @@ public class RekapHarianUI : MonoBehaviour
         if (textRekapTrust != null)
             textRekapTrust.text = "Tingkat Kepercayaan: " + sisaTrust + "%";
 
-        LoseCondition.Instance?.CheckLoseCondition();
+        // LoseCondition.Instance?.CheckLoseCondition();
     }
 
     public void TombolLanjutHariBaru()

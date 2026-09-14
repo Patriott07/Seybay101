@@ -11,4 +11,9 @@ public class GameEvent : MonoBehaviour
     public static Action GenerateNewPassportData;
     public static Action<PassportSchema> GenerateNewBoardingPass;
     public static Action<Gender> OnSetGander;
+
+
+    public static Action OnKoperIsEnable;
+    public static Action OnBillBoardInteract;
+    public static Action OnPassportModeCall;
 }

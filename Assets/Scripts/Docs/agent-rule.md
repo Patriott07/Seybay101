@@ -11,7 +11,9 @@ Always respect the 3-day Game Jam scope. Prioritize fast implementation, clear g
 5. Ikuti Naming Confension sesuai kesepakatan
 6. Pake Design Pattern yang udah dipilih
 7. Setiap fitur yang selesai coba bikin docs sederhana dengan format .md
-8. Satu fitur = satu script baru, jangan digabung jadi satu file
+8. Satu fitur = satu script baru, jangan digabung jadi satu file.
+9. beri nama file sesuai dengan fungsinya
+10. ketika melakukan perbaikan, buatkan todolist yang secara realtime saya bisa pantau.
 
 
 here more info : 

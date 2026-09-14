@@ -22,12 +22,14 @@ public class LuggageItem : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f); // abu-abu sedikit
+
+        cam = GameManager.Instance.mainCam;
         layerAwal = spriteRenderer.sortingOrder;
 
         posisiAwalKoperLokal = transform.localPosition;
-        manager = FindObjectOfType<LuggageManager>();
+        manager = LuggageManager.Instance;
     }
 
     void Update()
@@ -39,7 +41,7 @@ public class LuggageItem : MonoBehaviour
                 if (sedangDigeser)
                 {
                     sedangDigeser = false;
-                    if (manager != null) manager.SembunyikanInfoBarang();
+                    // if (manager != null) manager.SembunyikanInfoBarang();
                 }
                 StartCoroutine(PulangKeKoper());
             }
@@ -49,16 +51,20 @@ public class LuggageItem : MonoBehaviour
     void OnMouseEnter()
     {
         isHovered = true;
+        spriteRenderer.color = Color.white; // hover state
     }
 
     void OnMouseExit()
     {
         isHovered = false;
+        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f); // abu-abu sedikit
     }
 
     void OnMouseDown()
     {
-        if (sedangAnimasiPulang) return;
+        spriteRenderer.color = Color.white; // hover state
+        if (sedangAnimasiPulang)
+            return;
         sedangDigeser = true;
         spriteRenderer.sortingOrder = 100;
 
@@ -66,32 +72,37 @@ public class LuggageItem : MonoBehaviour
         Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
         offsetDrag = transform.position - titikMouse;
 
-        if (manager != null)
-        {
-            manager.TampilkanInfoBarang(dataBarang.itemName, dataBarang.itemWeight);
-        }
+        // if (manager != null)
+        // {
+        //     manager.TampilkanInfoBarang(dataBarang.itemName, dataBarang.itemWeight);
+        // }
     }
 
     void OnMouseDrag()
     {
-        if (sedangAnimasiPulang) return;
+        if (sedangAnimasiPulang)
+            return;
 
         // --- TERAPKAN OFFSET SAAT BARANG DISERET ---
         Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
 
         // Posisi barang sekarang = Posisi Mouse + Selisih jarak klik awal
-        transform.position = new Vector3(titikMouse.x + offsetDrag.x, titikMouse.y + offsetDrag.y, transform.position.z);
+        transform.position = new Vector3(
+            titikMouse.x + offsetDrag.x,
+            titikMouse.y + offsetDrag.y,
+            transform.position.z
+        );
     }
 
     void OnMouseUp()
     {
         sedangDigeser = false;
         spriteRenderer.sortingOrder = layerAwal;
-
-        if (manager != null)
-        {
-            manager.SembunyikanInfoBarang();
-        }
+        LuggageManager.Instance.HitungBeratRealtime();
+        // if (manager != null)
+        // {
+        //     manager.SembunyikanInfoBarang();
+        // }
     }
 
     IEnumerator PulangKeKoper()
@@ -125,10 +136,12 @@ public class LuggageItem : MonoBehaviour
 
     public bool ApakahDiDalamKoper()
     {
-        if (sedangDigeser) return false;
+        if (sedangDigeser)
+            return false;
 
         float jarak = Vector3.Distance(transform.position, GetPosisiAwal());
-        if (jarak > 1.5f) return false;
+        if (jarak > 1.5f)
+            return false;
 
         return true;
     }

@@ -7,6 +7,7 @@ public class EconomyManager : MonoBehaviour
 
     [Header("Pengaturan Nilai Awal (Harian)")]
     public int money = 1500;
+    public int punish = 0;
     public int trust = 100;
     public int maxTrustHarian = 100;
     public int batasWarningTrust = 30;
@@ -21,9 +22,9 @@ public class EconomyManager : MonoBehaviour
     public int penaltyUangSalah = 25;
 
     [Header("Referensi UI")]
-    public TextMeshProUGUI textUangHUD;
-    public TextMeshProUGUI textTrustHUD;
-    public TextMeshProUGUI textWarningTrust;
+    // public TextMeshProUGUI textUangHUD;
+    // public TextMeshProUGUI textTrustHUD;
+    // public TextMeshProUGUI textWarningTrust;
     public string pesanWarning = "PERINGATAN: Tingkat Kepercayaan Kritis! (< 30%)";
 
     private void Awake()
@@ -31,7 +32,7 @@ public class EconomyManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -44,14 +45,14 @@ public class EconomyManager : MonoBehaviour
     {
         ResetDataGame();
         LoadFromSave();
-        UpdateUI();
+        HUDManager.Instance.UpdateStat(trust);
     }
 
     public void ResetDataGame()
     {
-        money = 1500;
+        // money = 1500;
         trust = maxTrustHarian;
-        UpdateUI();
+        HUDManager.Instance.UpdateStat(trust);
         Debug.Log("[DEBUG] Data Uang & Trust berhasil di-reset ke nilai awal!");
     }
 
@@ -67,66 +68,69 @@ public class EconomyManager : MonoBehaviour
     {
         trust = maxTrustHarian;
         SaveManager.Instance?.SaveGame();
-        UpdateUI();
+        HUDManager.Instance.UpdateStat(trust);
         Debug.Log("Hari Baru Dimulai! Trust direset ke 100.");
     }
 
     public void TambahUang()
     {
         money += rewardUangBenar;
-        UpdateUI();
+        Debug.Log($"Current money : {money}");
+        HUDManager.Instance.UpdateStat(trust);
     }
 
-    public void KurangiUang()
+    public void KurangiUang(int count)
     {
-        money = Mathf.Max(0, money - penaltyUangSalah);
-        UpdateUI();
+        punish += count;
+        HUDManager.Instance.UpdateStat(trust);
+        Debug.Log($"Punishment money : {count}");
+        Debug.Log($"Current money : {money - punish}");
     }
 
-    public void TambahTrust()
+    public void TambahTrust(int jumlh)
     {
-        trust = Mathf.Clamp(trust + rewardTrustBenar, 0, maxTrustHarian);
-        UpdateUI();
-        CekWarningTrust();
-        LoseCondition.Instance?.CheckLoseCondition();
+        trust = Mathf.Clamp(trust + jumlh, 0, maxTrustHarian);
+        HUDManager.Instance.UpdateStat(trust);
+        
+        // LoseCondition.Instance?.CheckLoseCondition();
     }
 
     public void KurangiTrust(int jumlahPenalty)
     {
-        trust = Mathf.Clamp(trust - jumlahPenalty, 0, maxTrustHarian);
-        UpdateUI();
-        CekWarningTrust();
-        LoseCondition.Instance?.CheckLoseCondition();
+        trust -= jumlahPenalty;
+        HUDManager.Instance.UpdateStat(trust);
+        
+        LoseCondition.Instance?.CheckLoseCondition(trust);
     }
 
     public void ResetTrustToMax()
     {
         trust = maxTrustHarian;
-        UpdateUI();
-        CekWarningTrust();
+        HUDManager.Instance.UpdateStat(trust);
+        
         Debug.Log("Trust direset ke 100.");
     }
 
-    private void CekWarningTrust()
-    {
-        if (textWarningTrust != null)
-        {
-            if (trust <= batasWarningTrust)
-            {
-                textWarningTrust.text = pesanWarning;
-                textWarningTrust.gameObject.SetActive(true);
-            }
-            else
-            {
-                textWarningTrust.gameObject.SetActive(false);
-            }
-        }
-    }
+    // private void CekWarningTrust()
+    // {
+    //     if (textWarningTrust != null)
+    //     {
+    //         if (trust <= batasWarningTrust)
+    //         {
+    //             textWarningTrust.text = pesanWarning;
+    //             textWarningTrust.gameObject.SetActive(true);
+    //         }
+    //         else
+    //         {
+    //             textWarningTrust.gameObject.SetActive(false);
+    //         }
+    //     }
+    // }
 
-    public void UpdateUI()
-    {
-        if (textUangHUD != null) textUangHUD.text = "$" + money;
-        if (textTrustHUD != null) textTrustHUD.text = trust + "%";
-        CekWarningTrust();
-    }
+    // public void HUDManager.Instance.UpdateStat(trust)
+    // {
+    //     if (textUangHUD != null) textUangHUD.text = "$" + money;
+    //     if (textTrustHUD != null) textTrustHUD.text = trust + "%";
+    //     
+    // }
 }

@@ -1,6 +1,8 @@
+// using System;
 using System.Collections.Generic;
 using Schema.data;
 using UnityEngine;
+
 // =============================================
 // ABSTRACT BASE CLASS — All violation types inherit from this
 // =============================================
@@ -10,13 +12,15 @@ using UnityEngine;
 // =============================================
 public abstract class RuleViolation
 {
-    public string ruleID;       // Unique identifier for this violation type
-    public string title;        // Short title shown to player (e.g., "Expired Passport")
-    public string description;  // Longer description of what the violation means
+    public string ruleID; // Unique identifier for this violation type
+    public string title; // Short title shown to player (e.g., "Expired Passport")
+    public string description; // Longer description of what the violation means
 
     // Override in each subclass to define how the violation modifies the passport
-    public abstract void Apply(PassportSchema passport);
+    // public abstract void Apply(PassportSchema passport);
+    public abstract void Apply(PassportSchema passport, BoardingPassSchema ticket = null);
 
+    // public float chance = 0.2f;
     // Override in each subclass to return a detail string for display/reporting
     public abstract string GetViolationDetail(PassportSchema passport);
 }
@@ -36,12 +40,14 @@ public class ExpiredPassportViolation : RuleViolation
     }
 
     // Sets expiryDate to a random past date (pre-2044), making the passport expired
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
-        string day = Random.Range(1, 31).ToString();
-        string month = Random.Range(1, 12).ToString();
+        int day = Random.Range(1, 31);
+        int month = Random.Range(1, 12);
         int year = Random.Range(1960, 2044);
-        passport.expiryDate = day + "/" + month + "/" + year.ToString();
+        passport.expiryDate = new System.DateTime(year, month, day);
+
+        PassportScript.Instance.UpdateViewPassport(passport);
     }
 
     public override string GetViolationDetail(PassportSchema passport)
@@ -53,46 +59,69 @@ public class ExpiredPassportViolation : RuleViolation
 // Rule 2: Ticket and passport info don't match (country/district changed to invalid values)
 public class InfoMismatchViolation : RuleViolation
 {
+    // constructor
     public InfoMismatchViolation()
     {
         ruleID = "VIOL_MISMATCH_001";
-        title = "Info Mismatch";
+        title = "Info Mismatch ";
         description = "Informasi tiket dan passport tidak selaras";
     }
 
     // Sets countryName to "XXX" and districtHome to "Unknown District" — indicates mismatch
-    public override void Apply(PassportSchema passport)
+    //  public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
+    // {
+    //     // passport.countryName = "XXX";
+    //     // passport.districtHome = "Unknown District";
+    // }
+
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket)
     {
-        passport.countryName = "XXX";
-        passport.districtHome = "Unknown District";
+        if (ticket == null) return;
+        if (Random.Range(0f, 1f) <= 0.5f)
+            ticket.passengerName = PassportScript.Instance.GenerateOwnerName(
+                passport.sex == "F" ? true : false
+            );
+        else
+            ticket.passNumber = PassportScript.Instance.GenerateID();
+
+        TicketScript.Instance.UpdateView(ticket);
     }
 
     public override string GetViolationDetail(PassportSchema passport)
     {
-        return title + " — Country: " + passport.countryName + ", District: " + passport.districtHome;
+        return "";
     }
 }
 
 // Rule 3: Passport doesn't meet standards (photo mismatch + invalid document)
-public class StandardViolation : RuleViolation
+public class TicketDateValid : RuleViolation
 {
-    public StandardViolation()
+    public TicketDateValid()
     {
         ruleID = "VIOL_STD_001";
-        title = "Standard Violation";
+        title = "Ticket Date is not valid";
         description = "Passport tidak memenuhi standar (photo mismatch / invalid)";
     }
 
     // Sets sameOwnerPhoto = false and isValid = false — passport fails inspection
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
-        passport.sameOwnerPhoto = false;
-        passport.isValid = false;
+        if (ticket == null) return;
+        int day = Random.Range(1, 31);
+        int month = Random.Range(1, 12);
+        int year = Random.Range(1984, 2043);
+        ticket.departureDate = new System.DateTime(year, month, day);
+
+        TicketScript.Instance.UpdateView(ticket);
     }
 
     public override string GetViolationDetail(PassportSchema passport)
     {
-        return title + " — SameOwnerPhoto: " + passport.sameOwnerPhoto + ", IsValid: " + passport.isValid;
+        return title
+            + " — SameOwnerPhoto: "
+            + passport.sameOwnerPhoto
+            + ", IsValid: "
+            + passport.isValid;
     }
 }
 
@@ -111,7 +140,7 @@ public class NewRule_Day2 : RuleViolation
     }
 
     // Sets hexaCardColor to red (#FF0000) — visual indicator of suspicious card
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
         passport.hexaCardColor = "#FF0000";
     }
@@ -133,7 +162,7 @@ public class NewRule_Day3 : RuleViolation
     }
 
     // Sets districtHome to "Restricted Zone" — indicates NPC from high-risk area
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
         passport.districtHome = "Restricted Zone";
     }
@@ -155,7 +184,7 @@ public class NewRule_Day5 : RuleViolation
     }
 
     // Prefixes documentNumber with "FAKE" — makes it immediately identifiable as counterfeit
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
         passport.documentNumber = "FAKE" + Random.Range(1000, 9999);
     }
@@ -177,7 +206,7 @@ public class NewRule_Day7 : RuleViolation
     }
 
     // Sets ownerName to "BLACKLISTED" — immediately flags NPC as prohibited
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
         passport.ownerName = "BLACKLISTED";
     }
@@ -199,7 +228,7 @@ public class NewRule_Day9 : RuleViolation
     }
 
     // Sets hexaCardColor to green (#00FF00) — mutation indicator
-    public override void Apply(PassportSchema passport)
+    public override void Apply(PassportSchema passport, BoardingPassSchema ticket = null)
     {
         passport.hexaCardColor = "#00FF00";
     }

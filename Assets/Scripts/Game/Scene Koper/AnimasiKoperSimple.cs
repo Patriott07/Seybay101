@@ -21,33 +21,50 @@ public class AnimasiKoperSimple : MonoBehaviour
     public float tinggiLompatan = 0.3f; // BARU: Seberapa tinggi koper melompat dari meja
     public Vector3 skalaKecil = Vector3.zero;
 
-    private bool isTerbuka = false;
+    public bool isTerbuka = false;
     private bool sedangAnimasi = false;
-    private bool sudahGenerateBarang = false;
 
     private Vector3 skalaAsli;
     private Vector3 posisiAsli; // BARU: Untuk menyimpan koordinat nempel di meja
 
     void Start()
     {
-        if (objekKoperUtama == null) objekKoperUtama = this.transform;
+        if (objekKoperUtama == null)
+            objekKoperUtama = this.transform;
 
         skalaAsli = objekKoperUtama.localScale;
-        if (skalaAsli.x < 0.1f) skalaAsli = new Vector3(1f, 1f, 1f);
+        if (skalaAsli.x < 0.1f)
+            skalaAsli = new Vector3(1f, 1f, 1f);
 
         // Simpan titik mendarat awal koper
         posisiAsli = objekKoperUtama.localPosition;
 
-        if (koperTutup != null) koperTutup.SetActive(true);
-        if (koperBuka != null) koperBuka.SetActive(false);
+        if (koperTutup != null)
+            koperTutup.SetActive(true);
+        if (koperBuka != null)
+            koperBuka.SetActive(false);
 
-        if (containerBarang != null) containerBarang.SetActive(false);
-        if (dokumenKoper != null) dokumenKoper.SetActive(false);
+        if (containerBarang != null)
+            containerBarang.SetActive(false);
+        if (dokumenKoper != null)
+            dokumenKoper.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        // transform.localScale = Vector3.one
+        GameEvent.OnKoperIsEnable?.Invoke();
+    }
+
+    public bool IsOpen()
+    {
+        return isTerbuka;
     }
 
     public void ToggleKoper()
     {
-        if (sedangAnimasi) return;
+        if (sedangAnimasi)
+            return;
         StartCoroutine(ProsesTransisi2DPositionalBounce());
     }
 
@@ -58,8 +75,12 @@ public class AnimasiKoperSimple : MonoBehaviour
         if (isTerbuka && dokumenKoper != null)
         {
             DokumenKoperZoom docZoom = dokumenKoper.GetComponent<DokumenKoperZoom>();
-            if (docZoom != null) docZoom.bisaDiklik = false;
+            if (docZoom != null)
+                docZoom.bisaDiklik = false;
         }
+
+        // ← TAMBAHKAN INI: langsung set scale ke skalaAsli agar tidak terlihat 0
+        // transform.localScale = skalaAsli;
 
         Vector3 skalaMemantul = skalaAsli * multiplierBouncing;
         // Titik tertinggi saat koper terangkat
@@ -93,28 +114,34 @@ public class AnimasiKoperSimple : MonoBehaviour
         // --- FASE 3: GANTI GAMBAR & MUNCULKAN ISI ---
         isTerbuka = !isTerbuka;
 
-        if (koperTutup != null) koperTutup.SetActive(!isTerbuka);
-        if (koperBuka != null) koperBuka.SetActive(isTerbuka);
+        if (koperTutup != null)
+            koperTutup.SetActive(!isTerbuka);
+        if (koperBuka != null)
+            koperBuka.SetActive(isTerbuka);
 
         if (isTerbuka)
         {
-            if (containerBarang != null) containerBarang.SetActive(true);
-            if (dokumenKoper != null) dokumenKoper.SetActive(true);
+            if (containerBarang != null)
+                containerBarang.SetActive(true);
+            if (dokumenKoper != null)
+                dokumenKoper.SetActive(true);
 
-            if (!sudahGenerateBarang)
+            LuggageManager manager = LuggageManager.Instance;
+            if (!manager.sudahGenerateBarang)
             {
-                LuggageManager manager = FindObjectOfType<LuggageManager>();
                 if (manager != null)
                 {
                     manager.GenerateBarangNPC();
-                    sudahGenerateBarang = true;
+                    manager.sudahGenerateBarang = true;
                 }
             }
         }
         else
         {
-            if (containerBarang != null) containerBarang.SetActive(false);
-            if (dokumenKoper != null) dokumenKoper.SetActive(false);
+            if (containerBarang != null)
+                containerBarang.SetActive(false);
+            if (dokumenKoper != null)
+                dokumenKoper.SetActive(false);
         }
 
         // --- FASE 4: MEMBESAR & MELOMPAT NAIK ---
@@ -148,7 +175,8 @@ public class AnimasiKoperSimple : MonoBehaviour
             if (dokumenKoper != null)
             {
                 DokumenKoperZoom docZoom = dokumenKoper.GetComponent<DokumenKoperZoom>();
-                if (docZoom != null) docZoom.bisaDiklik = true;
+                if (docZoom != null)
+                    docZoom.bisaDiklik = true;
             }
         }
 
