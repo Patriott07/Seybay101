@@ -19,7 +19,7 @@ public class RekapHarianUI : MonoBehaviour
         if (panelRekap != null)
             panelRekap.SetActive(true);
 
-        int sisaUang = PlayerPrefs.GetInt("CurrentUang", 1500);
+        int sisaUang = PlayerPrefs.GetInt("CurrentUang", 0);
         int sisaTrust = PlayerPrefs.GetInt("CurrentTrust", 100);
 
         if (textRekapUang != null)

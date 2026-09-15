@@ -9,7 +9,8 @@ using Schema.data;
 // =============================================
 // Save file location: Application.persistentDataPath/game_save.json
 // Uses JsonUtility.ToJson/FromJson — no encryption
-// Saves only: money, day, ticket purchase status, penalty, and trust
+// Data: day, money, penalty, trust, ticket purchase status
+// Note: RecapDayUI reads directly from this JSON file
 // =============================================
 public class SaveManager : MonoBehaviour
 {
@@ -57,14 +58,36 @@ public class SaveManager : MonoBehaviour
         {
             string json = File.ReadAllText(saveFilePath);
             currentSave = JsonUtility.FromJson<GameSaveState>(json);
-            ApplyData(); // Apply loaded data to EconomyManager and GameManager
-            Debug.Log("[SaveManager] Game loaded from: " + saveFilePath);
+
+            if (IsSaveValid())
+            {
+                ApplyData();
+                Debug.Log("[SaveManager] Game loaded from: " + saveFilePath);
+            }
+            else
+            {
+                Debug.Log("[SaveManager] Save data invalid. Creating fresh save.");
+                currentSave = CreateNewSave();
+                ApplyData();
+                SaveGame();
+            }
         }
         else
         {
-            currentSave = CreateNewSave(); // First time — create fresh save
+            currentSave = CreateNewSave();
+            ApplyData();
+            SaveGame();
             Debug.Log("[SaveManager] No save found. New save created.");
         }
+    }
+
+    private bool IsSaveValid()
+    {
+        if (currentSave == null) return false;
+        if (currentSave.playerCash < 0) return false;
+        if (currentSave.currentDay < 1) return false;
+        if (currentSave.trust < 0 || currentSave.trust > 100) return false;
+        return true;
     }
 
     // Deletes save file and resets to new save state
@@ -102,7 +125,7 @@ public class SaveManager : MonoBehaviour
         return new GameSaveState
         {
             currentDay = 1,
-            playerCash = 1500,
+            playerCash = 0,
             purchasedTickets = 0,
             purhaceTicketForAldo = false,
             purhaceTicketForNasya = false,
@@ -121,9 +144,17 @@ public class SaveManager : MonoBehaviour
 
         if (EconomyManager.Instance != null)
         {
-            EconomyManager.Instance.money = currentSave.playerCash;
-            EconomyManager.Instance.punish = currentSave.penalty;
-            EconomyManager.Instance.trust = currentSave.trust;
+            if (currentSave.playerCash > 0)
+                EconomyManager.Instance.money = currentSave.playerCash;
+            else
+                EconomyManager.Instance.money = 0;
+
+            // EconomyManager.Instance.punish = currentSave.penalty;
+
+            // if (currentSave.trust > 0)
+            //     EconomyManager.Instance.trust = currentSave.trust;
+            // else
+            //     EconomyManager.Instance.trust = 100;
         }
 
         if (GameManager.Instance != null)

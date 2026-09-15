@@ -44,6 +44,8 @@ public class RecapDayUI : MonoBehaviour
             return;
         }
 
+        SaveManager.Instance.LoadSave();
+
         int playerCash = SaveManager.Instance.GetSaveData().playerCash;
         int penalty = SaveManager.Instance.GetSaveData().penalty;
         int netMoney = playerCash - penalty;

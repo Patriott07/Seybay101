@@ -1417,7 +1417,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1862, y: -60}
+  m_AnchoredPosition: {x: 1626, y: -60}
   m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265916542
@@ -1440,7 +1440,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Day 1, 1 Agustus 2045
+  m_text: 'Day 1
+
+    1 Ags, 2045'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a49fb07f50224243958f1bd6b4210c4, type: 2}
   m_sharedMaterial: {fileID: -2943315669543368328, guid: 1a49fb07f50224243958f1bd6b4210c4, type: 2}
@@ -1474,7 +1476,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: -9
@@ -2490,7 +2492,7 @@ MonoBehaviour:
   timerText: {fileID: 1198346739}
   displayStartHour: 8
   displayEndHour: 22
-  realTimeDurationMinutes: 1
+  realTimeDurationMinutes: 7
 --- !u!1 &430313971
 GameObject:
   m_ObjectHideFlags: 0
@@ -4489,7 +4491,7 @@ MonoBehaviour:
   rewardTrustBenar: 10
   penaltyTrustLolos: 5
   penaltyTrustSalahSita: 1
-  rewardUangBenar: 15
+  rewardUangBenar: 10
   penaltyUangSalah: 5
   pesanWarning: 'PERINGATAN: Tingkat Kepercayaan Kritis! (< 30%)'
 --- !u!1 &832876587
@@ -7114,7 +7116,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1590.426, y: -174}
+  m_AnchoredPosition: {x: 1583.426, y: -205}
   m_SizeDelta: {x: 581.1479, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1316883476
@@ -7148,8 +7150,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3686842560
-  m_fontColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 0.85882354}
+    rgba: 4293388263
+  m_fontColor: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7166,8 +7168,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

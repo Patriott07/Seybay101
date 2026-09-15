@@ -259,9 +259,13 @@ public class StampHybridController : MonoBehaviour
         {
             // cek stamp sebagai benar
             if (_mistakeCount == 0)
+            {
+                EconomyManager.Instance.TambahUang();
                 EconomyManager.Instance.TambahTrust(5);
+            }
             else
             {
+                EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
         }
@@ -269,9 +273,13 @@ public class StampHybridController : MonoBehaviour
         {
             // cek stamp sebagai salah
             if (_mistakeCount > 0)
-                EconomyManager.Instance.TambahTrust(5);
+            {
+                EconomyManager.Instance.TambahUang();
+                EconomyManager.Instance.TambahTrust(5);   
+            }
             else
             {
+                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
         }

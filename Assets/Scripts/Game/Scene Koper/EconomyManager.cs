@@ -6,7 +6,7 @@ public class EconomyManager : MonoBehaviour
     public static EconomyManager Instance;
 
     [Header("Pengaturan Nilai Awal (Harian)")]
-    public int money = 1500;
+    public int money = 0;
     public int punish = 0;
     public int trust = 100;
     public int maxTrustHarian = 100;
@@ -18,8 +18,8 @@ public class EconomyManager : MonoBehaviour
     public int penaltyTrustSalahSita = 1;
 
     [Header("Pengaturan Uang")]
-    public int rewardUangBenar = 50;
-    public int penaltyUangSalah = 25;
+    public int rewardUangBenar = 10;
+    public int penaltyUangSalah = 5;
 
     [Header("Referensi UI")]
     // public TextMeshProUGUI textUangHUD;
@@ -43,16 +43,17 @@ public class EconomyManager : MonoBehaviour
 
     private void Start()
     {
-        ResetDataGame();
         LoadFromSave();
         HUDManager.Instance.UpdateStat(trust);
     }
 
     public void ResetDataGame()
     {
-        // money = 1500;
+        money = 0;
         trust = maxTrustHarian;
+        punish = 0;
         HUDManager.Instance.UpdateStat(trust);
+        SaveManager.Instance?.SaveGame();
         Debug.Log("[DEBUG] Data Uang & Trust berhasil di-reset ke nilai awal!");
     }
 

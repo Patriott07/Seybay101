@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -90,6 +89,6 @@ public class Timer : MonoBehaviour
         GameManager.Instance.isCanSpawnNpc = false;
         AudioManager.Instance.PlaySfxTimerEnd();
         Debug.Log("Timer end in: " + elapsedTime + " second");
-        SceneManager.LoadScene("RecapDay");
+        // SceneManager.LoadScene("RecapDay");
     }
 }

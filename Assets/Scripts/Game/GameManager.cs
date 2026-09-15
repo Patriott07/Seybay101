@@ -75,6 +75,13 @@ public class GameManager : MonoBehaviour
     public void EndShiftAndLoadScene()
     {
         SaveManager.Instance?.SaveGame();
+        StartCoroutine(EndShiftDelayLoadScene());
+
+    }
+
+    System.Collections.IEnumerator EndShiftDelayLoadScene()
+    {
+        yield return new WaitForSecondsRealtime(1.4f);
         SceneManager.LoadScene("RecapDay");
     }
 

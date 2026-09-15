@@ -143,7 +143,7 @@ public class TicketScript : MonoBehaviour
         // else
         //     return day + "/" + month + "/" + UnityEngine.Random.Range(1960, 2044);
          if (isValid)
-            return new DateTime(UnityEngine.Random.Range(2046, 2066), month, day);
+            return new DateTime(2045, month, day);
         else
             return new DateTime(UnityEngine.Random.Range(1960, 2044), month, day);
   
