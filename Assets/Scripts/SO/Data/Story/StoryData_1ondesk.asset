@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd333e05fc6655246b501ccbd8d989b4, type: 3}
+  m_Name: StoryData_1ondesk
+  m_EditorClassIdentifier: 
+  Day: 1
+  storyText:
+  - contentText: 44 Celcius
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Udara kian kering. suhu bumi menaiki peningkatan dalam 6 bulan
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Satu rekaman para ilmuwan pecah ke publik
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: '[Effect]It''s Getting Worse'
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Day to day
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: ......
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Surat kabar menyebarkan kepanikan masa
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: '"Secure Your Seat. Escape to Seybay Outpost."'
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Aku harus membawa istri dan anak-anakku pergi.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03

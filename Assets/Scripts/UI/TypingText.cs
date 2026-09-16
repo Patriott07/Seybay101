@@ -1,8 +1,9 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TypingText : MonoBehaviour
 {
@@ -29,10 +30,20 @@ public class TypingText : MonoBehaviour
     private int currentLineIndex = 0;
     private string currentLineText = "";
     private string displayedText = "";
+
+    [SerializeField]
     private bool isTyping = false;
+
+    [SerializeField]
     private bool isComplete = false;
+
+    [SerializeField]
     private bool isSkipping = false;
+
+    [SerializeField]
     private float skipHoldTimer = 0f;
+
+    [SerializeField]
     private bool isHoldSpace = false;
 
     private float baseXPosition = 0f;
@@ -40,6 +51,15 @@ public class TypingText : MonoBehaviour
 
     public event System.Action OnLineComplete;
     public event System.Action OnAllComplete;
+    public event System.Action<AudioClip> OnAudioPlay;
+
+    [Header("UnityEvent")]
+    [SerializeField] private UnityEvent onLineCompleteUnity;
+    [SerializeField] private UnityEvent onAllCompleteUnity;
+    [SerializeField] private UnityEvent<AudioClip> onAudioPlayUnity;
+
+    private List<AudioClip> audioClips = new List<AudioClip>();
+    private List<float> lineSpeeds = new List<float>();
 
     void Start()
     {
@@ -54,6 +74,8 @@ public class TypingText : MonoBehaviour
     {
         lines.Clear();
         hasEffect.Clear();
+        audioClips.Clear();
+        lineSpeeds.Clear();
         currentLineIndex = 0;
         isTyping = false;
         isComplete = false;
@@ -75,6 +97,50 @@ public class TypingText : MonoBehaviour
                 hasEffect.Add(false);
                 lines.Add(trimmedLine);
             }
+            audioClips.Add(null);
+            lineSpeeds.Add(baseCharsPerSecond);
+        }
+
+        displayedText = "";
+        if (textComponent != null)
+        {
+            textComponent.text = "";
+        }
+
+        if (lines.Count > 0)
+        {
+            StartCoroutine(TypeAllLines());
+        }
+    }
+
+    public void SetTextWithAudio(List<TextContentSchema> items)
+    {
+        lines.Clear();
+        hasEffect.Clear();
+        audioClips.Clear();
+        lineSpeeds.Clear();
+        currentLineIndex = 0;
+        isTyping = false;
+        isComplete = false;
+        isSkipping = false;
+        skipHoldTimer = 0f;
+        isHoldSpace = false;
+
+        foreach (var item in items)
+        {
+            string trimmedText = item.contentText.Trim();
+            if (trimmedText.StartsWith("[Effect]"))
+            {
+                hasEffect.Add(true);
+                lines.Add(trimmedText.Replace("[Effect]", "").Trim());
+            }
+            else
+            {
+                hasEffect.Add(false);
+                lines.Add(trimmedText);
+            }
+            audioClips.Add(item.audioSource);
+            lineSpeeds.Add(item.textSpeed > 0f ? item.textSpeed : baseCharsPerSecond);
         }
 
         displayedText = "";
@@ -110,6 +176,8 @@ public class TypingText : MonoBehaviour
             currentLineIndex = i;
             currentLineText = lines[i];
             bool lineHasEffect = hasEffect[i];
+            float currentSpeed = lineSpeeds[i];
+            AudioClip lineClip = audioClips.Count > i ? audioClips[i] : null;
             displayedText = "";
 
             if (textComponent != null)
@@ -117,7 +185,12 @@ public class TypingText : MonoBehaviour
                 textComponent.text = "";
             }
 
-            float currentSpeed = baseCharsPerSecond + Random.Range(-speedVariation, speedVariation);
+            if (lineClip != null)
+            {
+                OnAudioPlay?.Invoke(lineClip);
+                onAudioPlayUnity?.Invoke(lineClip);
+            }
+
             float elapsed = 0f;
 
             for (int j = 0; j <= currentLineText.Length; j++)
@@ -133,17 +206,11 @@ public class TypingText : MonoBehaviour
                 float delta = Time.deltaTime;
                 elapsed += delta;
 
-                if (isHoldSpace)
+                if (isHoldSpace && skipHoldTimer >= skipHoldTime)
                 {
-                    skipHoldTimer += delta;
-                    UpdateProgressBar();
-
-                    if (skipHoldTimer >= skipHoldTime)
-                    {
-                        isSkipping = true;
-                        SkipAll();
-                        yield break;
-                    }
+                    isSkipping = true;
+                    SkipAll();
+                    break;
                 }
 
                 if (j < currentLineText.Length)
@@ -165,10 +232,13 @@ public class TypingText : MonoBehaviour
             }
 
             OnLineComplete?.Invoke();
+            onLineCompleteUnity?.Invoke();
 
             if (i < lines.Count - 1 && !isSkipping)
             {
-                yield return new WaitForSeconds(lineDelay);
+                yield return StartCoroutine(WaitForClickOrSkip());
+                if (isSkipping)
+                    break;
             }
         }
 
@@ -179,6 +249,20 @@ public class TypingText : MonoBehaviour
         skipTextIndicator.SetActive(false);
         HideProgressBar();
         OnAllComplete?.Invoke();
+        onAllCompleteUnity?.Invoke();
+    }
+
+    IEnumerator WaitForClickOrSkip()
+    {
+        while (!Input.GetMouseButtonDown(0))
+        {
+            if (isHoldSpace && isTyping && skipHoldTimer >= skipHoldTime)
+            {
+                SkipAll(false);
+                yield break;
+            }
+            yield return null;
+        }
     }
 
     IEnumerator WobbleEffect()
@@ -192,7 +276,8 @@ public class TypingText : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float wave = Mathf.Sin(elapsed * wobbleSpeed) * wobbleAmount * (1f - elapsed / duration);
+            float wave =
+                Mathf.Sin(elapsed * wobbleSpeed) * wobbleAmount * (1f - elapsed / duration);
             textComponent.rectTransform.localPosition = new Vector3(
                 baseXPosition,
                 originalYPosition + wave,
@@ -203,18 +288,29 @@ public class TypingText : MonoBehaviour
 
         if (textComponent != null && textComponent.rectTransform != null)
         {
-            textComponent.rectTransform.localPosition = new Vector3(baseXPosition, originalYPosition, textComponent.rectTransform.localPosition.z);
+            textComponent.rectTransform.localPosition = new Vector3(
+                baseXPosition,
+                originalYPosition,
+                textComponent.rectTransform.localPosition.z
+            );
         }
     }
 
     void Update()
     {
         isHoldSpace = Input.GetKey(skipKey);
-
-        if (!isHoldSpace)
+        if (StoryManager.Instance.isCanSkip)
         {
-            skipHoldTimer = 0f;
-            HideProgressBar();
+            if (isHoldSpace && (isTyping || !isComplete))
+            {
+                skipHoldTimer += Time.deltaTime;
+                UpdateProgressBar();
+            }
+            else
+            {
+                skipHoldTimer = 0f;
+                HideProgressBar();
+            }
         }
     }
 
@@ -237,7 +333,7 @@ public class TypingText : MonoBehaviour
             skipTextIndicator.SetActive(false);
     }
 
-    public void SkipAll()
+    public void SkipAll(bool showAllText = true)
     {
         isSkipping = true;
         isTyping = false;
@@ -248,7 +344,9 @@ public class TypingText : MonoBehaviour
         continueButton.SetActive(true);
         skipTextIndicator.SetActive(false);
 
-        if (textComponent != null)
+        audioClips.Clear();
+        lineSpeeds.Clear();
+        if (showAllText && textComponent != null)
         {
             string allText = string.Join("\n", lines);
             displayedText = allText;
@@ -257,18 +355,26 @@ public class TypingText : MonoBehaviour
 
         if (textComponent != null && textComponent.rectTransform != null)
         {
-            textComponent.rectTransform.localPosition = new Vector3(baseXPosition, originalYPosition, textComponent.rectTransform.localPosition.z);
+            textComponent.rectTransform.localPosition = new Vector3(
+                baseXPosition,
+                originalYPosition,
+                textComponent.rectTransform.localPosition.z
+            );
         }
     }
 
     public bool IsComplete() => isComplete;
+
     public bool IsTyping() => isTyping;
+
     public bool IsSkipping() => isSkipping;
 
     public void ClearText()
     {
         lines.Clear();
         hasEffect.Clear();
+        audioClips.Clear();
+        lineSpeeds.Clear();
         displayedText = "";
         currentLineIndex = 0;
         if (textComponent != null)
