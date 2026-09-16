@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class StoryManager : MonoBehaviour
 {
@@ -12,15 +12,23 @@ public class StoryManager : MonoBehaviour
     public StorySchema currentStory;
 
     [Header("Scene Names")]
-    public string preDaySceneName = "PreDay";
+    public bool isLoadSceneInEnd = true;
     public string mainDeskSceneName = "MainDesk";
-    public string afterShiftSceneName = "AfterShift";
-    public string recapSceneName = "RecapDay";
+
+    // public string preDaySceneName = "PreDay";
+    // public string afterShiftSceneName = "AfterShift";
+    // public string recapSceneName = "RecapDay";
+    public bool AutoPlayText = true;
+    public bool isCanSkip = true;
 
     [Header("UI References")]
-    public TypingText typingTextPreDay;
-    public TypingText typingTextOnDesk;
-    public TypingText typingTextAfterShift;
+    public TypingText typingText;
+
+    // public TypingText typingTextOnDesk;
+    // public TypingText typingTextAfterShift;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
 
     private int currentDay = 1;
 
@@ -29,7 +37,6 @@ public class StoryManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -40,12 +47,17 @@ public class StoryManager : MonoBehaviour
     void Start()
     {
         currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
-        LoadStoryData(currentDay);
+        // LoadStoryData(currentDay);
+        // Pastikan memanggil ShowTypingText() agar Event Listener terpasang sebelum data dimuat
+        ShowTypingText();
     }
 
     public void LoadStoryData(int day)
     {
         currentDay = day;
+
+        if (AutoPlayText)
+            ShowTypingText();
     }
 
     public void SetStoryData(StorySchema story)
@@ -54,42 +66,61 @@ public class StoryManager : MonoBehaviour
         currentDay = story != null ? story.Day : 1;
     }
 
-    public void ShowPreDay()
+    public void ShowTypingText()
     {
-        if (currentStory == null || currentStory.preDayText == null || currentStory.preDayText.Count == 0)
+        if (currentStory == null)
+        {
+            Debug.LogWarning("CurrentStory masih null! Pastikan data story sudah di-assign.");
+            return;
+        }
+
+        if (currentStory.storyText == null || currentStory.storyText.Count == 0)
             return;
 
-        string combinedText = string.Join("\n", currentStory.preDayText);
-
-        if (typingTextPreDay != null)
+        if (typingText != null)
         {
-            typingTextPreDay.SetText(combinedText);
+            typingText.OnAudioPlay -= OnAudioPlayHandler;
+            typingText.OnAudioPlay += OnAudioPlayHandler;
+
+            typingText.OnLineComplete -= OnLineCompleteHandler;
+            typingText.OnLineComplete += OnLineCompleteHandler;
+
+            typingText.OnAllComplete -= OnPreDayAllComplete;
+            typingText.OnAllComplete += OnPreDayAllComplete;
+
+            typingText.SetTextWithAudio(currentStory.storyText);
         }
     }
 
-    public void ShowOnDesk()
+    private void OnAudioPlayHandler(AudioClip clip)
     {
-        if (currentStory == null || currentStory.onDeskText == null || currentStory.onDeskText.Count == 0)
-            return;
-
-        string combinedText = string.Join("\n", currentStory.onDeskText);
-
-        if (typingTextOnDesk != null)
+        if (audioSource != null && clip != null)
         {
-            typingTextOnDesk.SetText(combinedText);
+            audioSource.clip = clip;
+            audioSource.Play();
         }
     }
 
-    public void ShowAfterShift()
+    private void OnLineCompleteHandler()
     {
-        if (currentStory == null || currentStory.afterShiftText == null || currentStory.afterShiftText.Count == 0)
-            return;
+        StopCurrentAudio();
+    }
 
-        string combinedText = string.Join("\n", currentStory.afterShiftText);
+    private void OnPreDayAllComplete()
+    {
+        typingText.OnAudioPlay -= OnAudioPlayHandler;
+        typingText.OnLineComplete -= OnLineCompleteHandler;
+        typingText.OnAllComplete -= OnPreDayAllComplete;
+        StopCurrentAudio();
+        if (isLoadSceneInEnd)
+            SceneManager.LoadScene(mainDeskSceneName);
+    }
 
-        if (typingTextAfterShift != null)
+    private void StopCurrentAudio()
+    {
+        if (audioSource != null && audioSource.isPlaying)
         {
-            typingTextAfterShift.SetText(combinedText);
+            audioSource.Stop();
         }
     }
 
@@ -98,18 +129,19 @@ public class StoryManager : MonoBehaviour
         AudioManager.Instance.PlaySfxSceneTransition();
         if (GameManager.Instance != null)
         {
-            SceneManager.LoadScene(mainDeskSceneName);
+            if (isLoadSceneInEnd)
+                SceneManager.LoadScene(mainDeskSceneName);
         }
     }
 
-    public void OnAfterShiftComplete()
-    {
-        AudioManager.Instance.PlaySfxSceneTransition();
-        if (GameManager.Instance != null)
-        {
-            SceneManager.LoadScene(recapSceneName);
-        }
-    }
+    // public void OnAfterShiftComplete()
+    // {
+    //     AudioManager.Instance.PlaySfxSceneTransition();
+    //     if (GameManager.Instance != null)
+    //     {
+    //         SceneManager.LoadScene(recapSceneName);
+    //     }
+    // }
 
     public void AdvanceDay()
     {
@@ -123,9 +155,9 @@ public class StoryManager : MonoBehaviour
 
     public void SkipAllStory()
     {
-        if (typingTextPreDay != null) typingTextPreDay.SkipAll();
-        if (typingTextOnDesk != null) typingTextOnDesk.SkipAll();
-        if (typingTextAfterShift != null) typingTextAfterShift.SkipAll();
+        if (typingText != null)
+            typingText.SkipAll();
+        StopCurrentAudio();
     }
 
     public void SetupDailyFlow()
@@ -135,19 +167,10 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator DailyFlowCoroutine()
     {
-        ShowPreDay();
-        yield return new WaitUntil(() => typingTextPreDay != null && typingTextPreDay.IsComplete());
+        ShowTypingText();
+        yield return new WaitUntil(() => typingText != null && typingText.IsComplete());
         yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene(mainDeskSceneName);
-
-        ShowOnDesk();
-        yield return new WaitUntil(() => typingTextOnDesk != null && typingTextOnDesk.IsComplete());
-        yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene(afterShiftSceneName);
-
-        ShowAfterShift();
-        yield return new WaitUntil(() => typingTextAfterShift != null && typingTextAfterShift.IsComplete());
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(recapSceneName);
+        if (isLoadSceneInEnd)
+            SceneManager.LoadScene(mainDeskSceneName);
     }
 }

@@ -17,14 +17,14 @@ public class StorySchema : ScriptableObject
     public int Day = 1; // Day number (1-10) that this schema belongs to
 
     [Header("Sebelum Shift (Scene Pre-Day)")]
-    [TextArea(3, 10)]
-    public List<string> preDayText; // Text shown in PreDay scene before shift starts
+    public List<TextContentSchema> storyText; // Text shown in PreDay scene before shift starts
 
-    [Header("Saat Shift Dimulai (On Desk)")]
-    [TextArea(3, 10)]
-    public List<string> onDeskText; // Text shown when player starts the shift at the desk
+}
 
-    [Header("Setelah Shift Selesai")]
-    [TextArea(3, 10)]
-    public List<string> afterShiftText; // Text shown after shift ends (daily report)
+[System.Serializable]
+public class TextContentSchema
+{
+    public string contentText;
+    public AudioClip audioSource;
+    public float textSpeed;
 }
