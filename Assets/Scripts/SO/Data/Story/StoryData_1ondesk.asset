@@ -14,30 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Day: 1
   storyText:
-  - contentText: 44 Celcius
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Udara kian kering. suhu bumi menaiki peningkatan dalam 6 bulan
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Satu rekaman para ilmuwan pecah ke publik
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: '[Effect]It''s Getting Worse'
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Day to day
+  - contentText: Hari ini sepertinya akan melelahkan dr hari biasanya
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Surat kabar menyebarkan kepanikan masa
+  - contentText: Padat dan Berisik.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: '"Secure Your Seat. Escape to Seybay Outpost."'
+  - contentText: Peraturan Baru pasti sudah diterbitkan oleh Azura Corp.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Aku harus membawa istri dan anak-anakku pergi.
+    textSpeed: 0.05
+  - contentText: Aku Akan mengecek dokumen di papan Billboard
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.07
+  - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03

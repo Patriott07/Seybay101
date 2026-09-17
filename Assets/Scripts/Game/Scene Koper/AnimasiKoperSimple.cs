@@ -53,6 +53,7 @@ public class AnimasiKoperSimple : MonoBehaviour
     void OnEnable()
     {
         // transform.localScale = Vector3.one
+        // if (GameManager.CurrentGameState == GameManager.GameState.PLAY)
         GameEvent.OnKoperIsEnable?.Invoke();
     }
 

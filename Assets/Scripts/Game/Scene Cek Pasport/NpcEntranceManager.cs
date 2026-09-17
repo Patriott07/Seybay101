@@ -56,7 +56,7 @@ public class NpcEntranceManager : MonoBehaviour
             // dokumenKertas.gameObject.SetActive(false);
             // objekTiket.gameObject.SetActive(false);
 
-            StartCoroutine(SpawnAnotherNPC(0f));
+            // StartCoroutine(SpawnAnotherNPC(0f));
         }
     }
 
@@ -141,8 +141,6 @@ public class NpcEntranceManager : MonoBehaviour
         // // Apply Violation tileset to override property
         // GameManager.Instance.DoViolationGenerateSetup();
 
-
-
         time = 0;
         Vector3 titikAwalDokumen = dokumenKertas.position;
         Vector3 titikAwalTiket = objekTiket.position;
@@ -224,7 +222,7 @@ public class NpcEntranceManager : MonoBehaviour
         GameEvent.SpawnNPCOnStartDay -= CallSpawnAnotherNPC;
     }
 
-    void CallSpawnAnotherNPC(float d)
+    public void CallSpawnAnotherNPC(float d)
     {
         StartCoroutine(SpawnAnotherNPC(d));
     }

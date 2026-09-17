@@ -23,6 +23,8 @@ public class StoryManager : MonoBehaviour
 
     [Header("UI References")]
     public TypingText typingText;
+    public CanvasGroup contentBlocker;
+    public Animator contentAnimationController;
 
     // public TypingText typingTextOnDesk;
     // public TypingText typingTextAfterShift;
@@ -92,6 +94,11 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    public void HideContent()
+    {
+        contentAnimationController.Play("BoxChatHide", 0, 0);
+    }
+
     private void OnAudioPlayHandler(AudioClip clip)
     {
         if (audioSource != null && clip != null)
@@ -142,6 +149,25 @@ public class StoryManager : MonoBehaviour
     //         SceneManager.LoadScene(recapSceneName);
     //     }
     // }
+
+    public void BlockScreenInteract()
+    {
+        if (contentBlocker != null)
+        {
+            contentBlocker.alpha = 0;
+            contentBlocker.blocksRaycasts = true;
+            contentBlocker.blocksRaycasts = true;
+        }
+    }
+    public void UnBlockScreenInteract()
+    {
+        if (contentBlocker != null)
+        {
+            contentBlocker.alpha = 0;
+            contentBlocker.blocksRaycasts = false;
+            contentBlocker.blocksRaycasts = false;
+        }
+    }
 
     public void AdvanceDay()
     {

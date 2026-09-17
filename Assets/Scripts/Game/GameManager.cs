@@ -10,6 +10,13 @@ public class GameManager : MonoBehaviour
     private int currentDay = 1;
     public float chanceTOGetSomeActiveViolation = 0.2f;
 
+    public enum GameState
+    {
+        CUTSCENE, PLAY
+    }
+
+    public static GameState CurrentGameState = GameState.CUTSCENE; 
+
     void Awake()
     {
         if (Instance == null)
@@ -21,6 +28,11 @@ public class GameManager : MonoBehaviour
     public int GetCurrentDay() => currentDay;
 
     public void SetCurrentDay(int day) => currentDay = day;
+
+    public void StartMyShift()
+    {
+        CurrentGameState = GameState.PLAY;
+    }
 
     // this front end for Implementation generating violation by currentday
     public void DoViolationGenerateSetup()

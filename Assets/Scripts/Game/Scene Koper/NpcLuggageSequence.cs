@@ -41,7 +41,7 @@ public class NpcLuggageSequence : MonoBehaviour
         
     }
 
-    void StartAnim()
+    public void StartAnim()
     {
         StartCoroutine(JalankanAdegan());
     }
