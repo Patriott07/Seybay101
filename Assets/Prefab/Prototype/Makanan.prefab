@@ -110,7 +110,7 @@ MonoBehaviour:
     isMetallic: 0
     isOrganic: 0
     isContraband: 0
-    itemWeight: 2
+    itemWeight: 6
 --- !u!61 &-4849429551232763054
 BoxCollider2D:
   m_ObjectHideFlags: 0

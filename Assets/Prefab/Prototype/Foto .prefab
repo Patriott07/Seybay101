@@ -107,10 +107,10 @@ MonoBehaviour:
     itemSprite: {fileID: 0}
     xrayMaskSprite: {fileID: 0}
     gridPosition: {x: 0, y: 0}
-    isMetallic: 1
+    isMetallic: 0
     isOrganic: 0
     isContraband: 0
-    itemWeight: 0.5
+    itemWeight: 4
 --- !u!61 &4840825792645919619
 BoxCollider2D:
   m_ObjectHideFlags: 0

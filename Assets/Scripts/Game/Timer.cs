@@ -54,7 +54,7 @@ public class Timer : MonoBehaviour
         transitionPanel.alpha = 0;
         transitionPanel.blocksRaycasts = false;
         transitionPanel.interactable = false;
-        StartTimerDefault();
+        // StartTimerDefault();
     }
 
     void Update()
@@ -70,7 +70,7 @@ public class Timer : MonoBehaviour
             }
         }
 
-        if (timerText != null)
+        if (timerText != null && isRunning)
             timerText.text = FormatDisplayTime();
     }
 
