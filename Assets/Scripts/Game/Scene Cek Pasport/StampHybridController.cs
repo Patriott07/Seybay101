@@ -1,7 +1,9 @@
 using System.Collections;
 using DG.Tweening;
+using NUnit.Framework;
 using Schema.data;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class StampHybridController : MonoBehaviour
@@ -25,6 +27,14 @@ public class StampHybridController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private int layerAwal;
 
+    private bool isMoving;
+    private float elapsedTime = 0f;
+    private Transform startPos;
+
+    [SerializeField] Transform stampleDecisionHolder;
+    Transform targetPos;
+    [SerializeField] Transform targetOne, targetTwo;
+
     void Start()
     {
         // cam = Camera.main;
@@ -34,9 +44,28 @@ public class StampHybridController : MonoBehaviour
         layerAwal = spriteRenderer.sortingOrder;
     }
 
+    void Update()
+    {
+        // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
+        // #800020
+        if (isMoving) {
+            elapsedTime += Time.deltaTime;
+            float percentageComplete =  elapsedTime / 0.3f;
+
+            stampleDecisionHolder.position = Vector2.Lerp(startPos.position, targetPos.position, percentageComplete);
+
+            if (percentageComplete >= 1f)
+            {
+                isMoving = false;
+            }
+        }
+        // #800020
+        // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
+    }
+
     void OnEnable()
     {
-        GameEvent.DeleteMarkTicket += DeleteMarkTicket;
+        GameEvent.DeleteMarkTicket += DeleteMarkTicket; // to delete approve/disapprove mark from a used ticket
     }
 
     void OnDisable()
@@ -44,11 +73,25 @@ public class StampHybridController : MonoBehaviour
         GameEvent.DeleteMarkTicket -= DeleteMarkTicket;
     }
 
+    // Tambahkan OnMouseDown untuk trigger klik pertama kali
+    void OnMouseDown()
+    {
+        if (sedangDiproses) return;
+
+        targetPos = targetOne;
+        startPos = targetTwo;
+        elapsedTime = 0f; // Reset waktu agar animasi jalan perlahan dari awal
+        isMoving = true;
+    }
+
+    // Bersihkan OnMouseDrag, cukup untuk menggeser objek
     void OnMouseDrag()
     {
         // Debug.Log("DOWN");
+
         if (sedangDiproses)
             return;
+
         Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;
         transform.position = mousePos;
@@ -56,6 +99,13 @@ public class StampHybridController : MonoBehaviour
 
     void OnMouseUp()
     {
+        targetPos = targetTwo;
+        startPos = targetOne;
+        // target pos set ke luar layar supaya tidak visible
+        elapsedTime = 0f; // Reset waktu lagi untuk animasi pulangnya
+        isMoving = true;
+
+
         if (sedangDiproses)
             return;
 
@@ -265,6 +315,10 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
+            if (Random.Range(1, 3) == 3)
+            {
+                // ShowMistake() a function that notify player if he make a mistake!!!
+            }
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
@@ -279,7 +333,7 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
+                EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
         }
