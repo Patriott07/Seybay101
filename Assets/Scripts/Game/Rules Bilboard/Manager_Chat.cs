@@ -11,6 +11,7 @@ public class ContentChat
     [TextArea(2, 4)]
     public string textChat;
     public AudioClip clip;
+    public bool isMC = true;
 }
 // === [AKHIR PERUBAHAN 1] ===
 
@@ -40,8 +41,7 @@ public class Manager_Chat : MonoBehaviour
 
     // === [AWAL PERUBAHAN 2: MENGGUNAKAN LIST CONTENT CHAT] ===
     [Header("Daftar Dialog")]
-    public List<ContentChat> dialogMC;
-    public List<ContentChat> dialogNPC;
+    public List<ContentChat> dialogs;
     // === [AKHIR PERUBAHAN 2] ===
 
     private List<GameObject> daftarPesanAktif = new List<GameObject>();
@@ -58,12 +58,13 @@ public class Manager_Chat : MonoBehaviour
         else Destroy(gameObject);
 
         // Otomatis membuat komponen AudioSource di belakang layar
-        audioSourceChat = gameObject.AddComponent<AudioSource>();
-        audioSourceChat.playOnAwake = false;
+        // audioSourceChat = gameObject.AddComponent<AudioSource>();
+        // audioSourceChat.playOnAwake = false;
     }
 
     void Start()
     {
+        audioSourceChat = GetComponent<AudioSource>();
         // Tetap dibiarkan KOSONG agar NpcEntranceManager yang memanggil MulaiChatBaru()
     }
 
@@ -98,39 +99,23 @@ public class Manager_Chat : MonoBehaviour
     {
         yield return new WaitForSeconds(delaySebelumMulai);
 
-        int indexMC = 0;
-        int indexNPC = 0;
-        int totalDialog = dialogMC.Count + dialogNPC.Count;
+        int totalDialog = dialogs.Count;
 
         for (int i = 0; i < totalDialog; i++)
         {
-            bool giliranMC = false;
+            ContentChat chat = dialogs[i];
+            bool isMC = chat.isMC;
+            float offsetX = isMC ? geserKiriNPC : geserKananMC;
+            GameObject prefab = isMC ? prefabBubbleMC : prefabBubbleNPC;
 
-            if (indexMC < dialogMC.Count && indexNPC < dialogNPC.Count)
-            {
-                int acak = Random.Range(0, 2);
-                giliranMC = (acak == 0);
-            }
-            else if (indexMC < dialogMC.Count) giliranMC = true;
-            else if (indexNPC < dialogNPC.Count) giliranMC = false;
-
-            // === [AWAL PERUBAHAN 4: MENGAMBIL DATA DARI CLASS CONTENT CHAT] ===
-            if (giliranMC)
-            {
-                ContentChat chatMC = dialogMC[indexMC];
-                yield return StartCoroutine(MunculkanPesan(prefabBubbleMC, chatMC.textChat, chatMC.clip, geserKananMC, true));
-                indexMC++;
-            }
-            else
-            {
-                ContentChat chatNPC = dialogNPC[indexNPC];
-                yield return StartCoroutine(MunculkanPesan(prefabBubbleNPC, chatNPC.textChat, chatNPC.clip, geserKiriNPC, false));
-                indexNPC++;
-            }
+            // === [AWAL PERUBAHAN 4: MENGGUNAKAN DARI DIALOG SINGLE LIST BERDASARKAN isMC] ===
+            yield return StartCoroutine(MunculkanPesan(prefab, chat.textChat, chat.clip, offsetX, isMC));
             // === [AKHIR PERUBAHAN 4] ===
 
             yield return new WaitForSeconds(jedaAntarPesan);
         }
+
+          audioSourceChat.Stop(); // Hentikan suara sebelumnya (jika menumpuk)
     }
 
     // === [AWAL PERUBAHAN 5: PARAMETER TAMBAHAN UNTUK AUDIOCLIP] ===
@@ -155,11 +140,12 @@ public class Manager_Chat : MonoBehaviour
 
         Vector3 posisiMuncul = transform.position + new Vector3(offsetX, posisiYSelanjutnya, 0);
 
+        Vector3 originalScale = prefab.transform.localScale;
         GameObject pesanBaru = Instantiate(prefab, posisiMuncul, Quaternion.identity, transform);
         pesanBaru.transform.localScale = Vector3.zero;
         daftarPesanAktif.Add(pesanBaru);
 
-        pesanBaru.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBack);
+        pesanBaru.transform.DOScale(originalScale, 0.4f).SetEase(Ease.OutBack);
 
         // Putar suara jika AudioClip-nya diisi di Inspector
         if (suara != null && audioSourceChat != null)

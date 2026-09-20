@@ -102,7 +102,7 @@ public class PassportScript : MonoBehaviour
         
         // bool isValid = UnityEngine.Random.Range(1, 5) > 2.5 ? true : false;
 
-        int day = UnityEngine.Random.Range(1, 31);
+        int day = UnityEngine.Random.Range(1, 27);
         int month = UnityEngine.Random.Range(1, 12);
         return new DateTime(UnityEngine.Random.Range(2046, 2066), month, day);
 

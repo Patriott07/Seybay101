@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Game/AlphaPreDay1.unity
+    guid: 38bfa1bc39ad4454ab70f8a79af9e22a
+  - enabled: 1
     path: Assets/Scenes/Story/Preday.unity
     guid: 4853398fd5fc73c439c44806c536cc71
   - enabled: 1
@@ -29,6 +32,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ptorotype/AlphaPlaytestingImplementAudioV2.unity
     guid: a129736131eac424ab69997cd952f14d
+  - enabled: 1
+    path: Assets/Scenes/Game/AlphaDay1.unity
+    guid: 7c7a1fbc660fbe6489d369a28b76972c
+  - enabled: 1
+    path: Assets/Scenes/Game/AlphaRecapDay1.unity
+    guid: 9630f2ea309fa9b4e87a7bc7ac1230ce
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

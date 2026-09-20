@@ -15115,6 +15115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7197ac96f0f8c2d4aab511be075a3f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneNameRecapDay: AlphaRecapDay1
   mainCam: {fileID: 641752317}
   isCanSpawnNpc: 1
   chanceTOGetSomeActiveViolation: 0.1

@@ -160,6 +160,8 @@ public class NpcEntranceManager : MonoBehaviour
             objekTiket.position = Vector3.Lerp(titikAwalTiket, targetTiket, time);
             yield return null;
         }
+
+        Manager_Chat.Instance.MulaiChatBaru();
     }
     // --- FASE C: FUNGSI UNTUK MENGUSIR NPC ---
     public void UsirNpc(bool isApprove)

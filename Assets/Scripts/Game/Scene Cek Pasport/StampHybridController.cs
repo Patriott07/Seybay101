@@ -118,6 +118,7 @@ public class StampHybridController : MonoBehaviour
             {
                 StartCoroutine(SiklusAnimasiKeputusan(true, hit.transform.position));
                 dilepasDiZona = true;
+                Manager_Chat.Instance.BersihkanChat();
                 // lets check here
                 CheckRule(true);
 
@@ -127,6 +128,7 @@ public class StampHybridController : MonoBehaviour
             {
                 StartCoroutine(SiklusAnimasiKeputusan(false, hit.transform.position));
                 dilepasDiZona = true;
+                Manager_Chat.Instance.BersihkanChat();
                 // lets check here
                 CheckRule(false);
                 break;
@@ -333,8 +335,8 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-                EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
-                EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
+                EconomyManager.Instance.KurangiUang(5);
+                EconomyManager.Instance.KurangiTrust(5);
             }
         }
     }
