@@ -44,6 +44,7 @@ public class Timer : MonoBehaviour
     {
         GameEvent.StartTranstionDayToRecap += CloseDay;
     }
+
     void OnDisable()
     {
         GameEvent.StartTranstionDayToRecap -= CloseDay;
@@ -51,9 +52,12 @@ public class Timer : MonoBehaviour
 
     void Start()
     {
-        transitionPanel.alpha = 0;
-        transitionPanel.blocksRaycasts = false;
-        transitionPanel.interactable = false;
+        if (transitionPanel != null)
+        {
+            transitionPanel.alpha = 0;
+            transitionPanel.blocksRaycasts = false;
+            transitionPanel.interactable = false;
+        }
         // StartTimerDefault();
     }
 
@@ -113,7 +117,6 @@ public class Timer : MonoBehaviour
     {
         transitionPanel.blocksRaycasts = true;
         transitionPanel.interactable = true;
-        transitionPanel
-            .DOFade(1, 0.5f);
+        transitionPanel.DOFade(1, 0.5f);
     }
 }

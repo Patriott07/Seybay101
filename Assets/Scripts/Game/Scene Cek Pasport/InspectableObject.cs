@@ -10,6 +10,7 @@ public class InspectableObject : MonoBehaviour
     public float kecepatanAnimasi = 8f;
     public SpriteRenderer bg;
 
+    private static InspectableObject currentInspectedObject;
     private Vector3 posisiMeja;
     private Vector3 skalaAwal;
     private int urutanLayerAwal;
@@ -55,6 +56,13 @@ public class InspectableObject : MonoBehaviour
             // === INI ADALAH DOUBLE CLICK ===
             if (!isInspected)
             {
+                if (currentInspectedObject != null & currentInspectedObject != this)
+                {
+                    currentInspectedObject.PaksaZoomOut();
+
+                }
+
+                currentInspectedObject = this;
                 posisiMeja = transform.position;
                 StartCoroutine(
                     AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true)
@@ -130,6 +138,7 @@ public class InspectableObject : MonoBehaviour
         if (isInspected && !sedangAnimasi)
         {
             StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
+            if (currentInspectedObject == this) currentInspectedObject = null;
         }
     }
 }
