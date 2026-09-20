@@ -14,30 +14,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Day: 1
   storyText:
+  - contentText: Aku Aldo
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Seorang ayah yang hidup sederhana di kota yang padat
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Aku tinggal bersama istriku, Nasya. dan 2 anakku.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Menjadi seorang ayah ternyata tidak mudah
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Apalagi dengan kondisi alam bumi yang semakin tak nyaman.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
   - contentText: 44 Celcius
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Udara kian kering. suhu bumi menaiki peningkatan dalam 6 bulan
+  - contentText: Udara yang kian kering. suhu bumi menaiki peningkatan dalam 6 bulan terakhir
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Situasi disini tidak membaik.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: Satu rekaman para ilmuwan pecah ke publik
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: '[Effect]It''s Getting Worse'
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Day to day
+  - contentText: '[Effect]It''s Getting Worse.'
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Surat kabar menyebarkan kepanikan masa
+  - contentText: Surat kabar menyebar cepat
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Memercik kepanikan dan keresahan masa
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: '"Secure Your Seat. Escape to Seybay Outpost."'
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
+  - contentText: Surat kabar trending hari itu.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
   - contentText: Aku harus membawa istri dan anak-anakku pergi.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
+  - contentText: Meski ini bukan hari pertama menjadi seorang penjaga loket.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Rasanya.. Besok shift pertama dengan suasana yang baru.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Nasya, Virly, Kraisa..
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Bertahanlah..
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: ....
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+    

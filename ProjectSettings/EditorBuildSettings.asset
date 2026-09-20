@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Story/Preday.unity
+    guid: 4853398fd5fc73c439c44806c536cc71
+  - enabled: 1
     path: Assets/Scenes/Ptorotype/AlphaPlaytestingImplementAudio.unity
     guid: ffc26cd058e861b4fab3879e3c0eff6d
   - enabled: 1

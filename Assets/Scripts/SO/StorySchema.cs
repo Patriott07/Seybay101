@@ -27,4 +27,6 @@ public class TextContentSchema
     public string contentText;
     public AudioClip audioSource;
     public float textSpeed;
+    public Texture textureStoryboard;
+    public AudioClip immersiveAudio;
 }

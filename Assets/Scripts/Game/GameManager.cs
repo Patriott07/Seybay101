@@ -93,6 +93,8 @@ public class GameManager : MonoBehaviour
 
     System.Collections.IEnumerator EndShiftDelayLoadScene()
     {
+        yield return new WaitForSecondsRealtime(4.4f);
+        GameEvent.StartTranstionDayToRecap?.Invoke();
         yield return new WaitForSecondsRealtime(1.4f);
         SceneManager.LoadScene("RecapDay");
     }

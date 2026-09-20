@@ -1,30 +1,58 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
     [Header("Audio Sources")]
-    [SerializeField] private AudioSource _musicSource;
-    [SerializeField] private AudioSource _sfxSource;
-    [SerializeField] private AudioSource _ambientSource;
+    [SerializeField]
+    private AudioSource _musicSource;
+
+    [SerializeField]
+    private AudioSource _sfxSource;
+
+    [SerializeField]
+    private AudioSource _ambientSource;
 
     [Header("Music Clips")]
-    [SerializeField] private AudioClip _bgmAirportAmbience;
-    [SerializeField] private AudioClip _bgmMysteryBell;
+    [SerializeField]
+    private AudioClip _ambientAuto;
+
+    [SerializeField]
+    private AudioClip _bgmAuto;
 
     [Header("SFX Clips")]
-    [SerializeField] private AudioClip _sfxClickButton;
-    [SerializeField] private AudioClip _sfxCoin;
-    [SerializeField] private AudioClip _sfxFootstep;
-    [SerializeField] private AudioClip _sfxPaper;
+    [SerializeField]
+    private AudioClip _sfxClickButton;
+
+    [SerializeField]
+    private AudioClip _sfxCoin;
+
+    [SerializeField]
+    private AudioClip _sfxFootstep;
+
+    [SerializeField]
+    private AudioClip _sfxPaper;
 
     [Header("Settings")]
-    [SerializeField] private float _musicVolume = 0.5f;
-    [SerializeField] private float _sfxVolume = 0.8f;
-    [SerializeField] private float _ambientVolume = 0.4f;
-    [SerializeField] private float _fadeDuration = 1f;
+    [SerializeField]
+    private float _musicVolume = 0.5f;
+
+    [SerializeField]
+    private float _sfxVolume = 0.8f;
+
+    [SerializeField]
+    private float _ambientVolume = 0.4f;
+
+    [SerializeField]
+    private float _fadeDuration = 1f;
+
+    [SerializeField]
+    private bool autoPlayingAmbient = true;
+
+    [SerializeField]
+    private bool autoPlayingMusic = false;
 
     private bool _isMusicPlaying;
     private bool _isAmbientPlaying;
@@ -49,21 +77,39 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayBgm(_bgmAirportAmbience);
+        if(autoPlayingMusic)
+            PlayBgm(_bgmAuto);
+        if (autoPlayingAmbient)
+            PlayAmbient(_ambientAuto);
     }
 
     #region Music
 
     public void PlayBgm(AudioClip clip)
     {
-        if (clip == null) return;
-        StartCoroutine(FadeOutMusic());
-        StartCoroutine(FadeInMusic(clip));
+        if (clip == null)
+            return;
+        // Hentikan coroutine fade yang sedang berjalan agar tidak bentrok
+        StopAllCoroutines();
+        StartCoroutine(ChangeBgmRoutine(clip));
+    }
+
+    private IEnumerator ChangeBgmRoutine(AudioClip newClip)
+    {
+        // 1. Jika ada musik yang sedang berputar, lakukan Fade Out terlebih dahulu
+        if (_musicSource.isPlaying)
+        {
+            yield return StartCoroutine(FadeOutMusic());
+        }
+
+        // 2. Lakukan Fade In untuk musik baru
+        yield return StartCoroutine(FadeInMusic(newClip));
     }
 
     public void PlayBgmLoop(AudioClip clip)
     {
-        if (clip == null) return;
+        if (clip == null)
+            return;
         _musicSource.clip = clip;
         _musicSource.loop = true;
         _musicSource.Play();
@@ -92,8 +138,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMysteryBell()
     {
-        if (_bgmMysteryBell != null)
-            _sfxSource.PlayOneShot(_bgmMysteryBell);
+        if (_bgmAuto != null)
+            _sfxSource.PlayOneShot(_bgmAuto);
     }
 
     #endregion
@@ -102,7 +148,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayAmbient(AudioClip clip)
     {
-        if (clip == null) return;
+        if (clip == null)
+            return;
         _ambientSource.clip = clip;
         _ambientSource.loop = true;
         _ambientSource.Play();
@@ -250,7 +297,9 @@ public class AudioManager : MonoBehaviour
     }
 
     public float GetMusicVolume() => _musicVolume;
+
     public float GetSfxVolume() => _sfxVolume;
+
     public float GetAmbientVolume() => _ambientVolume;
 
     #endregion
@@ -265,23 +314,29 @@ public class AudioManager : MonoBehaviour
         _musicSource.Play();
         _isMusicPlaying = true;
 
-        float startVolume = 0f;
-        while (_musicSource.volume < _musicVolume)
+        float timer = 0f;
+        while (timer < _fadeDuration)
         {
-            _musicSource.volume = Mathf.Lerp(startVolume, _musicVolume, _musicSource.time / _fadeDuration);
+            timer += Time.deltaTime;
+            _musicSource.volume = Mathf.Lerp(0f, _musicVolume, timer / _fadeDuration);
             yield return null;
         }
+
         _musicSource.volume = _musicVolume;
     }
 
     private IEnumerator FadeOutMusic()
     {
         float startVolume = _musicSource.volume;
-        while (_musicSource.volume > 0f)
+        float timer = 0f;
+
+        while (timer < _fadeDuration)
         {
-            _musicSource.volume = Mathf.Lerp(startVolume, 0f, _musicSource.time / _fadeDuration);
+            timer += Time.deltaTime;
+            _musicSource.volume = Mathf.Lerp(startVolume, 0f, timer / _fadeDuration);
             yield return null;
         }
+
         _musicSource.Stop();
         _musicSource.volume = startVolume;
     }
@@ -289,11 +344,15 @@ public class AudioManager : MonoBehaviour
     private IEnumerator FadeOutAmbient()
     {
         float startVolume = _ambientSource.volume;
-        while (_ambientSource.volume > 0f)
+        float timer = 0f;
+
+        while (timer < _fadeDuration)
         {
-            _ambientSource.volume = Mathf.Lerp(startVolume, 0f, _ambientSource.time / _fadeDuration);
+            timer += Time.deltaTime;
+            _ambientSource.volume = Mathf.Lerp(startVolume, 0f, timer / _fadeDuration);
             yield return null;
         }
+
         _ambientSource.Stop();
         _ambientSource.volume = startVolume;
     }

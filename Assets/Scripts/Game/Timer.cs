@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class Timer : MonoBehaviour
 {
     public static Timer Singleton;
+
+    public CanvasGroup transitionPanel;
 
     public float elapsedTime = 0f;
     public float endTime = 0f;
@@ -15,8 +19,10 @@ public class Timer : MonoBehaviour
     [Header("Display Settings")]
     [Tooltip("Jam awal tampilan")]
     public float displayStartHour = 8f;
+
     [Tooltip("Jam akhir tampilan")]
     public float displayEndHour = 22f;
+
     [Tooltip("Durasi waktu real-time dalam menit (default 10 menit)")]
     public float realTimeDurationMinutes = 10f;
 
@@ -34,8 +40,20 @@ public class Timer : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        GameEvent.StartTranstionDayToRecap += CloseDay;
+    }
+    void OnDisable()
+    {
+        GameEvent.StartTranstionDayToRecap -= CloseDay;
+    }
+
     void Start()
     {
+        transitionPanel.alpha = 0;
+        transitionPanel.blocksRaycasts = false;
+        transitionPanel.interactable = false;
         StartTimerDefault();
     }
 
@@ -87,8 +105,15 @@ public class Timer : MonoBehaviour
     {
         isRunning = false;
         GameManager.Instance.isCanSpawnNpc = false;
-        AudioManager.Instance.PlaySfxTimerEnd();
+        // AudioManager.Instance.PlaySfxTimerEnd();
         Debug.Log("Timer end in: " + elapsedTime + " second");
-        // SceneManager.LoadScene("RecapDay");
+    }
+
+    void CloseDay()
+    {
+        transitionPanel.blocksRaycasts = true;
+        transitionPanel.interactable = true;
+        transitionPanel
+            .DOFade(1, 0.5f);
     }
 }
