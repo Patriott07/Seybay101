@@ -10,86 +10,73 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd333e05fc6655246b501ccbd8d989b4, type: 3}
-  m_Name: StoryData_1aftershift
+  m_Name: StoryData_2aftershift
   m_EditorClassIdentifier: 
   Day: 1
   storyText:
-  - contentText: “Gimana shift di loket hari ini mas?“
+  - contentText: “Muka kamu pucat banget mas... Ada apa di loket?” Ujar Nasya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “pasti padet banget ya?”. Ujar Nasya.
+  - contentText: Hari ini kacau banget Sya... Kamu dengar berita Roket D003 tadi pagi?
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Di luar makin berisik Sya.
+  - contentText: “Yang penumpang gelap menusuk kru Azura Corp itu kan?”
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Banyak yang datang ke loket cuma bawa berkas kedaluwarsa
+  - contentText: Iya. Garis pengamanan dinaikkan ke Protokol Darurat Kategori A.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku tolak beberapa orang
+  - contentText: Aku nggak cuma periksa kertas paspor lagi sekarang...
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: ......
+  - contentText: Aku harus membongkar koper barang bawaan orang-orang.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Meski aku merasa kasihan pada mereka
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Mereka udah beli tiketnya tapi aku tolak
+  - contentText: Nyari senjata tajam, peledak, sampai obat sintetis ilegal.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Bukan salahmu, sayang”. Ujar Nasya.
+  - contentText: Paling parah, Azura Corp menaikkan harga tiket secara sepihak.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Tugasmu hanya bekerja dengan baik.”
+  - contentText: Orang-orang di luar loket makin gila dan histeris, Sya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Dan membawa pulang hasil untuk kami dirumah”
+  - contentText: Tatapan mereka saat barangnya kusita... seperti ingin membunuhku.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: .....
+  - contentText: “Aduh ya Tuhan... Dunia di luar makin nggak aman.” Ujar Nasya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku mengerti, Makasih ya sayang.
+  - contentText: “Di rumah juga makin sulit mas. Debu di luar makin pekat.”
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Syukurlah perusahaan bayar upahku tepat waktu karena ramai pengunjung.
+  - contentText: “Kulit Virly makin merah dan perih kalau kena udara luar.”
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Oiyya dimana Virly? dan Kraisa
+  - contentText: “Dia rewel terus seharian, Kraisa sampai bingung nemeninnya.”
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Kraisa sama Virly ada di kamar”
+  - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Virly seharian ini nggak banyak gerak”. Ujar Nasya.
+  - contentText: Kasihan anak kita... Kita harus beli salep atau obat buat Virly.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Dia bilang kulitnya terasa gatal”
+  - contentText: Tapi harga tiket evakuasi yang dinaikkan Azura Corp bikin target kita makin jauh.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “tapi perih kalau disentuh..”
+  - contentText: “Gak apa-apa mas, yang penting anak-anak bisa makan dan sehat dulu hari ini.”
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Aku bingung mas harus ngapain.” Ujar Nasya.
+  - contentText: Iya Sya. Mari kita hitung sisa gaji hari ini.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Sya, Aku ngerti kondisi kita ga mudah. Kamu yang sabar ya.
+  - contentText: Kita harus atur keuangan kita baik-baik malam ini.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Kita harus atur uang hari ini, Sya.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Tiket evakuasi nggak murah.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Tapi, kita juga nggak bisa biarin rumah kelaparan. dan Nasya ngeluh
-      sakit kan?”
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: .....
+  - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03

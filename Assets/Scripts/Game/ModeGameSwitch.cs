@@ -22,12 +22,12 @@ public class ModeGameSwitch : MonoBehaviour
         InitializeMode();
     }
 
-    void Enable()
+    void OnEnable()
     {
         GameEvent.OnPassportModeCall += SwitchToPassport;
     }
 
-    void Disable()
+    void OnDisable()
     {
         GameEvent.OnPassportModeCall -= SwitchToPassport;
     }
@@ -37,7 +37,7 @@ public class ModeGameSwitch : MonoBehaviour
     void Update()
     {
         bool isSpaceDown = Input.GetKeyDown(KeyCode.Space);
-        if (isSpaceDown)
+        if (isSpaceDown && GameManager.CurrentGameState == GameManager.GameState.PLAY)
             ToggleMode();
     }
 

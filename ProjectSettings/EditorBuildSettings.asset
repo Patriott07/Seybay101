@@ -36,8 +36,20 @@ EditorBuildSettings:
     path: Assets/Scenes/Game/AlphaDay1.unity
     guid: 7c7a1fbc660fbe6489d369a28b76972c
   - enabled: 1
+    path: Assets/Scenes/Game/AlphaDay2.unity
+    guid: bb6074e52c43aba449ab9e7efa97876b
+  - enabled: 1
+    path: Assets/Scenes/Game/AlphaPreDay2.unity
+    guid: dccbc63aed154bf40a2aa76c0c34631e
+  - enabled: 1
     path: Assets/Scenes/Game/AlphaRecapDay1.unity
     guid: 9630f2ea309fa9b4e87a7bc7ac1230ce
+  - enabled: 1
+    path: Assets/Scenes/Game/AlphaRecapDay2.unity
+    guid: bb46d54d758769141a25ee4422b4b612
+  - enabled: 1
+    path: Assets/Scenes/Game/Home.unity
+    guid: ff003349e93bc9344b9d7772d473acbe
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

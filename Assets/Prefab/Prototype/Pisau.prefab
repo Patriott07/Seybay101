@@ -108,15 +108,9 @@ MonoBehaviour:
     xrayMaskSprite: {fileID: 0}
     gridPosition: {x: 0, y: 0}
     isMetallic: 0
-<<<<<<< HEAD
     isOrganic: 0
     isContraband: 1
     itemWeight: 3
-=======
-    isOrganic: 1
-    isContraband: 0
-    itemWeight: 10
->>>>>>> eb2777443529b62128d2ec56e51769d47e7d852f
 --- !u!61 &914989059484478946
 BoxCollider2D:
   m_ObjectHideFlags: 0

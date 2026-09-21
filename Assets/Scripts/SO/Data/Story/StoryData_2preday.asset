@@ -10,86 +10,66 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd333e05fc6655246b501ccbd8d989b4, type: 3}
-  m_Name: StoryData_1aftershift
+  m_Name: StoryData_2preday
   m_EditorClassIdentifier: 
   Day: 1
   storyText:
-  - contentText: “Gimana shift di loket hari ini mas?“
+  - contentText: TutttTutt (Suara notifikasi dari ponsel)
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “pasti padet banget ya?”. Ujar Nasya.
+  - contentText: Mataku yang masih setengah terlelap tidur.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Di luar makin berisik Sya.
+  - contentText: Mencoba membuka ponsel ku yang berdering.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Banyak yang datang ke loket cuma bawa berkas kedaluwarsa
+  - contentText: 1400 Pesan Tertulis di grup Diskusi Azura Corp.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku tolak beberapa orang
+  - contentText: TOLONG PERKETAT SYSTEM.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: ......
+  - contentText: Mulai Geledah seluruh barang penumpang.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Meski aku merasa kasihan pada mereka
+  - contentText: Mataku yang masih sayu sayu bangun tidur.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Mereka udah beli tiketnya tapi aku tolak
+  - contentText: Masih mencoba memahami seluruh isi pesan.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: ......
+  - contentText: Insiden Pembunuhan Pada Penerbangan Evakuasi003
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Bukan salahmu, sayang”. Ujar Nasya.
+  - contentText: 8 Korban jatuh meninggal ditempat.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Tugasmu hanya bekerja dengan baik.”
+  - contentText: 20 Korban lainyya luka-luka.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Dan membawa pulang hasil untuk kami dirumah”
+  - contentText: Dan Pelaku berhasil dilumpuhkan dan diintrogasi atas motif.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: .....
+  - contentText: WHHHHAT--
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku mengerti, Makasih ya sayang.
+  - contentText: "Protokol Darurat: Waspadai senjata dan narkotika di koper penumpang"
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Syukurlah perusahaan bayar upahku tepat waktu karena ramai pengunjung.
+  - contentText: "Harga Ticket Evakuasi Melambung Tinggi. 350$ ke 500$"
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Oiyya dimana Virly? dan Kraisa
+  - contentText: ....
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Kraisa sama Virly ada di kamar”
+  - contentText: Hari ku rasanya makin berat.. ak butuh 4 ticket.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Virly seharian ini nggak banyak gerak”. Ujar Nasya.
+  - contentText: Setidaknya 2000$
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “Dia bilang kulitnya terasa gatal”
+  - contentText: ....
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: “tapi perih kalau disentuh..”
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: “Aku bingung mas harus ngapain.” Ujar Nasya.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Sya, Aku ngerti kondisi kita ga mudah. Kamu yang sabar ya.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Kita harus atur uang hari ini, Sya.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Tiket evakuasi nggak murah.
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: Tapi, kita juga nggak bisa biarin rumah kelaparan. dan Nasya ngeluh
-      sakit kan?”
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
-  - contentText: .....
-    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
-    textSpeed: 0.03
+ 
+
