@@ -32,15 +32,6 @@ public class ModeGameSwitch : MonoBehaviour
         GameEvent.OnPassportModeCall -= SwitchToPassport;
     }
 
-    
-    // Update is called once per frame
-    void Update()
-    {
-        bool isSpaceDown = Input.GetKeyDown(KeyCode.Space);
-        if (isSpaceDown && GameManager.CurrentGameState == GameManager.GameState.PLAY)
-            ToggleMode();
-    }
-
     void InitializeMode()
     {
         switch (currentMode)

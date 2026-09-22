@@ -1,9 +1,6 @@
 using System.Collections;
 using DG.Tweening;
-using NUnit.Framework;
 using Schema.data;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class StampHybridController : MonoBehaviour
@@ -31,9 +28,13 @@ public class StampHybridController : MonoBehaviour
     private float elapsedTime = 0f;
     private Transform startPos;
 
-    [SerializeField] Transform stampleDecisionHolder;
+    [SerializeField]
+    Transform stampleDecisionHolder;
     Transform targetPos;
-    [SerializeField] Transform targetOne, targetTwo;
+
+    [SerializeField]
+    Transform targetOne,
+        targetTwo;
 
     void Start()
     {
@@ -48,11 +49,16 @@ public class StampHybridController : MonoBehaviour
     {
         // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
         // #800020
-        if (isMoving) {
+        if (isMoving)
+        {
             elapsedTime += Time.deltaTime;
-            float percentageComplete =  elapsedTime / 0.3f;
+            float percentageComplete = elapsedTime / 0.3f;
 
-            stampleDecisionHolder.position = Vector2.Lerp(startPos.position, targetPos.position, percentageComplete);
+            stampleDecisionHolder.position = Vector2.Lerp(
+                startPos.position,
+                targetPos.position,
+                percentageComplete
+            );
 
             if (percentageComplete >= 1f)
             {
@@ -76,7 +82,8 @@ public class StampHybridController : MonoBehaviour
     // Tambahkan OnMouseDown untuk trigger klik pertama kali
     void OnMouseDown()
     {
-        if (sedangDiproses) return;
+        if (sedangDiproses)
+            return;
 
         targetPos = targetOne;
         startPos = targetTwo;
@@ -105,9 +112,14 @@ public class StampHybridController : MonoBehaviour
         elapsedTime = 0f; // Reset waktu lagi untuk animasi pulangnya
         isMoving = true;
 
-
         if (sedangDiproses)
             return;
+
+        if (!GameManager.Instance.isNpcInFront)
+        {
+            transform.position = posisiAwal;
+            return;
+        }
 
         Collider2D[] hits = Physics2D.OverlapPointAll(transform.position);
         bool dilepasDiZona = false;
@@ -299,6 +311,31 @@ public class StampHybridController : MonoBehaviour
                     _validTicketDate = false;
                 }
                 break;
+
+            case 2:
+                /// <summary>
+                /// Day 2: Check passport + koper items
+                /// </summary>
+                PassportSchema passport2 = PassportScript.Instance.currentData;
+                BoardingPassSchema ticket2 = TicketScript.Instance.currentData;
+                if (passport2 != null && ticket2 != null)
+                {
+                    if (passport2.ownerName != ticket2.passengerName
+                        || passport2.documentNumber != ticket2.idPassengerCard)
+                        _mistakeCount++;
+                    if (passport2.expiryDate.Year < 2045)
+                        _mistakeCount++;
+                    if (ticket2.departureDate.Year != 2045)
+                        _mistakeCount++;
+                }
+
+                // Check koper: barang terlarang yang masih belum disita
+                if (LuggageManager.Instance != null && LuggageManager.Instance.isSystemActive)
+                {
+                    int illegalItemsInKoper = LuggageManager.Instance.JumlahBarangTerlarangBelumDisita();
+                    _mistakeCount += illegalItemsInKoper;
+                }
+                break;
             default:
                 break;
         }
@@ -317,10 +354,10 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-            if (Random.Range(1, 3) == 3)
-            {
-                // ShowMistake() a function that notify player if he make a mistake!!!
-            }
+                if (Random.Range(1, 3) == 3)
+                {
+                    // ShowMistake() a function that notify player if he make a mistake!!!
+                }
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
             }
@@ -331,7 +368,7 @@ public class StampHybridController : MonoBehaviour
             if (_mistakeCount > 0)
             {
                 EconomyManager.Instance.TambahUang();
-                EconomyManager.Instance.TambahTrust(5);   
+                EconomyManager.Instance.TambahTrust(5);
             }
             else
             {

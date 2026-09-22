@@ -111,6 +111,8 @@ MonoBehaviour:
     isOrganic: 0
     isContraband: 0
     itemWeight: 6
+  mejaMin: {x: -7.5, y: -2.27}
+  mejaMax: {x: 2.38, y: -3.37}
 --- !u!61 &-1617318204311994320
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -6,6 +6,11 @@ public class LuggageItem : MonoBehaviour
     [Header("Data Spesifik Barang")]
     public LuggageItemData dataBarang;
 
+    [Header("Batas Area Meja (World Space)")]
+    public Vector2 mejaMin;
+    public Vector2 mejaMax;
+    private bool pakaiBatchManual = true;
+
     private Vector3 posisiAwalKoperLokal;
     private bool sedangDigeser = false;
     private bool sedangAnimasiPulang = false;
@@ -21,25 +26,18 @@ public class LuggageItem : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f); // abu-abu sedikit
+        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f);
 
         cam = GameManager.Instance.mainCam;
 
-        // --- KUNCI PERBAIKAN: Sinkronisasi Fisika dan Visual (Tanpa Bug) ---
-        // Kita ambil urutan spawn barang ini di dalam koper
         int urutanTumpukan = transform.GetSiblingIndex();
-
-        // 1. Jadikan urutan tersebut sebagai layer visual (yang belakangan spawn = di atas)
         spriteRenderer.sortingOrder = urutanTumpukan;
         layerAwal = spriteRenderer.sortingOrder;
 
-        // 2. Majukan sumbu Z-nya sedikit demi sedikit ke arah kamera.
-        // Ini memaksa sistem klik fisik Unity percaya bahwa barang ini benar-benar ada di depan.
         Vector3 posLokal = transform.localPosition;
         posLokal.z = urutanTumpukan * -0.01f;
         transform.localPosition = posLokal;
 
-        // Simpan posisi amannya
         posisiAwalKoperLokal = transform.localPosition;
         manager = LuggageManager.Instance;
     }
@@ -56,7 +54,8 @@ public class LuggageItem : MonoBehaviour
                     KembalikanPosisiZ(); // Reset kedalaman Z jika klik kanan di udara
                     // if (manager != null) manager.SembunyikanInfoBarang();
                 }
-                StartCoroutine(PulangKeKoper());
+                // StartCoroutine(PulangKeKoper());
+                 StartCoroutine(SnapKeKoper());
             }
         }
     }
@@ -109,15 +108,21 @@ public class LuggageItem : MonoBehaviour
         if (sedangAnimasiPulang)
             return;
 
-        // --- TERAPKAN OFFSET SAAT BARANG DISERET ---
         Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        // Posisi barang sekarang = Posisi Mouse + Selisih jarak klik awal
-        transform.position = new Vector3(
+        Vector3 targetPos = new Vector3(
             titikMouse.x + offsetDrag.x,
             titikMouse.y + offsetDrag.y,
             transform.position.z
         );
+
+        if (pakaiBatchManual)
+        {
+            targetPos.x = Mathf.Clamp(targetPos.x, mejaMin.x, mejaMax.x);
+            targetPos.y = Mathf.Clamp(targetPos.y, mejaMin.y, mejaMax.y);
+        }
+
+        transform.position = targetPos;
     }
 
     void OnMouseUp()
@@ -125,11 +130,43 @@ public class LuggageItem : MonoBehaviour
         if (!sedangDigeser) return;
         sedangDigeser = false;
 
-        // Kembalikan gambar ke tumpukan semula
         spriteRenderer.sortingOrder = layerAwal;
+        KembalikanPosisiZ();
+
+        if (pakaiBatchManual)
+        {
+            bool diDalamMeja = transform.position.x >= mejaMin.x && transform.position.x <= mejaMax.x &&
+                               transform.position.y >= mejaMin.y && transform.position.y <= mejaMax.y;
+            if (!diDalamMeja)
+            {
+                // StartCoroutine(SnapKeKoper());
+                // return;
+            }
+        }
+
         LuggageManager.Instance.HitungBeratRealtime();
-        KembalikanPosisiZ(); // Kembalikan fisik ke tumpukan semula
-       
+    }
+
+    IEnumerator SnapKeKoper()
+    {
+        float time = 0;
+        Vector3 startPos = transform.position;
+        Vector3 tujuan = transform.parent != null
+            ? transform.parent.TransformPoint(posisiAwalKoperLokal)
+            : posisiAwalKoperLokal;
+        tujuan = new Vector3(tujuan.x, tujuan.y, startPos.z);
+
+        while (time < 1)
+        {
+            time += Time.deltaTime * 8f;
+            transform.position = Vector3.Lerp(startPos, tujuan, time);
+            yield return null;
+        }
+
+        transform.position = tujuan;
+        spriteRenderer.sortingOrder = layerAwal;
+        KembalikanPosisiZ();
+        LuggageManager.Instance.HitungBeratRealtime();
     }
 
     // Fungsi pembantu untuk mengembalikan kedalaman Z barang

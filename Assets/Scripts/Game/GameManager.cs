@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public string sceneNameRecapDay;
     public Camera mainCam;
     public bool isCanSpawnNpc = true;
-    private int currentDay = 1;
+    public bool isNpcInFront = false;
+    [SerializeField] private int currentDay = 1;
     public float chanceTOGetSomeActiveViolation = 0.2f;
 
     public enum GameState

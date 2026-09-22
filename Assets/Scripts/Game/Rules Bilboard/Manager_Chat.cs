@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using DG.Tweening;
+using TMPro;
+using UnityEngine;
 
 // === [AWAL PERUBAHAN 1: CLASS CONTENT CHAT DARI TEMANMU] ===
 [System.Serializable]
@@ -13,6 +13,7 @@ public class ContentChat
     public AudioClip clip;
     public bool isMC = true;
 }
+
 // === [AKHIR PERUBAHAN 1] ===
 
 public class Manager_Chat : MonoBehaviour
@@ -39,9 +40,10 @@ public class Manager_Chat : MonoBehaviour
     public float geserKiriNPC = -0.5f;
     public float geserKananMC = 0.5f;
 
-    // === [AWAL PERUBAHAN 2: MENGGUNAKAN LIST CONTENT CHAT] ===
-    [Header("Daftar Dialog")]
-    public List<ContentChat> dialogs;
+    // === [AWAL PERUBAHAN 2: MENGGUNAKAN CHAT TOPIC SCRIPTABLEOBJECT] ===
+    [Header("Daftar Percakapan")]
+    public ChatTopic currentTopic;
+
     // === [AKHIR PERUBAHAN 2] ===
 
     private List<GameObject> daftarPesanAktif = new List<GameObject>();
@@ -54,8 +56,10 @@ public class Manager_Chat : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
 
         // Otomatis membuat komponen AudioSource di belakang layar
         // audioSourceChat = gameObject.AddComponent<AudioSource>();
@@ -70,7 +74,8 @@ public class Manager_Chat : MonoBehaviour
 
     public void BersihkanChat()
     {
-        if (prosesChatAktif != null) StopCoroutine(prosesChatAktif);
+        if (prosesChatAktif != null)
+            StopCoroutine(prosesChatAktif);
 
         // === [AWAL PERUBAHAN 3: HENTIKAN SUARA SAAT DIBERSIHKAN] ===
         if (audioSourceChat != null && audioSourceChat.isPlaying)
@@ -81,7 +86,8 @@ public class Manager_Chat : MonoBehaviour
 
         foreach (GameObject pesanLama in daftarPesanAktif)
         {
-            if (pesanLama != null) Destroy(pesanLama);
+            if (pesanLama != null)
+                Destroy(pesanLama);
         }
         daftarPesanAktif.Clear();
 
@@ -99,33 +105,51 @@ public class Manager_Chat : MonoBehaviour
     {
         yield return new WaitForSeconds(delaySebelumMulai);
 
-        int totalDialog = dialogs.Count;
-
-        for (int i = 0; i < totalDialog; i++)
+        if (currentTopic == null)
         {
-            ContentChat chat = dialogs[i];
+            Debug.LogWarning("ChatTopic belum di-assignment di Inspector!");
+            yield break;
+        }
+
+        if (!currentTopic.ShouldSpeak())
+        {
+            yield break;
+        }
+
+        List<ContentChat> chats = currentTopic.GetRandomMessage();
+        if (chats == null)
+        {
+            Debug.LogWarning("List messages di ChatTopic kosong!");
+            yield break;
+        }
+
+        foreach (ContentChat chat in chats)
+        {
             bool isMC = chat.isMC;
             float offsetX = isMC ? geserKiriNPC : geserKananMC;
             GameObject prefab = isMC ? prefabBubbleMC : prefabBubbleNPC;
 
-            // === [AWAL PERUBAHAN 4: MENGGUNAKAN DARI DIALOG SINGLE LIST BERDASARKAN isMC] ===
-            yield return StartCoroutine(MunculkanPesan(prefab, chat.textChat, chat.clip, offsetX, isMC));
-            // === [AKHIR PERUBAHAN 4] ===
-
-            yield return new WaitForSeconds(jedaAntarPesan);
+            yield return StartCoroutine(
+                MunculkanPesan(prefab, chat.textChat, chat.clip, offsetX, isMC)
+            );
         }
-
-          audioSourceChat.Stop(); // Hentikan suara sebelumnya (jika menumpuk)
     }
 
     // === [AWAL PERUBAHAN 5: PARAMETER TAMBAHAN UNTUK AUDIOCLIP] ===
-    IEnumerator MunculkanPesan(GameObject prefab, string teks, AudioClip suara, float offsetX, bool isMC)
+    IEnumerator MunculkanPesan(
+        GameObject prefab,
+        string teks,
+        AudioClip suara,
+        float offsetX,
+        bool isMC
+    )
     {
         if (daftarPesanAktif.Count >= batasMaksimalPesan)
         {
             foreach (GameObject pesanLama in daftarPesanAktif)
             {
-                if (pesanLama != null) Destroy(pesanLama);
+                if (pesanLama != null)
+                    Destroy(pesanLama);
             }
             daftarPesanAktif.Clear();
             posisiYSelanjutnya = 0f;
@@ -134,8 +158,10 @@ public class Manager_Chat : MonoBehaviour
 
         if (apakahMCSebelumnya != null)
         {
-            if (isMC == apakahMCSebelumnya) posisiYSelanjutnya -= jarakSamaKarakter;
-            else posisiYSelanjutnya -= jarakBedaKarakter;
+            if (isMC == apakahMCSebelumnya)
+                posisiYSelanjutnya -= jarakSamaKarakter;
+            else
+                posisiYSelanjutnya -= jarakBedaKarakter;
         }
 
         Vector3 posisiMuncul = transform.position + new Vector3(offsetX, posisiYSelanjutnya, 0);

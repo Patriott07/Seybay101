@@ -161,6 +161,7 @@ public class NpcEntranceManager : MonoBehaviour
             yield return null;
         }
 
+        GameManager.Instance.isNpcInFront = true;
         Manager_Chat.Instance.MulaiChatBaru();
     }
     // --- FASE C: FUNGSI UNTUK MENGUSIR NPC ---
@@ -223,6 +224,7 @@ public class NpcEntranceManager : MonoBehaviour
                     GameManager.Instance.EndShiftAndLoadScene();
                 }
                 
+                GameManager.Instance.isNpcInFront = false;
                 Debug.Log("NPC sudah pergi dari layar!");
             });
     }

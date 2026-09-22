@@ -44,7 +44,6 @@ public class Day2RuleSet : Day1RuleSet
     public override List<RuleViolation> GetRules()
     {
         var rules = base.GetRules();           // Get Day1's 3 rules
-        rules.Add(new NewRule_Day2());          // Add Bribery
         return rules;
     }
 }

@@ -206,6 +206,23 @@ public class LuggageManager : MonoBehaviour
         textBeratKoper.text = "Weight: " + totalBerat.ToString("F1") + "KG \n" + "------------";
     }
 
+    public int JumlahBarangTerlarangBelumDisita()
+    {
+        if (barangAktif == null) return 0;
+        int count = 0;
+        foreach (LuggageItem item in barangAktif)
+        {
+            if (item != null && item.dataBarang.isContraband && item.ApakahDiDalamKoper())
+                count++;
+        }
+        return count;
+    }
+
+    public bool AdaBarangTerlarangDiKoper()
+    {
+        return JumlahBarangTerlarangBelumDisita() > 0;
+    }
+
     public void EvaluasiInspeksi()
     {
         StartCoroutine(ProsesEvaluasiDanAnimasiKeluar());

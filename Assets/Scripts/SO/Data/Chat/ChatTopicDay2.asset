@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 920843e495dc57c438e9b134fabd35a6, type: 3}
+  m_Name: ChatTopicDay2
+  m_EditorClassIdentifier: 
+  topicName: 
+  chanceToSpeak: 0.5
+  messages:
+  - chatLines:
+    - textChat: Hii, Selamat Pagi
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Ini Benar Penerbangan Azura Corp?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: 'You : Benar, Biar saya periksa dulu'
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pagi, Pak.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Kudengar dari berita semalam kuota tiket diperketat lagi ya?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Iya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Aturannya makin tidak masuk akal.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pak, tetangga sebelah rumah saya semalam sakit.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Batuknya Keluar Darah dan kulitnya mengeras.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Apa itu tanda awal gejala kaya yg diberita ya?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Saya tidak terlalu paham soal itu
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Sebaiknya cepat diperiksa jika kamu mengalami hal serupa
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Aduh, kepala saya pusing sekali dari tadi malam.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Udara di luar rasanya makin beracun.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+  - chatLines:
+    - textChat: Pak, apakah benar di planet Seybay nanti kita bisa sembuh total?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Itu janji Azura Corp di brosur.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Kita harus yakin.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Yang penting kita bisa berangkat dulu.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Koper saya agak berat karena isinya persediaan obat keluarga.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Tidak apa-apa kan kalau lolos sensor berat?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Letakkan kopernya di timbangan.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Semalam badai debunya besar sekali, Pak.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Jendela rumah saya hampir pecah tersapu angin.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Daerah saya juga sama kondisinya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Apa koper saya harus dibongkar ulang?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Taruh saja kopernya di atas meja.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pak, wajah bapak kelihatan pucat sekali hari ini.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Anda tidak ikut terpapar udara luar kan?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Hanya kurang tidur.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Anak saya nangis terus karena kehausan.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Apakah air kemasan di tas ini diizinkan lewat sensor?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+  - chatLines:
+    - textChat: Pak, saya dengar roket keberangkatan siang ini ditunda.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Apa itu benar?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Saya tidak memegang jadwal penerbangan roket.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Tugas saya hanya memeriksa berkas di meja ini.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Terima kasih untuk kerja kerasnya hari ini, Pak.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Semoga keluarga bapak juga lekas siap untuk evakuasi.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Terima kasih kembali.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1

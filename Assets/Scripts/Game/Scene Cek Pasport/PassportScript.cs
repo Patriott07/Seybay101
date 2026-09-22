@@ -99,16 +99,10 @@ public class PassportScript : MonoBehaviour
   
     DateTime GenerateExpireDate()
     {
-        
-        // bool isValid = UnityEngine.Random.Range(1, 5) > 2.5 ? true : false;
-
-        int day = UnityEngine.Random.Range(1, 27);
-        int month = UnityEngine.Random.Range(1, 12);
-        return new DateTime(UnityEngine.Random.Range(2046, 2066), month, day);
-
-        // if (isValid)
-        // else
-        //     return new DateTime(UnityEngine.Random.Range(1960, 2044), month, day);
+        int month = UnityEngine.Random.Range(1, 13);
+        int year = UnityEngine.Random.Range(2046, 2066);
+        int day = UnityEngine.Random.Range(1, DateTime.DaysInMonth(year, month) + 1);
+        return new DateTime(year, month, day);
     }
 
     public string GenerateOwnerName(bool isFemale)
