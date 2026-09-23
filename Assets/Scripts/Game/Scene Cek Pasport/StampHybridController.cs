@@ -2,7 +2,6 @@ using System.Collections;
 using DG.Tweening;
 using NUnit.Framework;
 using Schema.data;
-using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
 
@@ -35,8 +34,21 @@ public class StampHybridController : MonoBehaviour
     Transform targetPos;
     [SerializeField] Transform targetOne, targetTwo;
 
+    [Header("Pengaturan Notify Mistake")]
+    public float jarakGerakX = 5f;
+    public float durasiGerak = 0.5f;
+    public float waktuBerhenti = 2f;
+
+    [SerializeField]
+    Transform notifyMistakeOBJ;
+
+    private Vector3 notifyMistakeOBJStartPos;
+
     void Start()
     {
+        if (notifyMistakeOBJ != null)
+            notifyMistakeOBJStartPos = notifyMistakeOBJ.position;
+
         // cam = Camera.main;
         posisiAwal = transform.position;
 
@@ -46,6 +58,12 @@ public class StampHybridController : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            notifyMistake();
+            
+        }
         // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
         // #800020
         if (isMoving) {
@@ -138,6 +156,31 @@ public class StampHybridController : MonoBehaviour
             transform.position = posisiAwal;
         }
     }
+
+
+    void notifyMistake()
+    {
+        if (notifyMistakeOBJ != null)
+        {
+            // Hentikan animasi sebelumnya jika sedang berjalan agar tidak tumpang tindih
+            notifyMistakeOBJ.DOKill();
+            // Pastikan mulai dari posisi awal
+            notifyMistakeOBJ.position = notifyMistakeOBJStartPos;
+
+            Sequence seq = DOTween.Sequence();
+            
+            // Gerak ke kanan
+            seq.Append(notifyMistakeOBJ.DOMoveX(notifyMistakeOBJStartPos.x + jarakGerakX, durasiGerak));
+            
+            // Berhenti
+            seq.AppendInterval(waktuBerhenti);
+            
+            // Balik ke kiri (posisi awal)
+            seq.Append(notifyMistakeOBJ.DOMoveX(notifyMistakeOBJStartPos.x, durasiGerak));
+        }
+    }
+
+
 
     IEnumerator SiklusAnimasiKeputusan(bool isApprove, Vector3 posisiZona)
     {
@@ -318,6 +361,7 @@ public class StampHybridController : MonoBehaviour
             if (Random.Range(1, 3) == 3)
             {
                 // ShowMistake() a function that notify player if he make a mistake!!!
+                notifyMistake();
             }
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
