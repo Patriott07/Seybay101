@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,12 +25,18 @@ public class StoryManager : MonoBehaviour
 
     [Header("UI References")]
     public TypingText typingText;
+    public CanvasGroup contentBlocker;
+    public Animator contentAnimationController;
+    public CanvasGroup contentGroup;
+    public float hideDur = 0.4f;
 
-    // public TypingText typingTextOnDesk;
-    // public TypingText typingTextAfterShift;
 
     [Header("Audio")]
     public AudioSource audioSource;
+    public AudioSource immersiveAudioSource;
+
+    [Header("Storyboard")]
+    public UnityEngine.UI.RawImage storyboardRawImage;
 
     private int currentDay = 1;
 
@@ -50,6 +58,7 @@ public class StoryManager : MonoBehaviour
         // LoadStoryData(currentDay);
         // Pastikan memanggil ShowTypingText() agar Event Listener terpasang sebelum data dimuat
         ShowTypingText();
+     
     }
 
     public void LoadStoryData(int day)
@@ -59,6 +68,25 @@ public class StoryManager : MonoBehaviour
         if (AutoPlayText)
             ShowTypingText();
     }
+
+    public void LoadScene(string name){
+        SceneManager.LoadScene(name);
+    }
+
+    public void StopAudio(AudioSource audioSource)
+    {
+        audioSource.Stop();
+    }
+
+    public void HideCanvas(bool loadScene){
+        if(contentGroup != null){
+            contentGroup.blocksRaycasts =false;
+            contentGroup.interactable =false;
+            contentGroup.DOFade(0, hideDur).OnComplete(() => {if(loadScene) SceneManager.LoadScene(mainDeskSceneName);});
+        }
+    }
+
+    // public void 
 
     public void SetStoryData(StorySchema story)
     {
@@ -88,8 +116,22 @@ public class StoryManager : MonoBehaviour
             typingText.OnAllComplete -= OnPreDayAllComplete;
             typingText.OnAllComplete += OnPreDayAllComplete;
 
+            typingText.OnLineStoryData -= OnLineStoryDataHandler;
+            typingText.OnLineStoryData += OnLineStoryDataHandler;
+
             typingText.SetTextWithAudio(currentStory.storyText);
         }
+    }
+
+    public void HideContent()
+    {
+        contentAnimationController.Play("BoxChatHide", 0, 0);
+    }
+
+    public void PlayAudio(AudioSource audioSource)
+    {
+        audioSource.Stop();
+        audioSource.Play();
     }
 
     private void OnAudioPlayHandler(AudioClip clip)
@@ -98,6 +140,38 @@ public class StoryManager : MonoBehaviour
         {
             audioSource.clip = clip;
             audioSource.Play();
+        }
+    }
+
+    private void OnLineStoryDataHandler(Texture texture, AudioClip immersiveClip)
+    {
+        // 1. Storyboard Texture
+        if (storyboardRawImage != null)
+        {
+            if (texture != null)
+            {
+                storyboardRawImage.gameObject.SetActive(true);
+                storyboardRawImage.texture = texture;
+            }
+            else
+            {
+                storyboardRawImage.gameObject.SetActive(false);
+            }
+        }
+
+        // 2. Immersive Audio
+        if (immersiveAudioSource != null)
+        {
+            if (immersiveClip != null)
+            {
+                immersiveAudioSource.clip = immersiveClip;
+                immersiveAudioSource.Play();
+            }
+            else
+            {
+                if (immersiveAudioSource.isPlaying)
+                    immersiveAudioSource.Stop();
+            }
         }
     }
 
@@ -111,6 +185,7 @@ public class StoryManager : MonoBehaviour
         typingText.OnAudioPlay -= OnAudioPlayHandler;
         typingText.OnLineComplete -= OnLineCompleteHandler;
         typingText.OnAllComplete -= OnPreDayAllComplete;
+        typingText.OnLineStoryData -= OnLineStoryDataHandler;
         StopCurrentAudio();
         if (isLoadSceneInEnd)
             SceneManager.LoadScene(mainDeskSceneName);
@@ -121,6 +196,10 @@ public class StoryManager : MonoBehaviour
         if (audioSource != null && audioSource.isPlaying)
         {
             audioSource.Stop();
+        }
+        if (immersiveAudioSource != null && immersiveAudioSource.isPlaying)
+        {
+            immersiveAudioSource.Stop();
         }
     }
 
@@ -142,6 +221,25 @@ public class StoryManager : MonoBehaviour
     //         SceneManager.LoadScene(recapSceneName);
     //     }
     // }
+
+    public void BlockScreenInteract()
+    {
+        if (contentBlocker != null)
+        {
+            contentBlocker.alpha = 1;
+            contentBlocker.blocksRaycasts = true;
+            contentBlocker.blocksRaycasts = true;
+        }
+    }
+    public void UnBlockScreenInteract()
+    {
+        if (contentBlocker != null)
+        {
+            contentBlocker.alpha = 0;
+            contentBlocker.blocksRaycasts = false;
+            contentBlocker.blocksRaycasts = false;
+        }
+    }
 
     public void AdvanceDay()
     {

@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 920843e495dc57c438e9b134fabd35a6, type: 3}
+  m_Name: ChatTopicDay1
+  m_EditorClassIdentifier: 
+  topicName: 
+  chanceToSpeak: 0.5
+  messages:
+  - chatLines:
+    - textChat: Hii, Selamat Pagi
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Ini Benar Penerbangan Azura Corp?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: 'You : Benar, Biar saya periksa dulu'
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pak, anak saya dari tadi nangis terus di belakang.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Bisa tolong cepat?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Sabar, tunggu ya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Dokumennya saya periksa dulu biar nggak salah.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pak, beneran bumi mau kiamat?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Kayak yang dibilang siaran semalam.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Entahlah.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Saya juga cuma pengikut berita di TV.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Ngeri kalau dipikir-pikir.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Kalau berita itu bohong, sial sekali kita.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+  - chatLines:
+    - textChat: Gila ya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Harga tiket roket naik lagi pagi ini.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Mau dibawa ke mana uang sebanyak itu?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+  - chatLines:
+    - textChat: Passport saya basah karena kmrin kehujanan.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Semoga Masih bisa dibaca.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Taruh saja di meja.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Antreannya lama sekali.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Kaki saya sudah pegal.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Sabar sebentar lagi, Bu.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Giliran Ibu tinggal sebentar lagi.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Dompet saya tadi hampir dicopet di gerbang depan.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Syukur dokumen pentingnya aman.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Hati-hati di luar sana.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Situasinya makin tidak kondusif.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Di luar banyak orang protes karena harga tiket naik.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Bapak tidak takut kena imbasnya?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Saya hanya pekerja loket kecil.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Protes pun tidak mengubah keputusan korporat.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Selamat pagi menjelang siang, Pak.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Semoga harinya menyenangkan walau cuaca di luar panas.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Pagi juga.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Silakan taruh dokumennya di sini.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Halo, Pak petugas.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Masih semangat melayani antrean panjang?
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Harus tetap semangat.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Mau bagaimana lagi.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+  - chatLines:
+    - textChat: Pagi, Pak.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Duh, antrean di loket ini lumayan cepat ya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 0
+    - textChat: Selamat pagi.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Kami usahakan seteliti mungkin tapi tetap cepat.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1
+    - textChat: Silakan tunjukkan paspornya.
+      clip: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+      isMC: 1

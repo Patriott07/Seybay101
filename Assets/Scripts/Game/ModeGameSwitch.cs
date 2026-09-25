@@ -22,23 +22,14 @@ public class ModeGameSwitch : MonoBehaviour
         InitializeMode();
     }
 
-    void Enable()
+    void OnEnable()
     {
         GameEvent.OnPassportModeCall += SwitchToPassport;
     }
 
-    void Disable()
+    void OnDisable()
     {
         GameEvent.OnPassportModeCall -= SwitchToPassport;
-    }
-
-    
-    // Update is called once per frame
-    void Update()
-    {
-        bool isSpaceDown = Input.GetKeyDown(KeyCode.Space);
-        if (isSpaceDown)
-            ToggleMode();
     }
 
     void InitializeMode()

@@ -5,8 +5,8 @@ using UnityEngine;
 public class InspectableObject : MonoBehaviour
 {
     [Header("Pengaturan Inspeksi")]
-    public Transform titikInspeksi; // Tempat benda melayang saat dizoom
-    public float skalaZoom = 2f; // Seberapa besar benda membesar (2f = 2x lipat)
+    public Transform titikInspeksi;
+    public float skalaZoom = 2f;
     public float kecepatanAnimasi = 8f;
     public SpriteRenderer bg;
 
@@ -19,8 +19,9 @@ public class InspectableObject : MonoBehaviour
     private bool sedangAnimasi = false;
     private SpriteRenderer spriteRenderer;
 
-    private float clickThreshold = 0.3f; // Batas waktu maksimal antara klik 1 dan klik 2 (dalam detik)
+    private float clickThreshold = 0.3f;
     private float lastClickTime = 0f;
+    private int clickCount = 0;
 
     Draggable draggableScript;
 
@@ -40,49 +41,47 @@ public class InspectableObject : MonoBehaviour
 
     void OnMouseDown()
     {
-        // Cegah klik beruntun saat benda masih bergerak
         if (sedangAnimasi)
             return;
 
-        // Cegah document billboard diinspect langsung -> taruh meja baru bisa
         if (draggableScript != null && draggableScript.isOnDesk == false)
             return;
 
-        // --- LOGIKA DOUBLE CLICK ---
         float timeSinceLastClick = Time.time - lastClickTime;
 
         if (timeSinceLastClick <= clickThreshold)
         {
-            // === INI ADALAH DOUBLE CLICK ===
-            if (!isInspected)
-            {
-                if (currentInspectedObject != null & currentInspectedObject != this)
-                {
-                    currentInspectedObject.PaksaZoomOut();
-
-                }
-
-                currentInspectedObject = this;
-                posisiMeja = transform.position;
-                StartCoroutine(
-                    AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true)
-                );
-
-                AudioManager.Instance.PlaySfxTicket();
-            }
-            else
-            {
-                StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
-                AudioManager.Instance.PlaySfxTicket();
-            }
-
-            // Reset waktu klik agar tidak terhitung triple click
-            lastClickTime = 0f;
+            clickCount++;
         }
         else
         {
-            // Jika ini baru klik pertama, simpan waktunya
-            lastClickTime = Time.time;
+            clickCount = 1;
+        }
+        lastClickTime = Time.time;
+
+        if (clickCount < 2)
+            return;
+
+        // === DOUBLE CLICK DETECTED ===
+        clickCount = 0;
+
+        if (!isInspected)
+        {
+            if (currentInspectedObject != null && currentInspectedObject != this)
+            {
+                currentInspectedObject.PaksaZoomOut();
+            }
+
+            currentInspectedObject = this;
+            posisiMeja = transform.position;
+            sedangAnimasi = true;
+            StartCoroutine(AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true));
+            AudioManager.Instance.PlaySfxTicket();
+        }
+        else
+        {
+            StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
+            AudioManager.Instance.PlaySfxTicket();
         }
     }
 
@@ -90,7 +89,6 @@ public class InspectableObject : MonoBehaviour
     {
         sedangAnimasi = true;
 
-        // Ubah layer langsung saat mulai bergerak naik
         if (!isInspected)
             spriteRenderer.sortingOrder = targetLayer;
 
@@ -100,7 +98,7 @@ public class InspectableObject : MonoBehaviour
         Vector3 startPos = transform.position;
         Vector3 startScale = transform.localScale;
 
-        // bg.
+        bg.DOKill();
         if (openBG)
             bg.DOFade(0.92f, 0.5f).SetDelay(0.3f);
         else
@@ -109,26 +107,24 @@ public class InspectableObject : MonoBehaviour
         while (time < 1)
         {
             time += Time.deltaTime * kecepatanAnimasi;
-
-            // Bergerak membesar dan berpindah posisi secara bersamaan
             transform.position = Vector3.Lerp(startPos, targetPos, time);
             transform.localScale = Vector3.Lerp(startScale, targetScale, time);
             yield return null;
         }
 
-        // Kembalikan layer ke awal HANYA saat benda sudah selesai mendarat di meja
         if (!isInspected)
             spriteRenderer.sortingOrder = targetLayer;
 
         sedangAnimasi = false;
     }
 
-    // Tambahkan 2 fungsi ini di bagian bawah script InspectableObject
     public void PaksaZoomIn()
     {
         if (!isInspected && !sedangAnimasi)
         {
+            currentInspectedObject = this;
             posisiMeja = transform.position;
+            sedangAnimasi = true;
             StartCoroutine(AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true));
         }
     }

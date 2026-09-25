@@ -14,30 +14,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Day: 1
   storyText:
-  - contentText: 44 Celcius
+  - contentText: “Gimana shift di loket hari ini mas?“
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Udara kian kering. suhu bumi menaiki peningkatan dalam 6 bulan
+  - contentText: “pasti padet banget ya?”. Ujar Nasya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Satu rekaman para ilmuwan pecah ke publik
+  - contentText: Di luar makin berisik Sya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: '[Effect]It''s Getting Worse'
+  - contentText: Banyak yang datang ke loket cuma bawa berkas kedaluwarsa
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Day to day
+  - contentText: Aku tolak beberapa orang
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: ......
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Surat kabar menyebarkan kepanikan masa
+  - contentText: Meski aku merasa kasihan pada mereka
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: '"Secure Your Seat. Escape to Seybay Outpost."'
+  - contentText: Mereka udah beli tiketnya tapi aku tolak
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku harus membawa istri dan anak-anakku pergi.
+  - contentText: ......
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Bukan salahmu, sayang”. Ujar Nasya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Tugasmu hanya bekerja dengan baik.”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Dan membawa pulang hasil untuk kami dirumah”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: .....
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Aku mengerti, Makasih ya sayang.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Syukurlah perusahaan bayar upahku tepat waktu karena ramai pengunjung.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Oiyya dimana Virly? dan Kraisa
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Kraisa sama Virly ada di kamar”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Virly seharian ini nggak banyak gerak”. Ujar Nasya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Dia bilang kulitnya terasa gatal”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “tapi perih kalau disentuh..”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Aku bingung mas harus ngapain.” Ujar Nasya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Sya, Aku ngerti kondisi kita ga mudah. Kamu yang sabar ya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Kita harus atur uang hari ini, Sya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Tiket evakuasi nggak murah.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Tapi, kita juga nggak bisa biarin rumah kelaparan. dan Nasya ngeluh
+      sakit kan?”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: .....
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03

@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd333e05fc6655246b501ccbd8d989b4, type: 3}
+  m_Name: StoryData_3aftershift
+  m_EditorClassIdentifier: 
+  Day: 1
+  storyText:
+  - contentText: “Muka kamu pucat banget mas... Ada apa di loket?” Ujar Nasya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Hari ini kacau banget Sya... Kamu dengar berita Roket D003 tadi
+      pagi?
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Yang penumpang gelap menusuk kru Azura Corp itu kan?”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Iya. Garis pengamanan dinaikkan ke Protokol Darurat Kategori A.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Aku nggak cuma periksa kertas paspor lagi sekarang...
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Aku harus membongkar koper barang bawaan orang-orang.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Nyari senjata tajam, peledak, sampai obat sintetis ilegal.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: ......
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Paling parah, Azura Corp menaikkan harga tiket secara sepihak.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Orang-orang di luar loket makin gila dan histeris, Sya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Tatapan mereka saat barangnya kusita... seperti ingin membunuhku.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Aduh ya Tuhan... Dunia di luar makin nggak aman.” Ujar Nasya.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Di rumah juga makin sulit mas. Debu di luar makin pekat.”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Kulit Virly makin merah dan perih kalau kena udara luar.”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Dia rewel terus seharian, Kraisa sampai bingung nemeninnya.”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: ......
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Kasihan anak kita... Kita harus beli salep atau obat buat Virly.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Tapi harga tiket evakuasi yang dinaikkan Azura Corp bikin target
+      kita makin jauh.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: “Gak apa-apa mas, yang penting anak-anak bisa makan dan sehat
+      dulu hari ini.”
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Iya Sya. Mari kita hitung sisa gaji hari ini.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: Kita harus atur keuangan kita baik-baik malam ini.
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03
+  - contentText: ......
+    audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
+    textSpeed: 0.03

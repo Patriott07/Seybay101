@@ -5,10 +5,19 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public string sceneNameRecapDay;
     public Camera mainCam;
     public bool isCanSpawnNpc = true;
-    private int currentDay = 1;
+    public bool isNpcInFront = false;
+    [SerializeField] private int currentDay = 1;
     public float chanceTOGetSomeActiveViolation = 0.2f;
+
+    public enum GameState
+    {
+        CUTSCENE, PLAY
+    }
+
+    public static GameState CurrentGameState = GameState.CUTSCENE; 
 
     void Awake()
     {
@@ -21,6 +30,11 @@ public class GameManager : MonoBehaviour
     public int GetCurrentDay() => currentDay;
 
     public void SetCurrentDay(int day) => currentDay = day;
+
+    public void StartMyShift()
+    {
+        CurrentGameState = GameState.PLAY;
+    }
 
     // this front end for Implementation generating violation by currentday
     public void DoViolationGenerateSetup()
@@ -48,6 +62,7 @@ public class GameManager : MonoBehaviour
                 ruleSet = new Day2RuleSet();
                 break;
             case 3:
+                ruleSet = new Day3RuleSet();
                 break;
             default:
                 break;
@@ -59,7 +74,7 @@ public class GameManager : MonoBehaviour
             if (Random.Range(0f, 1f) < chanceTOGetSomeActiveViolation)
             {
                 if (PassportScript.Instance.currentData == null) continue;
-                rule.Apply(PassportScript.Instance.currentData);
+                rule.Apply(PassportScript.Instance.currentData, TicketScript.Instance.currentData);
                 Debug.Log(rule.title);
             }
         }
@@ -81,8 +96,10 @@ public class GameManager : MonoBehaviour
 
     System.Collections.IEnumerator EndShiftDelayLoadScene()
     {
+        yield return new WaitForSecondsRealtime(4.4f);
+        GameEvent.StartTranstionDayToRecap?.Invoke();
         yield return new WaitForSecondsRealtime(1.4f);
-        SceneManager.LoadScene("RecapDay");
+        SceneManager.LoadScene(sceneNameRecapDay);
     }
 
     public void NextDay()

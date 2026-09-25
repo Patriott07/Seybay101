@@ -33,8 +33,9 @@ public class AnimasiKoperSimple : MonoBehaviour
             objekKoperUtama = this.transform;
 
         skalaAsli = objekKoperUtama.localScale;
+
         if (skalaAsli.x < 0.1f)
-            skalaAsli = new Vector3(1f, 1f, 1f);
+            skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
 
         // Simpan titik mendarat awal koper
         posisiAsli = objekKoperUtama.localPosition;
@@ -53,7 +54,8 @@ public class AnimasiKoperSimple : MonoBehaviour
     void OnEnable()
     {
         // transform.localScale = Vector3.one
-        GameEvent.OnKoperIsEnable?.Invoke();
+        // if (GameManager.CurrentGameState == GameManager.GameState.PLAY)
+        // GameEvent.OnKoperIsEnable?.Invoke();
     }
 
     public bool IsOpen()

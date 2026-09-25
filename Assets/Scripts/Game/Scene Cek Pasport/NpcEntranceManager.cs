@@ -56,7 +56,7 @@ public class NpcEntranceManager : MonoBehaviour
             // dokumenKertas.gameObject.SetActive(false);
             // objekTiket.gameObject.SetActive(false);
 
-            StartCoroutine(SpawnAnotherNPC(0f));
+            // StartCoroutine(SpawnAnotherNPC(0f));
         }
     }
 
@@ -136,6 +136,19 @@ public class NpcEntranceManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.3f);
 
+
+        // // randomize doc passport
+        // GameEvent.GenerateNewPassportData?.Invoke();
+
+        // // randomize boarding pass (ticket appears when NPC hands over passport)
+        // GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
+
+        // // randomize look NPC
+        // GameEvent.GenerateNewNPCView?.Invoke();
+
+        // // Apply Violation tileset to override property
+        // GameManager.Instance.DoViolationGenerateSetup();
+
         float time = 0;
         Vector3 titikAwalDokumen = dokumenKertas.position;
         Vector3 titikAwalTiket = objekTiket.position;
@@ -147,6 +160,9 @@ public class NpcEntranceManager : MonoBehaviour
             objekTiket.position = Vector3.Lerp(titikAwalTiket, targetTiket, time);
             yield return null;
         }
+
+        GameManager.Instance.isNpcInFront = true;
+        Manager_Chat.Instance.MulaiChatBaru();
     }
     // --- FASE C: FUNGSI UNTUK MENGUSIR NPC ---
     public void UsirNpc(bool isApprove)
@@ -208,6 +224,7 @@ public class NpcEntranceManager : MonoBehaviour
                     GameManager.Instance.EndShiftAndLoadScene();
                 }
                 
+                GameManager.Instance.isNpcInFront = false;
                 Debug.Log("NPC sudah pergi dari layar!");
             });
     }
@@ -222,7 +239,7 @@ public class NpcEntranceManager : MonoBehaviour
         GameEvent.SpawnNPCOnStartDay -= CallSpawnAnotherNPC;
     }
 
-    void CallSpawnAnotherNPC(float d)
+    public void CallSpawnAnotherNPC(float d)
     {
         StartCoroutine(SpawnAnotherNPC(d));
     }

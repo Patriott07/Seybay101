@@ -157,10 +157,10 @@ public class SaveManager : MonoBehaviour
             //     EconomyManager.Instance.trust = 100;
         }
 
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.SetCurrentDay(currentSave.currentDay);
-        }
+        // if (GameManager.Instance != null)
+        // {
+        //     GameManager.Instance.SetCurrentDay(currentSave.currentDay);
+        // }
     }
 
     #endregion

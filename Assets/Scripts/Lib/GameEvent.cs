@@ -16,4 +16,5 @@ public class GameEvent : MonoBehaviour
     public static Action OnKoperIsEnable;
     public static Action OnBillBoardInteract;
     public static Action OnPassportModeCall;
+    public static Action StartTranstionDayToRecap;
 }

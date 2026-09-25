@@ -52,6 +52,7 @@ public class TypingText : MonoBehaviour
     public event System.Action OnLineComplete;
     public event System.Action OnAllComplete;
     public event System.Action<AudioClip> OnAudioPlay;
+    public event System.Action<Texture, AudioClip> OnLineStoryData;
 
     [Header("UnityEvent")]
     [SerializeField] private UnityEvent onLineCompleteUnity;
@@ -60,6 +61,8 @@ public class TypingText : MonoBehaviour
 
     private List<AudioClip> audioClips = new List<AudioClip>();
     private List<float> lineSpeeds = new List<float>();
+    private List<Texture> storyboardTextures = new List<Texture>();
+    private List<AudioClip> immersiveAudios = new List<AudioClip>();
 
     void Start()
     {
@@ -67,6 +70,12 @@ public class TypingText : MonoBehaviour
         {
             baseXPosition = textComponent.rectTransform.localPosition.x;
             originalYPosition = textComponent.rectTransform.localPosition.y;
+        }
+
+        if (!StoryManager.Instance.isCanSkip)
+        {
+            progressBarFill.gameObject.SetActive(false);
+            skipTextIndicator.SetActive(false);
         }
     }
 
@@ -119,6 +128,8 @@ public class TypingText : MonoBehaviour
         hasEffect.Clear();
         audioClips.Clear();
         lineSpeeds.Clear();
+        storyboardTextures.Clear();
+        immersiveAudios.Clear();
         currentLineIndex = 0;
         isTyping = false;
         isComplete = false;
@@ -141,6 +152,8 @@ public class TypingText : MonoBehaviour
             }
             audioClips.Add(item.audioSource);
             lineSpeeds.Add(item.textSpeed > 0f ? item.textSpeed : baseCharsPerSecond);
+            storyboardTextures.Add(item.textureStoryboard);
+            immersiveAudios.Add(item.immersiveAudio);
         }
 
         displayedText = "";
@@ -178,12 +191,16 @@ public class TypingText : MonoBehaviour
             bool lineHasEffect = hasEffect[i];
             float currentSpeed = lineSpeeds[i];
             AudioClip lineClip = audioClips.Count > i ? audioClips[i] : null;
+            Texture lineTexture = storyboardTextures.Count > i ? storyboardTextures[i] : null;
+            AudioClip lineImmersive = immersiveAudios.Count > i ? immersiveAudios[i] : null;
             displayedText = "";
 
             if (textComponent != null)
             {
                 textComponent.text = "";
             }
+
+            OnLineStoryData?.Invoke(lineTexture, lineImmersive);
 
             if (lineClip != null)
             {
@@ -346,6 +363,8 @@ public class TypingText : MonoBehaviour
 
         audioClips.Clear();
         lineSpeeds.Clear();
+        storyboardTextures.Clear();
+        immersiveAudios.Clear();
         if (showAllText && textComponent != null)
         {
             string allText = string.Join("\n", lines);
@@ -375,6 +394,8 @@ public class TypingText : MonoBehaviour
         hasEffect.Clear();
         audioClips.Clear();
         lineSpeeds.Clear();
+        storyboardTextures.Clear();
+        immersiveAudios.Clear();
         displayedText = "";
         currentLineIndex = 0;
         if (textComponent != null)
