@@ -2,11 +2,24 @@ using UnityEngine;
 
 public class Draggable : MonoBehaviour
 {
+    [Header("Batas Area Dinamis")]
+    [Tooltip("Batas area MEJA (digunakan saat billboard tertutup).")]
+    public Collider2D areaBatasDrag;
+
+    [Tooltip("Batas area BILLBOARD (bisa pakai PolygonCollider2D).")]
+    public Collider2D areaBatasBillboard;
+
+    [Tooltip("Tarik objek induk 'Papan Billboard' ke sini.")]
+    public GameObject objekBillboard;
+
+    [Tooltip("Jika posisi Y Billboard di bawah angka ini, berarti sedang tampil di layar.")]
+    public float batasYBillboardTampil = 5f;
+
     public Vector3 offset;
     public float snapSpeed = 40f;
     public bool isOnDesk = false;
     private bool isSnapping = false;
-    private Vector3 snapTarget; // Kita simpan titik koordinat spesifik, bukan Transform mejanya
+    private Vector3 snapTarget;
     public Camera cameraTarget;
     private Vector3 skalaAwal;
 
@@ -19,48 +32,70 @@ public class Draggable : MonoBehaviour
         skalaAwal = transform.localScale;
     }
 
+    private Vector3 DapatkanPosisiMouse()
+    {
+        Vector3 posisiLayar = Input.mousePosition;
+        posisiLayar.z = cameraTarget.WorldToScreenPoint(transform.position).z;
+        return cameraTarget.ScreenToWorldPoint(posisiLayar);
+    }
+
     void OnMouseDown()
     {
         isSnapping = false;
+        AudioManager.Instance.PlaySfxPaper();
 
         if (inspectableObjectScript.GetIsInspect())
             return;
 
-        // transform.SetParent(null);
-
-        // transform.localScale = skalaAwal;
-
-        Vector3 mousePos = cameraTarget.ScreenToWorldPoint(Input.mousePosition);
-        offset = transform.position - new Vector3(mousePos.x, mousePos.y, transform.position.z);
+        offset = transform.position - DapatkanPosisiMouse();
     }
 
     void OnMouseDrag()
     {
         if (inspectableObjectScript.GetIsInspect())
             return;
-        // Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z) + offset;
 
-        // 1. Ambil posisi mouse saat ini di dunia
-        Vector3 mousePos = cameraTarget.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 targetPosition = new Vector3(mousePos.x, mousePos.y, transform.position.z) + offset;
+        Vector3 targetPosition = DapatkanPosisiMouse() + offset;
 
-        // 2. Batasi (Clamp) agar posisinya tidak keluar dari area kamera
-        // Menggunakan ViewportToWorldPoint dengan nilai 0 (kiri/bawah) sampai 1 (kanan/atas)
-        Vector3 minBounds = cameraTarget.ViewportToWorldPoint(
-            new Vector3(0, 0, Camera.main.nearClipPlane)
-        );
-        Vector3 maxBounds = cameraTarget.ViewportToWorldPoint(
-            new Vector3(1, 1, Camera.main.nearClipPlane)
-        );
+        Collider2D pembatasAktif = areaBatasDrag;
 
-        // Opsional: Jika ingin memperhitungkan ukuran objek (biar sprite tidak setengah keluar layar)
-        // Anda bisa menambahkan sedikit padding atau batas ukuran sprite di sini.
+        if (objekBillboard != null && objekBillboard.transform.position.y < batasYBillboardTampil)
+        {
+            if (areaBatasBillboard != null)
+            {
+                pembatasAktif = areaBatasBillboard;
+            }
+        }
 
-        targetPosition.x = Mathf.Clamp(targetPosition.x, minBounds.x, maxBounds.x);
-        targetPosition.y = Mathf.Clamp(targetPosition.y, minBounds.y, maxBounds.y);
+        // === [PERBAIKAN LOGIKA PEMBATAS POLYGON] ===
+        if (pembatasAktif != null)
+        {
+            // Periksa apakah targetPosition berada di DALAM collider
+            if (pembatasAktif.OverlapPoint(targetPosition))
+            {
+                // Jika di dalam, bebas bergerak ke targetPosition
+                // (Tidak perlu modifikasi koordinat X & Y)
+            }
+            else
+            {
+                // Jika DI LUAR collider, cari titik terdekat.
+                // Ini mengurangi beban komputasi dan mencegah glitch "ClosestPoint" di sudut.
+                Vector2 posisiDibatasi = pembatasAktif.ClosestPoint(targetPosition);
+                targetPosition.x = posisiDibatasi.x;
+                targetPosition.y = posisiDibatasi.y;
+            }
+        }
+        else
+        {
+            Vector3 minBounds = cameraTarget.ViewportToWorldPoint(new Vector3(0, 0, cameraTarget.nearClipPlane));
+            Vector3 maxBounds = cameraTarget.ViewportToWorldPoint(new Vector3(1, 1, cameraTarget.nearClipPlane));
 
-        // 3. Terapkan posisi yang sudah dibatasi ke objek
+            targetPosition.x = Mathf.Clamp(targetPosition.x, minBounds.x, maxBounds.x);
+            targetPosition.y = Mathf.Clamp(targetPosition.y, minBounds.y, maxBounds.y);
+        }
+        // ===========================================
+
+        targetPosition.z = transform.position.z;
         transform.position = targetPosition;
     }
 
@@ -71,44 +106,18 @@ public class Draggable : MonoBehaviour
             return;
 
         FindClosestDeskPoint();
-        // Vector2 mousePos2D = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-
-        // if (hit.collider != null)
-        // {
-        //     // PERBAIKAN: Pisahkan pengecekan tag Desk dan Billboard
-        //     if (hit.collider.CompareTag("Desk"))
-        //     {
-        //         isOnDesk = true;
-        //         isSnapping = false;
-        //         return;
-        //     }
-        //     else if (hit.collider.CompareTag("Billboard"))
-        //     {
-        //         isOnDesk = false;
-        //         isSnapping = false;
-        //         return;
-        //     }
-        // }
-        // else
-        // {
-        //     // Jika didrop di luar meja, cari titik area meja yang paling dekat
-        //     FindClosestDeskPoint();
-        // }
     }
 
     void Update()
     {
         if (isSnapping)
         {
-            // Meluncur ke titik target (Z tetap dikunci)
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 snapTarget,
                 snapSpeed * Time.deltaTime
             );
 
-            // Jika jaraknya sudah sangat dekat dengan target, berhenti meluncur
             if (Vector3.Distance(transform.position, snapTarget) < 0.01f)
             {
                 isSnapping = false;
@@ -118,12 +127,10 @@ public class Draggable : MonoBehaviour
 
     void FindClosestDeskPoint()
     {
-        // Ambil semua objek yang bertag "Desk" dan "Billboard"
         GameObject[] allDesks = GameObject.FindGameObjectsWithTag("Desk");
         GameObject[] allBillboards = GameObject.FindGameObjectsWithTag("Billboard");
 
-        System.Collections.Generic.List<GameObject> allTargets =
-            new System.Collections.Generic.List<GameObject>();
+        System.Collections.Generic.List<GameObject> allTargets = new System.Collections.Generic.List<GameObject>();
         allTargets.AddRange(allDesks);
         allTargets.AddRange(allBillboards);
 
@@ -162,16 +169,14 @@ public class Draggable : MonoBehaviour
             snapTarget = bestPoint;
             isSnapping = true;
 
-            // Tentukan status isOnDesk berdasarkan tag objek terdekat yang dituju
             if (targetObject.CompareTag("Desk"))
             {
                 isOnDesk = true;
-                transform.SetParent(null); // Lepas dari Billboard jika ada di meja
+                transform.SetParent(null);
             }
             else if (targetObject.CompareTag("Billboard"))
             {
                 isOnDesk = false;
-                // transform.localScale = skalaAwal;
                 transform.SetParent(targetObject.transform);
             }
         }

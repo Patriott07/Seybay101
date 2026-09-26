@@ -17,8 +17,8 @@ public class AnimasiKoperSimple : MonoBehaviour
     [Header("Pengaturan Animasi & Juice")]
     public float waktuAnimasi = 0.25f;
     public float waktuBouncing = 0.1f;
-    public float multiplierBouncing = 1.15f; // Efek melar membesar
-    public float tinggiLompatan = 0.3f; // BARU: Seberapa tinggi koper melompat dari meja
+    public float multiplierBouncing = 1.15f;
+    public float tinggiLompatan = 0.3f;
     public Vector3 skalaKecil = Vector3.zero;
 
     private bool isTerbuka = false;
@@ -26,23 +26,26 @@ public class AnimasiKoperSimple : MonoBehaviour
     private bool sudahGenerateBarang = false;
 
     private Vector3 skalaAsli;
-    private Vector3 posisiAsli; // BARU: Untuk menyimpan koordinat nempel di meja
+    private Vector3 posisiAsli;
 
     void Start()
     {
         if (objekKoperUtama == null) objekKoperUtama = this.transform;
 
         skalaAsli = objekKoperUtama.localScale;
-        if (skalaAsli.x < 0.1f) skalaAsli = new Vector3(1f, 1f, 1f);
+        if (skalaAsli.x < 0.1f) skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
 
-        // Simpan titik mendarat awal koper
         posisiAsli = objekKoperUtama.localPosition;
 
         if (koperTutup != null) koperTutup.SetActive(true);
         if (koperBuka != null) koperBuka.SetActive(false);
-
         if (containerBarang != null) containerBarang.SetActive(false);
         if (dokumenKoper != null) dokumenKoper.SetActive(false);
+    }
+
+    public bool IsOpen()
+    {
+        return isTerbuka;
     }
 
     public void ToggleKoper()
@@ -50,6 +53,27 @@ public class AnimasiKoperSimple : MonoBehaviour
         if (sedangAnimasi) return;
         StartCoroutine(ProsesTransisi2DPositionalBounce());
     }
+
+    // === [PENGAMAN UTAMA: MEMBERSIHKAN SISA BOURNCING] ===
+    public void ResetBawaanPabrik()
+    {
+        StopAllCoroutines(); // Hentikan paksa semua animasi bouncing yang sedang berjalan
+        sedangAnimasi = false;
+        isTerbuka = false;
+
+        if (koperTutup != null) koperTutup.SetActive(true);
+        if (koperBuka != null) koperBuka.SetActive(false);
+        if (containerBarang != null) containerBarang.SetActive(false);
+        if (dokumenKoper != null) dokumenKoper.SetActive(false);
+
+        if (objekKoperUtama != null)
+        {
+            // PAKSA KEMBALI KE NILAI DASAR (Membunuh semua sisa skala pantulan bouncing)
+            objekKoperUtama.localScale = skalaAsli;
+            objekKoperUtama.localPosition = posisiAsli;
+        }
+    }
+    // ====================================================
 
     IEnumerator ProsesTransisi2DPositionalBounce()
     {
@@ -101,14 +125,11 @@ public class AnimasiKoperSimple : MonoBehaviour
             if (containerBarang != null) containerBarang.SetActive(true);
             if (dokumenKoper != null) dokumenKoper.SetActive(true);
 
-            if (!sudahGenerateBarang)
+            LuggageManager manager = LuggageManager.Instance;
+            if (manager != null && !manager.sudahGenerateBarang)
             {
-                LuggageManager manager = FindObjectOfType<LuggageManager>();
-                if (manager != null)
-                {
-                    manager.GenerateBarangNPC();
-                    sudahGenerateBarang = true;
-                }
+                manager.GenerateBarangNPC();
+                manager.sudahGenerateBarang = true;
             }
         }
         else
@@ -138,7 +159,7 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // Kunci posisi akhir agar pas di meja
+        // Pastikan di akhir benar-benar bersih di angka asli
         objekKoperUtama.localScale = skalaAsli;
         objekKoperUtama.localPosition = posisiAsli;
 

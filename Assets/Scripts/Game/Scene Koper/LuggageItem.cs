@@ -6,6 +6,11 @@ public class LuggageItem : MonoBehaviour
     [Header("Data Spesifik Barang")]
     public LuggageItemData dataBarang;
 
+    [Header("Batas Area Meja (World Space)")]
+    public Vector2 mejaMin;
+    public Vector2 mejaMax;
+    private bool pakaiBatchManual = true;
+
     private Vector3 posisiAwalKoperLokal;
     private bool sedangDigeser = false;
     private bool sedangAnimasiPulang = false;
@@ -20,26 +25,21 @@ public class LuggageItem : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f);
 
-        // --- KUNCI PERBAIKAN: Sinkronisasi Fisika dan Visual (Tanpa Bug) ---
-        // Kita ambil urutan spawn barang ini di dalam koper
+        cam = GameManager.Instance.mainCam;
+
         int urutanTumpukan = transform.GetSiblingIndex();
-
-        // 1. Jadikan urutan tersebut sebagai layer visual (yang belakangan spawn = di atas)
         spriteRenderer.sortingOrder = urutanTumpukan;
         layerAwal = spriteRenderer.sortingOrder;
 
-        // 2. Majukan sumbu Z-nya sedikit demi sedikit ke arah kamera.
-        // Ini memaksa sistem klik fisik Unity percaya bahwa barang ini benar-benar ada di depan.
         Vector3 posLokal = transform.localPosition;
         posLokal.z = urutanTumpukan * -0.01f;
         transform.localPosition = posLokal;
 
-        // Simpan posisi amannya
         posisiAwalKoperLokal = transform.localPosition;
-        manager = FindObjectOfType<LuggageManager>();
+        manager = LuggageManager.Instance;
     }
 
     void Update()
@@ -51,10 +51,11 @@ public class LuggageItem : MonoBehaviour
                 if (sedangDigeser)
                 {
                     sedangDigeser = false;
-                    if (manager != null) manager.SembunyikanInfoBarang();
                     KembalikanPosisiZ(); // Reset kedalaman Z jika klik kanan di udara
+                    // if (manager != null) manager.SembunyikanInfoBarang();
                 }
-                StartCoroutine(PulangKeKoper());
+                // StartCoroutine(PulangKeKoper());
+                StartCoroutine(SnapKeKoper());
             }
         }
     }
@@ -62,23 +63,30 @@ public class LuggageItem : MonoBehaviour
     void OnMouseEnter()
     {
         isHovered = true;
+        spriteRenderer.color = Color.white; // hover state
     }
 
     void OnMouseExit()
     {
         isHovered = false;
+        spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f); // abu-abu sedikit
     }
 
+    // === [PERBAIKAN 1: MENCEGAH KURSOR TERBALIK KARENA KEDALAMAN KAMERA] ===
     private Vector3 DapatkanPosisiMouse()
     {
-        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
-        titikMouse.z = transform.position.z;
-        return titikMouse;
+        Vector3 posisiLayar = Input.mousePosition;
+        // Mathf.Abs memaksa nilai jarak selalu positif, sehingga arah geser tidak akan pernah terbalik
+        posisiLayar.z = Mathf.Abs(cam.transform.position.z - transform.position.z);
+        return cam.ScreenToWorldPoint(posisiLayar);
     }
+    // =======================================================================
 
     void OnMouseDown()
     {
-        if (sedangAnimasiPulang) return;
+        spriteRenderer.color = Color.white; // hover state
+        if (sedangAnimasiPulang)
+            return;
         sedangDigeser = true;
 
         // Naikkan layer gambar ke paling depan saat dipegang
@@ -92,16 +100,40 @@ public class LuggageItem : MonoBehaviour
         // Hitung selisih jarak penjepit (Offset) akurat
         offsetDrag = transform.position - DapatkanPosisiMouse();
 
-        if (manager != null)
-        {
-            manager.TampilkanInfoBarang(dataBarang.itemName, dataBarang.itemWeight);
-        }
+        // if (manager != null)
+        // {
+        //      manager.TampilkanInfoBarang(dataBarang.itemName, dataBarang.itemWeight);
+        // }
     }
 
     void OnMouseDrag()
     {
-        if (sedangAnimasiPulang || !sedangDigeser) return;
-        transform.position = DapatkanPosisiMouse() + offsetDrag;
+        if (sedangAnimasiPulang)
+            return;
+
+        // === [PERBAIKAN 2: GUNAKAN FUNGSI YANG SUDAH DIPERBAIKI, JANGAN MENTAHAN] ===
+        Vector3 titikMouse = DapatkanPosisiMouse();
+
+        Vector3 targetPos = new Vector3(
+            titikMouse.x + offsetDrag.x,
+            titikMouse.y + offsetDrag.y,
+            transform.position.z
+        );
+
+        if (pakaiBatchManual)
+        {
+            // Mencegah bug terbalik jika angka Min dan Max di Inspector tertukar
+            float batasMinX = Mathf.Min(mejaMin.x, mejaMax.x);
+            float batasMaxX = Mathf.Max(mejaMin.x, mejaMax.x);
+            float batasMinY = Mathf.Min(mejaMin.y, mejaMax.y);
+            float batasMaxY = Mathf.Max(mejaMin.y, mejaMax.y);
+
+            targetPos.x = Mathf.Clamp(targetPos.x, batasMinX, batasMaxX);
+            targetPos.y = Mathf.Clamp(targetPos.y, batasMinY, batasMaxY);
+        }
+
+        transform.position = targetPos;
+        // ============================================================================
     }
 
     void OnMouseUp()
@@ -109,14 +141,49 @@ public class LuggageItem : MonoBehaviour
         if (!sedangDigeser) return;
         sedangDigeser = false;
 
-        // Kembalikan gambar ke tumpukan semula
         spriteRenderer.sortingOrder = layerAwal;
-        KembalikanPosisiZ(); // Kembalikan fisik ke tumpukan semula
+        KembalikanPosisiZ();
 
-        if (manager != null)
+        if (pakaiBatchManual)
         {
-            manager.SembunyikanInfoBarang();
+            // Sesuaikan juga pengecekan drop agar anti-terbalik
+            float batasMinX = Mathf.Min(mejaMin.x, mejaMax.x);
+            float batasMaxX = Mathf.Max(mejaMin.x, mejaMax.x);
+            float batasMinY = Mathf.Min(mejaMin.y, mejaMax.y);
+            float batasMaxY = Mathf.Max(mejaMin.y, mejaMax.y);
+
+            bool diDalamMeja = transform.position.x >= batasMinX && transform.position.x <= batasMaxX &&
+                               transform.position.y >= batasMinY && transform.position.y <= batasMaxY;
+            if (!diDalamMeja)
+            {
+                // StartCoroutine(SnapKeKoper());
+                // return;
+            }
         }
+
+        LuggageManager.Instance.HitungBeratRealtime();
+    }
+
+    IEnumerator SnapKeKoper()
+    {
+        float time = 0;
+        Vector3 startPos = transform.position;
+        Vector3 tujuan = transform.parent != null
+            ? transform.parent.TransformPoint(posisiAwalKoperLokal)
+            : posisiAwalKoperLokal;
+        tujuan = new Vector3(tujuan.x, tujuan.y, startPos.z);
+
+        while (time < 1)
+        {
+            time += Time.deltaTime * 8f;
+            transform.position = Vector3.Lerp(startPos, tujuan, time);
+            yield return null;
+        }
+
+        transform.position = tujuan;
+        spriteRenderer.sortingOrder = layerAwal;
+        KembalikanPosisiZ();
+        LuggageManager.Instance.HitungBeratRealtime();
     }
 
     // Fungsi pembantu untuk mengembalikan kedalaman Z barang
@@ -159,10 +226,12 @@ public class LuggageItem : MonoBehaviour
 
     public bool ApakahDiDalamKoper()
     {
-        if (sedangDigeser) return false;
+        if (sedangDigeser)
+            return false;
 
         float jarak = Vector3.Distance(transform.position, GetPosisiAwal());
-        if (jarak > 1.5f) return false;
+        if (jarak > 1.5f)
+            return false;
 
         return true;
     }
