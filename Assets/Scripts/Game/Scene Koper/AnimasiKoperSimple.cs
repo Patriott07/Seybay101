@@ -21,19 +21,21 @@ public class AnimasiKoperSimple : MonoBehaviour
     public float tinggiLompatan = 0.3f;
     public Vector3 skalaKecil = Vector3.zero;
 
-    private bool isTerbuka = false;
+    public bool isTerbuka = false;
     private bool sedangAnimasi = false;
-    private bool sudahGenerateBarang = false;
 
     private Vector3 skalaAsli;
     private Vector3 posisiAsli;
 
     void Start()
     {
-        if (objekKoperUtama == null) objekKoperUtama = this.transform;
+        if (objekKoperUtama == null)
+            objekKoperUtama = this.transform;
 
         skalaAsli = objekKoperUtama.localScale;
-        if (skalaAsli.x < 0.1f) skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
+
+        if (skalaAsli.x < 0.1f)
+            skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
 
         posisiAsli = objekKoperUtama.localPosition;
 
@@ -50,14 +52,15 @@ public class AnimasiKoperSimple : MonoBehaviour
 
     public void ToggleKoper()
     {
-        if (sedangAnimasi) return;
+        if (sedangAnimasi)
+            return;
         StartCoroutine(ProsesTransisi2DPositionalBounce());
     }
 
-    // === [PENGAMAN UTAMA: MEMBERSIHKAN SISA BOURNCING] ===
-    public void ResetBawaanPabrik()
+    // FUNGSI: Membersihkan status animasi nyangkut tanpa merombak posisi
+    public void ResetStatusMurni()
     {
-        StopAllCoroutines(); // Hentikan paksa semua animasi bouncing yang sedang berjalan
+        StopAllCoroutines();
         sedangAnimasi = false;
         isTerbuka = false;
 
@@ -68,12 +71,9 @@ public class AnimasiKoperSimple : MonoBehaviour
 
         if (objekKoperUtama != null)
         {
-            // PAKSA KEMBALI KE NILAI DASAR (Membunuh semua sisa skala pantulan bouncing)
-            objekKoperUtama.localScale = skalaAsli;
-            objekKoperUtama.localPosition = posisiAsli;
+            objekKoperUtama.localScale = new Vector3(0.80555f, 0.80555f, 0.80555f);
         }
     }
-    // ====================================================
 
     IEnumerator ProsesTransisi2DPositionalBounce()
     {
@@ -86,10 +86,8 @@ public class AnimasiKoperSimple : MonoBehaviour
         }
 
         Vector3 skalaMemantul = skalaAsli * multiplierBouncing;
-        // Titik tertinggi saat koper terangkat
         Vector3 posisiPuncak = posisiAsli + new Vector3(0, tinggiLompatan, 0);
 
-        // --- FASE 1: MELOMPAT NAIK (Terangkat dari meja) ---
         float time = 0;
         while (time < 1)
         {
@@ -99,7 +97,6 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE 2: MENGHEMPAS TURUN & MENGECIL (Terbanting ke meja) ---
         time = 0;
         while (time < 1)
         {
@@ -110,11 +107,9 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // Pastikan nempel di meja dengan skala 0
         objekKoperUtama.localScale = skalaKecil;
         objekKoperUtama.localPosition = posisiAsli;
 
-        // --- FASE 3: GANTI GAMBAR & MUNCULKAN ISI ---
         isTerbuka = !isTerbuka;
 
         if (koperTutup != null) koperTutup.SetActive(!isTerbuka);
@@ -134,11 +129,11 @@ public class AnimasiKoperSimple : MonoBehaviour
         }
         else
         {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySfxLuggageClose();
             if (containerBarang != null) containerBarang.SetActive(false);
             if (dokumenKoper != null) dokumenKoper.SetActive(false);
         }
 
-        // --- FASE 4: MEMBESAR & MELOMPAT NAIK ---
         time = 0;
         while (time < 1)
         {
@@ -149,7 +144,6 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE 5: JATUH KE MEJA (Settle) ---
         time = 0;
         while (time < 1)
         {
@@ -159,11 +153,9 @@ public class AnimasiKoperSimple : MonoBehaviour
             yield return null;
         }
 
-        // Pastikan di akhir benar-benar bersih di angka asli
         objekKoperUtama.localScale = skalaAsli;
         objekKoperUtama.localPosition = posisiAsli;
 
-        // --- SELESAI ---
         if (isTerbuka)
         {
             if (dokumenKoper != null)

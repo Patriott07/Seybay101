@@ -38,110 +38,48 @@ public class NpcEntranceManager : MonoBehaviour
             dokumenKertas.gameObject.SetActive(true);
             objekTiket.gameObject.SetActive(true);
 
-            // Regenerate passport data so currentData is not null
             GameEvent.GenerateNewPassportData?.Invoke();
-            GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
             GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
         }
         else
-            // JIKA NPC BARU DATANG:
+        {
             Vector3 skalaKecil = skalaAsliNpc * 0f;
-            Vector3 skalaKecil = skalaAsliNpc * 0f;
-
+            posisiNpc.localScale = skalaKecil;
             dokumenKertas.localScale = Vector3.zero;
             objekTiket.localScale = Vector3.zero;
-            // dokumenKertas.gameObject.SetActive(false);
-            // objekTiket.gameObject.SetActive(false);
-
-            // StartCoroutine(SpawnAnotherNPC(0f));
-            // objekTiket.gameObject.SetActive(false);
-
-            // StartCoroutine(SpawnAnotherNPC(0f));
         }
     }
 
     IEnumerator AdeganNpcMasuk(Vector3 skalaKecil)
     {
-        // randomize doc passport
-        float time = 0;
+        posisiNpc.localScale = Vector3.zero;
 
-        // randomize doc passport
-
-        // Apply Violation tileset to override property
-        GameManager.Instance.DoViolationGenerateSetup();
+        GameEvent.GenerateNewPassportData?.Invoke();
         GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
         GameEvent.GenerateNewNPCView?.Invoke();
+        GameManager.Instance.DoViolationGenerateSetup();
 
-        // Apply Violation tileset to override property
-        {
-            posisiNpc.localPosition = Vector3.zero; // Cadangan jika spawner kosong
-        }
+        if (npcPosSpawn != null)
+            posisiNpc.position = npcPosSpawn.position;
+        else
+            posisiNpc.localPosition = Vector3.zero;
 
-
-        // --- FASE A: NPC MUNCUL DENGAN DOTWEEN (SCALE + SINE WAVE) ---
-        
         Vector3 animStartingPoint = posisiNpc.position;
-        
-        // Karena sebelumnya kamu pakai `time += Time.deltaTime * kecepatanMasuk` yang maksimalnya 1,
-        // maka durasi asli dalam detik adalah 1 dibagi kecepatanMasuk.
-        float entranceDuration = 1f / kecepatanMasuk; 
-        int bounceCount = 3; // Berapa kali NPC membal saat masuk
+        float entranceDuration = 1f / kecepatanMasuk;
+        int bounceCount = 3;
 
-        // 1. Jalankan animasi scale (membesar)
         posisiNpc.DOScale(skalaAsliNpc, entranceDuration).SetEase(Ease.OutQuad);
 
-        // 2. Jalankan animasi sine wave (membal naik-turun) dan TUNGGU sampai selesai
-        yield return posisiNpc.DOMoveY(animStartingPoint.y + 0.3f , entranceDuration / (bounceCount * 2f))
+        yield return posisiNpc.DOMoveY(animStartingPoint.y + 0.3f, entranceDuration / (bounceCount * 2f))
             .SetLoops(bounceCount * 2, LoopType.Yoyo)
             .SetEase(Ease.InOutSine)
             .WaitForCompletion();
 
-        // Pastikan NPC kembali menapak rata di tanah persis di titik awal Y setelah membal
         posisiNpc.position = animStartingPoint;
-
-        // Karena sebelumnya kamu pakai `time += Time.deltaTime * kecepatanMasuk` yang maksimalnya 1,
-        // maka durasi asli dalam detik adalah 1 dibagi kecepatanMasuk.
-
-        // --- FASE B: MENYODORKAN KERTAS KE MEJA ---
-
-        AudioManager.Instance.PlaySfxPaper();
-
-        // ... (SISA KODEMU UNTUK FASE B KE BAWAH TETAP SAMA) ...
-        
-        // 1. Jalankan animasi scale (membesar)
-        posisiNpc.DOScale(skalaAsliNpc, entranceDuration).SetEase(Ease.OutQuad);
-
-        // 2. Jalankan animasi sine wave (membal naik-turun) dan TUNGGU sampai selesai
-        yield return posisiNpc.DOMoveY(animStartingPoint.y + 0.3f , entranceDuration / (bounceCount * 2f))
-            .SetLoops(bounceCount * 2, LoopType.Yoyo)
-            .SetEase(Ease.InOutSine)
-            .WaitForCompletion();
-
-        // Pastikan NPC kembali menapak rata di tanah persis di titik awal Y setelah membal
-        posisiNpc.position = animStartingPoint;
-
         yield return new WaitForSeconds(waktuTungguSodor);
 
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySfxPaper();
 
-        // --- FASE B: MENYODORKAN KERTAS KE MEJA ---
-
-        yield return new WaitForSeconds(0.3f);
-
-
-        // // randomize doc passport
-        // GameEvent.GenerateNewPassportData?.Invoke();
-
-        // // randomize boarding pass (ticket appears when NPC hands over passport)
-        // GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
-
-        // // randomize look NPC
-        // GameEvent.GenerateNewNPCView?.Invoke();
-
-        // // Apply Violation tileset to override property
-        // GameManager.Instance.DoViolationGenerateSetup();
-
-        float time = 0;
-        
         dokumenKertas.DOScale(new Vector3(2, 2f, 1), 0.8f);
         dokumenKertas.position = new Vector3(
             posisiNpc.position.x,
@@ -153,26 +91,13 @@ public class NpcEntranceManager : MonoBehaviour
         objekTiket.position = new Vector3(
             posisiNpc.position.x,
             posisiNpc.position.y,
-        GameManager.Instance.isNpcInFront = true;
-        Manager_Chat.Instance.MulaiChatBaru();
-    }
+            targetTiket.z
+        );
+
         dokumenKertas.gameObject.SetActive(true);
         objekTiket.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(0.3f);
-
-
-        // // randomize doc passport
-        // GameEvent.GenerateNewPassportData?.Invoke();
-
-        // // randomize boarding pass (ticket appears when NPC hands over passport)
-        // GameEvent.GenerateNewBoardingPass?.Invoke(PassportScript.Instance.currentData);
-
-        // // randomize look NPC
-        // GameEvent.GenerateNewNPCView?.Invoke();
-
-        // // Apply Violation tileset to override property
-        // GameManager.Instance.DoViolationGenerateSetup();
 
         float time = 0;
         Vector3 titikAwalDokumen = dokumenKertas.position;
@@ -185,12 +110,11 @@ public class NpcEntranceManager : MonoBehaviour
             objekTiket.position = Vector3.Lerp(titikAwalTiket, targetTiket, time);
             yield return null;
         }
-    }
 
         GameManager.Instance.isNpcInFront = true;
-        Manager_Chat.Instance.MulaiChatBaru();
+        if (Manager_Chat.Instance != null) Manager_Chat.Instance.MulaiChatBaru();
     }
-    // --- FASE C: FUNGSI UNTUK MENGUSIR NPC ---
+
     public void UsirNpc(bool isApprove)
     {
         PlayerPrefs.DeleteKey("Paspor_PosX");
@@ -200,28 +124,19 @@ public class NpcEntranceManager : MonoBehaviour
         PlayerPrefs.DeleteKey("KoperSudahDicek");
         PlayerPrefs.Save();
 
-        // 1. Bersihkan fisik koper dari barang & reset status 'sudahGenerateBarang = false'
         if (LuggageManager.Instance != null) LuggageManager.Instance.ClearItem();
 
-        // 2. [PERBAIKAN] Menggunakan 'ResetBawaanPabrik' yang sesuai dengan AnimasiKoperSimple.cs
         AnimasiKoperSimple scriptKoper = FindObjectOfType<AnimasiKoperSimple>(true);
-        if (scriptKoper != null) scriptKoper.ResetBawaanPabrik();
+        if (scriptKoper != null) scriptKoper.ResetStatusMurni();
 
-        // 3. Matikan Koper / Sembunyikan UI Koper dari layar saat NPC pergi
-                // --- PENGATURAN SINE WAVE (JALAN MEMBAL) ---
-                float animDuration = isApprove ? kecepatanPergi : kecepatanPergi / 2f;
-                int bounceCount = isApprove ? 12 : 5; // Berapa kali langkah/membal saat keluar layar
+        ModeGameSwitch mode = FindObjectOfType<ModeGameSwitch>(true);
+        if (mode != null) mode.SwitchToPassport();
 
-                // 1. Gerak maju lurus ke samping (Sumbu X)
-                posisiNpc.DOMoveX(targetPergi.x, animDuration).SetEase(Ease.Linear);
+        AnimasiNpcPergi(isApprove);
+    }
 
-                // 2. Gerak membal naik-turun (Sumbu Y)
-                // Pastikan variabel 'amplitudoJalan' sudah ditambahkan di bagian atas script seperti sebelumnya
-                posisiNpc.DOMoveY(posisiAwalNpc.y + 0.3f, animDuration / (bounceCount * 2f))
-                    .SetLoops(bounceCount * 2, LoopType.Yoyo)
-                    .SetEase(Ease.InOutSine);
-                
-                // --- LANJUTAN LOGIKA SPAWN ---
+    void AnimasiNpcPergi(bool isApprove)
+    {
         Vector3 posisiAwalNpc = posisiNpc.position;
 
         dokumenKertas.DOMove(posisiAwalNpc, 0.8f);
@@ -229,49 +144,36 @@ public class NpcEntranceManager : MonoBehaviour
 
         objekTiket.DOScale(0, 0.6f).SetDelay(0.4f);
 
-                
-                GameManager.Instance.isNpcInFront = false;
-                Debug.Log("NPC sudah pergi dari layar!");
+        objekTiket
+            .DOMove(posisiAwalNpc, 0.8f)
             .SetDelay(0.4f)
             .OnComplete(() =>
             {
                 float arahX = isApprove ? jarakPergi : -jarakPergi;
-                Vector3 targetPergi =
-                    posisiAwalNpc + new Vector3(isApprove ? arahX : arahX / 2, 0, 0);
-
-                // while (time < 1)
-                // {
-                //     time += Time.deltaTime * kecepatanPergi;
-                //     posisiNpc.position = Vector3.Lerp(posisiAwalNpc, targetPergi, time);
-                //     yield return null;
-                // }
+                Vector3 targetPergi = posisiAwalNpc + new Vector3(isApprove ? arahX : arahX / 2, 0, 0);
 
                 GameEvent.DeleteMarkTicket?.Invoke();
 
-                // --- PENGATURAN SINE WAVE (JALAN MEMBAL) ---
                 float animDuration = isApprove ? kecepatanPergi : kecepatanPergi / 2f;
-                int bounceCount = isApprove ? 12 : 5; // Berapa kali langkah/membal saat keluar layar
+                int bounceCount = isApprove ? 12 : 5;
 
-                // 1. Gerak maju lurus ke samping (Sumbu X)
                 posisiNpc.DOMoveX(targetPergi.x, animDuration).SetEase(Ease.Linear);
 
-                // 2. Gerak membal naik-turun (Sumbu Y)
-                // Pastikan variabel 'amplitudoJalan' sudah ditambahkan di bagian atas script seperti sebelumnya
                 posisiNpc.DOMoveY(posisiAwalNpc.y + 0.3f, animDuration / (bounceCount * 2f))
                     .SetLoops(bounceCount * 2, LoopType.Yoyo)
                     .SetEase(Ease.InOutSine);
-                
-                // --- LANJUTAN LOGIKA SPAWN ---
+
                 if (GameManager.Instance.isCanSpawnNpc)
-                    coroutineSpawnNpc = StartCoroutine(SpawnAnotherNPC(kecepatanPergi + 1f));
+                {
+                    coroutineSpawnNpc = StartCoroutine(SpawnAnotherNPC(animDuration + 1f));
+                }
                 else
                 {
-                    StopCoroutine(coroutineSpawnNpc);
+                    if (coroutineSpawnNpc != null) StopCoroutine(coroutineSpawnNpc);
                     GameManager.Instance.EndShiftAndLoadScene();
                 }
-                
+
                 GameManager.Instance.isNpcInFront = false;
-                Debug.Log("NPC sudah pergi dari layar!");
             });
     }
 
@@ -285,7 +187,7 @@ public class NpcEntranceManager : MonoBehaviour
         GameEvent.SpawnNPCOnStartDay -= CallSpawnAnotherNPC;
     }
 
-    void CallSpawnAnotherNPC(float d)
+    public void CallSpawnAnotherNPC(float d)
     {
         StartCoroutine(SpawnAnotherNPC(d));
     }
