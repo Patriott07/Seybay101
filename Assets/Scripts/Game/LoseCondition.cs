@@ -10,12 +10,13 @@ public class LoseCondition : MonoBehaviour
 
     [Header("UI References")]
     public CanvasGroup loseCanvasGroup;
-    public TMP_Text textEndingReason;
-    public UnityEngine.UI.Button btnRestartDay;
+    //public TMP_Text textEndingReason;
+    //public UnityEngine.UI.Button btnRestartDay;
 
     [Header("Lose Config")]
-    public float fadeDuration = 1.5f;
-    public float waitBeforeRestart = 0.5f;
+    [SerializeField] public float fadeDuration = 1.5f; // durasi fade in(muncul) teks kalah
+    [SerializeField] public float waitBeforeRestart = 0.5f; // setelah player menekan aprrrove atau reeject(jika salah dan kalah) akan menunggu sebanyak ini
+    [SerializeField] float waitAndRestart = 1.3f; // durasi seberrapa lama teks kalah ditampilkan sebelum restart
 
     private bool isLoseTriggered = false;
 
@@ -47,8 +48,8 @@ public class LoseCondition : MonoBehaviour
     {
         if (currentTrust <= 0)
         {
+            TriggerLose();
             AudioManager.Instance.PlaySfxLose();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -67,7 +68,17 @@ public class LoseCondition : MonoBehaviour
             loseCanvasGroup.alpha = 0f;
             loseCanvasGroup.blocksRaycasts = true;
             loseCanvasGroup.interactable = true;
-            loseCanvasGroup.DOFade(1f, fadeDuration).SetEase(Ease.InOutQuad);
+            
+            // Tunggu animasi Fade In selesai sampai layar tertutup penuh
+            yield return loseCanvasGroup.DOFade(1f, fadeDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+
+            // animasi  ngetik disini(kayaknya).
+
+            yield return new WaitForSeconds(waitAndRestart);
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            Debug.Log("=========== ====== === Restart ==== ====== ========");            
+            // Setelah fade in selesai, langsung restart scene
         }
     }
 

@@ -41,12 +41,19 @@ public class StampHybridController : MonoBehaviour
     [SerializeField]
     Transform notifyMistakeOBJ;
 
-    private Vector3 notifyMistakeOBJStartPos;
+    private Vector2 notifyMistakeOBJStartPos; // Diubah jadi Vector2 untuk UI
 
     void Start()
     {
         if (notifyMistakeOBJ != null)
-            notifyMistakeOBJStartPos = notifyMistakeOBJ.position;
+        {
+            // Ambil posisi Anchor UI
+            RectTransform rect = notifyMistakeOBJ.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                notifyMistakeOBJStartPos = rect.anchoredPosition;
+            }
+        }
 
         // cam = Camera.main;
         posisiAwal = transform.position;
@@ -61,6 +68,7 @@ public class StampHybridController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             notifyMistake();
+            Debug.Log("mistake notify");
             
         }
         // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
@@ -174,21 +182,25 @@ public class StampHybridController : MonoBehaviour
     {
         if (notifyMistakeOBJ != null)
         {
-            // Hentikan animasi sebelumnya jika sedang berjalan agar tidak tumpang tindih
-            notifyMistakeOBJ.DOKill();
-            // Pastikan mulai dari posisi awal
-            notifyMistakeOBJ.position = notifyMistakeOBJStartPos;
+            RectTransform rect = notifyMistakeOBJ.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                // Hentikan animasi sebelumnya jika sedang berjalan agar tidak tumpang tindih
+                rect.DOKill();
+                // Pastikan mulai dari posisi awal
+                rect.anchoredPosition = notifyMistakeOBJStartPos;
 
-            Sequence seq = DOTween.Sequence();
-            
-            // Gerak ke kanan
-            seq.Append(notifyMistakeOBJ.DOMoveX(notifyMistakeOBJStartPos.x + jarakGerakX, durasiGerak));
-            
-            // Berhenti
-            seq.AppendInterval(waktuBerhenti);
-            
-            // Balik ke kiri (posisi awal)
-            seq.Append(notifyMistakeOBJ.DOMoveX(notifyMistakeOBJStartPos.x, durasiGerak));
+                Sequence seq = DOTween.Sequence();
+                
+                // Gerak ke kanan khusus UI (DOAnchorPosX)
+                seq.Append(rect.DOAnchorPosX(notifyMistakeOBJStartPos.x + jarakGerakX, durasiGerak));
+                
+                // Berhenti
+                seq.AppendInterval(waktuBerhenti);
+                
+                // Balik ke kiri (posisi awal)
+                seq.Append(rect.DOAnchorPosX(notifyMistakeOBJStartPos.x, durasiGerak));
+            }
         }
     }
 
@@ -398,10 +410,11 @@ public class StampHybridController : MonoBehaviour
             if (Random.Range(1, 3) == 3)
             {
                 // ShowMistake() a function that notify player if he make a mistake!!!
-                notifyMistake();
             }
+                notifyMistake();
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
+                Debug.Log("=====  mistake =====");
             }
         }
         else
@@ -414,8 +427,10 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
+                Debug.Log("=====  mistake =====");
                 EconomyManager.Instance.KurangiUang(5);
                 EconomyManager.Instance.KurangiTrust(5);
+                notifyMistake();
             }
         }
     }
