@@ -17,15 +17,15 @@ public class AnimasiKoperSimple : MonoBehaviour
     [Header("Pengaturan Animasi & Juice")]
     public float waktuAnimasi = 0.25f;
     public float waktuBouncing = 0.1f;
-    public float multiplierBouncing = 1.15f; // Efek melar membesar
-    public float tinggiLompatan = 0.3f; // BARU: Seberapa tinggi koper melompat dari meja
+    public float multiplierBouncing = 1.15f;
+    public float tinggiLompatan = 0.3f;
     public Vector3 skalaKecil = Vector3.zero;
 
     public bool isTerbuka = false;
     private bool sedangAnimasi = false;
 
     private Vector3 skalaAsli;
-    private Vector3 posisiAsli; // BARU: Untuk menyimpan koordinat nempel di meja
+    private Vector3 posisiAsli;
 
     void Start()
     {
@@ -37,7 +37,9 @@ public class AnimasiKoperSimple : MonoBehaviour
         if (skalaAsli.x < 0.1f)
             skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
 
-        // Simpan titik mendarat awal koper
+        if (skalaAsli.x < 0.1f)
+            skalaAsli = new Vector3(0.80555f, 0.80555f, 0.80555f);
+
         posisiAsli = objekKoperUtama.localPosition;
 
         if (koperTutup != null)
@@ -68,6 +70,24 @@ public class AnimasiKoperSimple : MonoBehaviour
         if (sedangAnimasi)
             return;
         StartCoroutine(ProsesTransisi2DPositionalBounce());
+    }
+
+    // FUNGSI: Membersihkan status animasi nyangkut tanpa merombak posisi
+    public void ResetStatusMurni()
+    {
+        StopAllCoroutines();
+        sedangAnimasi = false;
+        isTerbuka = false;
+
+        if (koperTutup != null) koperTutup.SetActive(true);
+        if (koperBuka != null) koperBuka.SetActive(false);
+        if (containerBarang != null) containerBarang.SetActive(false);
+        if (dokumenKoper != null) dokumenKoper.SetActive(false);
+
+        if (objekKoperUtama != null)
+        {
+            objekKoperUtama.localScale = new Vector3(0.80555f, 0.80555f, 0.80555f);
+        }
     }
 
     IEnumerator ProsesTransisi2DPositionalBounce()
@@ -122,22 +142,17 @@ public class AnimasiKoperSimple : MonoBehaviour
                 dokumenKoper.SetActive(true);
 
             LuggageManager manager = LuggageManager.Instance;
-            if (!manager.sudahGenerateBarang)
+            if (manager != null && !manager.sudahGenerateBarang)
             {
-                if (manager != null)
-                {
-                    manager.GenerateBarangNPC();
-                    manager.sudahGenerateBarang = true;
-                }
+                manager.GenerateBarangNPC();
+                manager.sudahGenerateBarang = true;
             }
         }
         else
         {
-            AudioManager.Instance.PlaySfxLuggageClose();
-            if (containerBarang != null)
-                containerBarang.SetActive(false);
-            if (dokumenKoper != null)
-                dokumenKoper.SetActive(false);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySfxLuggageClose();
+            if (containerBarang != null) containerBarang.SetActive(false);
+            if (dokumenKoper != null) dokumenKoper.SetActive(false);
         }
 
         time = 0;

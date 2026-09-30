@@ -72,12 +72,15 @@ public class LuggageItem : MonoBehaviour
         spriteRenderer.color = new Color(0.85f, 0.85f, 0.85f, 1f); // abu-abu sedikit
     }
 
+    // === [PERBAIKAN 1: MENCEGAH KURSOR TERBALIK KARENA KEDALAMAN KAMERA] ===
     private Vector3 DapatkanPosisiMouse()
     {
-        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
-        titikMouse.z = transform.position.z;
-        return titikMouse;
+        Vector3 posisiLayar = Input.mousePosition;
+        // Mathf.Abs memaksa nilai jarak selalu positif, sehingga arah geser tidak akan pernah terbalik
+        posisiLayar.z = Mathf.Abs(cam.transform.position.z - transform.position.z);
+        return cam.ScreenToWorldPoint(posisiLayar);
     }
+    // =======================================================================
 
     void OnMouseDown()
     {
@@ -108,7 +111,8 @@ public class LuggageItem : MonoBehaviour
         if (sedangAnimasiPulang)
             return;
 
-        Vector3 titikMouse = cam.ScreenToWorldPoint(Input.mousePosition);
+        // === [PERBAIKAN 2: GUNAKAN FUNGSI YANG SUDAH DIPERBAIKI, JANGAN MENTAHAN] ===
+        Vector3 titikMouse = DapatkanPosisiMouse();
 
         Vector3 targetPos = new Vector3(
             titikMouse.x + offsetDrag.x,
@@ -118,11 +122,18 @@ public class LuggageItem : MonoBehaviour
 
         if (pakaiBatchManual)
         {
-            targetPos.x = Mathf.Clamp(targetPos.x, mejaMin.x, mejaMax.x);
-            targetPos.y = Mathf.Clamp(targetPos.y, mejaMin.y, mejaMax.y);
+            // Mencegah bug terbalik jika angka Min dan Max di Inspector tertukar
+            float batasMinX = Mathf.Min(mejaMin.x, mejaMax.x);
+            float batasMaxX = Mathf.Max(mejaMin.x, mejaMax.x);
+            float batasMinY = Mathf.Min(mejaMin.y, mejaMax.y);
+            float batasMaxY = Mathf.Max(mejaMin.y, mejaMax.y);
+
+            targetPos.x = Mathf.Clamp(targetPos.x, batasMinX, batasMaxX);
+            targetPos.y = Mathf.Clamp(targetPos.y, batasMinY, batasMaxY);
         }
 
         transform.position = targetPos;
+        // ============================================================================
     }
 
     void OnMouseUp()
@@ -135,8 +146,14 @@ public class LuggageItem : MonoBehaviour
 
         if (pakaiBatchManual)
         {
-            bool diDalamMeja = transform.position.x >= mejaMin.x && transform.position.x <= mejaMax.x &&
-                               transform.position.y >= mejaMin.y && transform.position.y <= mejaMax.y;
+            // Sesuaikan juga pengecekan drop agar anti-terbalik
+            float batasMinX = Mathf.Min(mejaMin.x, mejaMax.x);
+            float batasMaxX = Mathf.Max(mejaMin.x, mejaMax.x);
+            float batasMinY = Mathf.Min(mejaMin.y, mejaMax.y);
+            float batasMaxY = Mathf.Max(mejaMin.y, mejaMax.y);
+
+            bool diDalamMeja = transform.position.x >= batasMinX && transform.position.x <= batasMaxX &&
+                               transform.position.y >= batasMinY && transform.position.y <= batasMaxY;
             if (!diDalamMeja)
             {
                 // StartCoroutine(SnapKeKoper());
