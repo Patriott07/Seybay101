@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca5cd1870fe524e4b9714bf4c65a662e, type: 3}
+  m_Name: Istri
+  m_EditorClassIdentifier: Assembly-CSharp::PhoneContactSO
+  idKontak: Bojo
+  namaKontak: Basir
+  avatar: {fileID: -2669573646148556869, guid: 6994a0be7d793c542a2c4c8113b51e18, type: 3}
+  tipe: 0
+  stages:
+  - namaStage: 
+    percakapan:
+    - dariAldo: 0
+      teks: wkwkwkkwkw
+    - dariAldo: 0
+      teks: ppppppppp
+    - dariAldo: 0
+      teks: qqqqqqq
+    - dariAldo: 0
+      teks: cccccc
+    - dariAldo: 0
+      teks: dddddd
+    - dariAldo: 0
+      teks: dddddd
+    - dariAldo: 0
+      teks: dddddd
+    - dariAldo: 0
+      teks: dddddd

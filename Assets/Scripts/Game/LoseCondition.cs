@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LoseCondition : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class LoseCondition : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -39,22 +40,27 @@ public class LoseCondition : MonoBehaviour
             loseCanvasGroup.blocksRaycasts = false;
             loseCanvasGroup.interactable = false;
         }
-
-       
-
+        AudioManager.Instance.PlaySfxLose();
     }
 
-    public void CheckLoseCondition()
+    public void CheckLoseCondition(int currentTrust)
+{
+    if (currentTrust > 0 || isLoseTriggered) return;
+
+    isLoseTriggered = true;
+    AudioManager.Instance.PlaySfxLose();
+
+    if (PhoneManager.Instance != null)
     {
-        if (isLoseTriggered) return;
-        if (EconomyManager.Instance == null) return;
-
-        int currentTrust = EconomyManager.Instance.trust;
-        if (currentTrust <= 0)
-        {
-            TriggerLose();
-        }
+        // Alur baru: Azura -> spam Manager_Boo -> (fade nanti)
+        PhoneManager.Instance.PicuTrustHabis();
     }
+    else
+    {
+        // Cadangan: kalau PhoneManager tidak ada di scene, pakai perilaku lama
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+}
 
     void TriggerLose()
     {
