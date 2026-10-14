@@ -45,13 +45,23 @@ public class LoseCondition : MonoBehaviour
     }
 
     public void CheckLoseCondition(int currentTrust)
+{
+    if (currentTrust > 0 || isLoseTriggered) return;
+
+    isLoseTriggered = true;
+    AudioManager.Instance.PlaySfxLose();
+
+    if (PhoneManager.Instance != null)
     {
-        if (currentTrust <= 0)
-        {
-            TriggerLose();
-            AudioManager.Instance.PlaySfxLose();
-        }
+        // Alur baru: Azura -> spam Manager_Boo -> (fade nanti)
+        PhoneManager.Instance.PicuTrustHabis();
     }
+    else
+    {
+        // Cadangan: kalau PhoneManager tidak ada di scene, pakai perilaku lama
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+}
 
     void TriggerLose()
     {

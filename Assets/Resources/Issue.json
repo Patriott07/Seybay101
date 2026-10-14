@@ -1,0 +1,8 @@
+{
+  "Permit_Document": {
+    "issue_id": "EXPIRED_PERMIT",
+    "category": "DOCUMENT",
+    "description": "Izin kerja sudah kedaluwarsa",
+    "severity": 2
+  }
+}

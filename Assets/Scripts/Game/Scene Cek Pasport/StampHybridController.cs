@@ -1,3 +1,4 @@
+
 using System.Collections;
 using DG.Tweening;
 using Schema.data;
@@ -64,13 +65,6 @@ public class StampHybridController : MonoBehaviour
 
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            notifyMistake();
-            Debug.Log("mistake notify");
-            
-        }
         // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
         // #800020
         if (isMoving)
@@ -154,7 +148,7 @@ public class StampHybridController : MonoBehaviour
             {
                 StartCoroutine(SiklusAnimasiKeputusan(true, hit.transform.position));
                 dilepasDiZona = true;
-                Manager_Chat.Instance.BersihkanChat();
+                Manager_Chat.Instance.ClearHistory();
                 // lets check here
                 CheckRule(true);
 
@@ -164,7 +158,7 @@ public class StampHybridController : MonoBehaviour
             {
                 StartCoroutine(SiklusAnimasiKeputusan(false, hit.transform.position));
                 dilepasDiZona = true;
-                Manager_Chat.Instance.BersihkanChat();
+                Manager_Chat.Instance.ClearHistory();
                 // lets check here
                 CheckRule(false);
                 break;
@@ -407,14 +401,14 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-            if (Random.Range(1, 3) == 3)
-            {
-                // ShowMistake() a function that notify player if he make a mistake!!!
-            }
-                notifyMistake();
+                if (Random.Range(1, 3) == 3)
+                {
+                    // ShowMistake() a function that notify player if he make a mistake!!!
+                }
+                
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
                 EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
-                Debug.Log("=====  mistake =====");
+                PhoneManager.Instance.TambahViolation("wrong_accept");
             }
         }
         else
@@ -427,10 +421,9 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-                Debug.Log("=====  mistake =====");
                 EconomyManager.Instance.KurangiUang(5);
                 EconomyManager.Instance.KurangiTrust(5);
-                notifyMistake();
+                PhoneManager.Instance.TambahViolation("wrong_reject");
             }
         }
     }

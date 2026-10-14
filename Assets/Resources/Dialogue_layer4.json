@@ -1,0 +1,28 @@
+{
+  "FOOD_RATION_CRISIS": {
+    "THE_WORKER": {
+      "PANICKED": [
+        "Kalau saya tidak masuk kerja hari ini, keluarga saya tidak dapat jatah makanan!"
+      ],
+      "DEPRESSED": [
+        "Entahlah... mungkin keluarga saya memang harus kelaparan hari ini."
+      ]
+    },
+    "THE_ELITE": {
+      "ANGRY": [
+        "Kau tahu berapa banyak orang yang bisa kehilangan pekerjaan karena keputusanmu?"
+      ],
+      "CALM": [
+        "Saya harap Anda memahami dampak keputusan ini."
+      ]
+    },
+    "THE_DEPENDENT": {
+      "FEARFUL": [
+        "Kalau saya tidak bisa lewat, siapa yang akan membelikan obat untuk saya?"
+      ],
+      "SAD": [
+        "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk."
+      ]
+    }
+  }
+}

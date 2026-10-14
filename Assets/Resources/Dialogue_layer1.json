@@ -1,0 +1,20 @@
+{
+  "PANICKED": {
+    "CHILD": [
+      {
+        "dialog" : "Saya belum sempat memperpanjang izin", 
+        "continue_bubble" : true
+      },
+      "Saya belum sempat memperpanjang izin",
+      "Saya masih harus bekerja, Pak"
+    ],
+    "ADULT": [
+      "Selesaikan masalah ini sekarang",
+      "Saya tidak punya waktu untuk ini"
+    ],
+    "ELDERLY": [
+      "Saya melewatkan tanggal perpanjangan",
+      "Apakah ada prosedur untuk memperbaikinya?"
+    ]
+  }
+}

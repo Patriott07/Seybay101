@@ -1,0 +1,22 @@
+{
+  "EXPIRED_PERMIT": {
+    "PANICKED": {
+      "THE_WORKER": [
+        {
+          "dialog": "Saya masih harus bekerja, Pak",
+          "continue_bubble": true
+        },
+        "Saya belum sempat memperpanjang izin",
+        "Saya masih harus bekerja, Pak"
+      ],
+      "THE_ELITE": [
+        "Selesaikan masalah ini sekarang",
+        "Saya tidak punya waktu untuk ini"
+      ],
+      "ACADEMIA": [
+        "Saya melewatkan tanggal perpanjangan",
+        "Apakah ada prosedur untuk memperbaikinya?"
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "THE_WORKER": {
+    "style": "polite"
+  },
+  
+  "npc_id": "NPC_DAY1_001",
+  "arktype_core": "THE_WORKER",
+  "gender": "MALE",
+  "age_group": "ADULT",
+  "personality": "STUBBORN",
+  "base_mood": "PANICKED"
+
+}

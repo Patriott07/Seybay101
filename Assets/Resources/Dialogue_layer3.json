@@ -1,0 +1,209 @@
+{
+  "BEG": {
+    "THE_ELITE": [
+      {
+        "dialog": "Saya masih harus bekerja, Pak",
+        "continue_bubble": true
+      },
+      "Tolong bantu saya menyelesaikan masalah ini."
+    ],
+    "ACADEMIA": [
+      "Saya mohon, izinkan saya menjelaskan situasinya.",
+      "Tolong beri saya kesempatan untuk memperbaiki kesalahan ini."
+    ],
+    "THE_WORKER": [
+      "Tolong pengertiannya, Pak. Saya benar-benar butuh ini.",
+      "Saya mohon, jangan persulit keadaan saya."
+    ],
+    "CIVILIAN": [
+      "Tolong, saya hanya ingin menyelesaikan urusan saya.",
+      "Saya mohon bantuannya. Saya tidak tahu harus bagaimana lagi."
+    ],
+    "THE_MARGINAL": [
+      "Ayolah, beri saya kesempatan kali ini.",
+      "Tolong, saya tidak ingin masalah ini semakin besar."
+    ],
+    "THE_DEPENDENT": [
+      "Tolong bantu saya. Saya benar-benar membutuhkannya.",
+      "Maaf, bisakah Anda memberi saya kesempatan?"
+    ],
+    "THE_ENFORCER": [
+      "Saya mohon, pertimbangkan situasi ini dengan saksama.",
+      "Tolong beri saya kesempatan untuk menjelaskan."
+    ],
+    "THE_LOYALIST": [
+      "Saya mohon, beri saya kesempatan untuk memperbaiki keadaan.",
+      "Demi perusahaan, tolong pertimbangkan permintaan saya."
+    ]
+  },
+  "LIE": {
+    "THE_ELITE": [
+      "Saya yakin terjadi kesalahpahaman.",
+      "Informasi itu pasti tidak sesuai dengan keadaan sebenarnya."
+    ],
+    "ACADEMIA": [
+      "Sepertinya ada kekeliruan dalam pencatatan data.",
+      "Berdasarkan informasi yang saya miliki, semuanya sudah sesuai."
+    ],
+    "THE_WORKER": [
+      "Saya rasa dokumen itu masih berlaku.",
+      "Mungkin ada kesalahan saat dokumen ini diperiksa."
+    ],
+    "CIVILIAN": [
+      "Saya tidak tahu apa yang Anda maksud.",
+      "Seingat saya, tidak ada masalah dengan dokumen itu."
+    ],
+    "THE_MARGINAL": [
+      "Anda pasti salah melihat sesuatu.",
+      "Saya tidak tahu apa-apa soal itu."
+    ],
+    "THE_DEPENDENT": [
+      "Saya... saya tidak tahu soal itu.",
+      "Bukannya semuanya sudah benar?"
+    ],
+    "THE_ENFORCER": [
+      "Informasi yang Anda sampaikan perlu diverifikasi kembali.",
+      "Saya tidak menemukan dasar untuk tuduhan tersebut."
+    ],
+    "THE_LOYALIST": [
+      "Tidak mungkin ada pelanggaran dalam urusan ini.",
+      "Pasti ada kesalahpahaman mengenai prosedur perusahaan."
+    ]
+  },
+  "BARGAIN": {
+    "THE_ELITE": [
+      "Kita pasti bisa mencapai kesepakatan yang menguntungkan kedua pihak.",
+      "Bagaimana jika kita menyelesaikan ini tanpa memperpanjang urusan?"
+    ],
+    "ACADEMIA": [
+      "Apakah ada alternatif yang dapat kita pertimbangkan?",
+      "Mungkin kita bisa mencari solusi yang sesuai prosedur."
+    ],
+    "THE_WORKER": [
+      "Apa ada cara lain supaya masalah ini bisa selesai, Pak?",
+      "Saya bersedia melakukan apa yang diperlukan untuk memperbaikinya."
+    ],
+    "CIVILIAN": [
+      "Bisakah kita mencari jalan tengah?",
+      "Apa yang bisa saya lakukan agar masalah ini selesai?"
+    ],
+    "THE_MARGINAL": [
+      "Kita bisa saling membantu, bukan?",
+      "Saya yakin kita bisa menemukan kesepakatan."
+    ],
+    "THE_DEPENDENT": [
+      "Apa ada cara lain yang bisa kita lakukan?",
+      "Saya akan mencoba mencari solusi, asal Anda memberi saya kesempatan."
+    ],
+    "THE_ENFORCER": [
+      "Mari kita lihat apakah ada penyelesaian yang diperbolehkan.",
+      "Apakah tersedia prosedur alternatif untuk kasus ini?"
+    ],
+    "THE_LOYALIST": [
+      "Kita harus menemukan solusi yang tetap menguntungkan perusahaan.",
+      "Saya yakin ada cara untuk menyelesaikan ini tanpa melanggar aturan."
+    ]
+  },
+  "THREATEN": {
+    "THE_ELITE": [
+      "Anda sebaiknya mempertimbangkan kembali keputusan itu.",
+      "Keputusan Anda bisa membawa konsekuensi yang tidak diinginkan."
+    ],
+    "ACADEMIA": [
+      "Saya harap Anda memahami konsekuensi dari keputusan tersebut.",
+      "Saya akan mempertanyakan keputusan ini melalui jalur resmi."
+    ],
+    "THE_WORKER": [
+      "Jangan salahkan saya kalau masalah ini menjadi lebih besar!",
+      "Saya tidak akan diam saja jika diperlakukan seperti ini."
+    ],
+    "CIVILIAN": [
+      "Anda tidak bisa memperlakukan saya semena-mena!",
+      "Saya akan melaporkan perlakuan ini."
+    ],
+    "THE_MARGINAL": [
+      "Anda yakin ingin membuat masalah dengan saya?",
+      "Jangan sampai keputusan ini merugikan kita berdua."
+    ],
+    "THE_DEPENDENT": [
+      "Tolong jangan paksa saya melakukan sesuatu yang buruk!",
+      "Saya akan mencari bantuan jika Anda terus memaksa."
+    ],
+    "THE_ENFORCER": [
+      "Saya sarankan Anda mempertimbangkan risiko tindakan tersebut.",
+      "Perilaku ini akan saya catat dalam laporan."
+    ],
+    "THE_LOYALIST": [
+      "Anda sedang membahayakan kepentingan perusahaan!",
+      "Saya akan memastikan tindakan ini diketahui atasan."
+    ]
+  },
+  "COOPERATE": {
+    "THE_ELITE": [
+      "Baik, mari kita selesaikan urusan ini.",
+      "Silakan lanjutkan pemeriksaannya."
+    ],
+    "ACADEMIA": [
+      "Tentu. Saya siap memberikan informasi yang diperlukan.",
+      "Silakan periksa dokumen saya satu per satu."
+    ],
+    "THE_WORKER": [
+      "Baik, Pak. Saya akan mengikuti prosedurnya.",
+      "Silakan periksa. Saya ingin urusan ini cepat selesai."
+    ],
+    "CIVILIAN": [
+      "Baik, saya mengerti.",
+      "Silakan. Saya akan membantu sebisa mungkin."
+    ],
+    "THE_MARGINAL": [
+      "Baiklah, saya akan mengikuti pemeriksaan.",
+      "Silakan periksa, saya tidak ingin memperpanjang masalah."
+    ],
+    "THE_DEPENDENT": [
+      "Baik. Saya akan mengikuti arahan Anda.",
+      "Oke, saya akan melakukan apa yang Anda minta."
+    ],
+    "THE_ENFORCER": [
+      "Silakan lanjutkan sesuai prosedur.",
+      "Saya siap memberikan keterangan yang dibutuhkan."
+    ],
+    "THE_LOYALIST": [
+      "Tentu. Saya mendukung prosedur perusahaan.",
+      "Saya akan mengikuti semua instruksi yang berlaku."
+    ]
+  },
+  "BRIBE": {
+    "THE_ELITE": [
+      "Mungkin ada sesuatu yang bisa membuat urusan kita lebih mudah.",
+      "Saya yakin kita bisa mencapai kesepakatan secara pribadi."
+    ],
+    "ACADEMIA": [
+      "Saya memiliki sesuatu yang mungkin bisa membantu menyelesaikan masalah ini.",
+      "Apakah Anda bersedia mempertimbangkan tawaran pribadi?"
+    ],
+    "THE_WORKER": [
+      "Pak, saya punya sedikit sesuatu. Bisa kita bicarakan?",
+      "Saya tidak punya banyak, tapi mungkin ini bisa membantu."
+    ],
+    "CIVILIAN": [
+      "Bagaimana kalau saya memberikan sesuatu sebagai gantinya?",
+      "Mungkin kita bisa menyelesaikan ini dengan cara lain."
+    ],
+    "THE_MARGINAL": [
+      "Saya rasa kita tidak perlu membuat masalah ini menjadi resmi.",
+      "Ada sesuatu untuk Anda, kalau kita bisa saling memahami."
+    ],
+    "THE_DEPENDENT": [
+      "Saya punya sedikit barang. Apa ini bisa membantu?",
+      "Saya tidak punya banyak, tapi tolong pertimbangkan ini."
+    ],
+    "THE_ENFORCER": [
+      "Apakah Anda sedang menawarkan imbalan di luar prosedur?",
+      "Saya perlu memastikan apakah tawaran ini melanggar kebijakan."
+    ],
+    "THE_LOYALIST": [
+      "Saya ingin memberikan sesuatu sebagai bentuk dukungan.",
+      "Mungkin bantuan kecil ini bisa mempermudah urusan kita."
+    ]
+  }
+}

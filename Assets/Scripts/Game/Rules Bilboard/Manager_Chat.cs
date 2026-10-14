@@ -4,7 +4,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-// === [AWAL PERUBAHAN 1: CLASS CONTENT CHAT DARI TEMANMU] ===
 [System.Serializable]
 public class ContentChat
 {
@@ -14,44 +13,72 @@ public class ContentChat
     public bool isMC = true;
 }
 
-// === [AKHIR PERUBAHAN 1] ===
-
 public class Manager_Chat : MonoBehaviour
 {
     public static Manager_Chat Instance;
 
-    [Header("Pengaturan Posisi & Objek")]
+    // Data satu bubble yang sedang tampil di HUD
+    class BubbleAktif
+    {
+        public GameObject go;
+        public float y;         // posisi Y relatif terhadap objek ini (turun = negatif)
+        public float offsetX;   // kiri (NPC) / kanan (MC)
+        public bool isMC;
+    }
+
+    [Header("Prefab Popup HUD")]
     public GameObject prefabBubbleMC;
     public GameObject prefabBubbleNPC;
 
-    [Header("Pengaturan Chat (Sensor Batas)")]
-    public int batasMaksimalPesan = 4;
+    [Header("Rata Kiri/Kanan HUD (NPC kiri, MC kanan)")]
+    public float geserKiriNPC = -0.5f;
+    public float geserKananMC = 0.5f;
 
     [Header("Pengaturan Jarak (Spacing)")]
     public float jarakBedaKarakter = 1.5f;
     public float jarakSamaKarakter = 0.8f;
 
-    [Header("Pengaturan Animasi & Waktu")]
-    public float delaySebelumMulai = 0.5f; // Dipercepat karena dipanggil NpcEntrance
-    public float jedaAntarPesan = 1f;
-    public float kecepatanKetik = 0.05f;
+    [Header("Batas Bubble di HUD")]
+    [Tooltip("Jika lebih dari ini, bubble paling atas hilang. 0 = tanpa batas")]
+    public int batasMaksimalPesan = 4;
+    [Tooltip("Sisa bubble ikut bergeser naik menutup ruang kosong setelah yang teratas hilang")]
+    public bool geserTumpukanSetelahHapus = true;
+    public float durasiGeser = 0.25f;
 
-    [Header("Pengaturan Rata Kiri/Kanan")]
-    public float geserKiriNPC = -0.5f;
-    public float geserKananMC = 0.5f;
+    [Header("Waktu Percakapan")]
+    public float delaySebelumMulai = 0.5f;
+    [Tooltip("Jeda sebelum pesan berikutnya muncul")]
+    public float jedaAntarPesan = 1.5f;
+    [Tooltip("Jeda sebelum pesan berikutnya muncul minimal selama audio clip-nya")]
+    public bool tungguAudioSelesai = true;
+    [Tooltip("Setelah pesan TERAKHIR muncul, semua bubble bertahan selama ini lalu hilang satu per satu")]
+    public float durasiTampilPopup = 3.0f;
 
-    // === [AWAL PERUBAHAN 2: MENGGUNAKAN CHAT TOPIC SCRIPTABLEOBJECT] ===
+    [Header("Animasi Hilang (naik sedikit + memudar)")]
+    [Tooltip("Jarak naik secara visual saat hilang (unit dunia)")]
+    public float jarakNaikSaatHilang = 0.6f;
+    public float durasiHilang = 0.4f;
+    [Tooltip("Jeda antar bubble saat semuanya hilang satu per satu")]
+    public float jedaAntarHilang = 0.25f;
+
     [Header("Daftar Percakapan")]
     public ChatTopic currentTopic;
 
-    // === [AKHIR PERUBAHAN 2] ===
+    [Header("=== SYSTEM HISTORY CHAT ===")]
+    public List<ContentChat> historyChat = new List<ContentChat>();
 
-    private List<GameObject> daftarPesanAktif = new List<GameObject>();
-    private float posisiYSelanjutnya = 0f;
-    private bool? apakahMCSebelumnya = null;
+    [Header("UI Panel History")]
+    public GameObject panelHistory;
+    [Tooltip("Satu TextMeshProUGUI di dalam panel history")]
+    public TextMeshProUGUI teksHistory;
+    [Tooltip("Batas pesan yang ditampilkan di kertas (0 = tanpa batas)")]
+    public int maksPesanHistory = 8;
+    public string namaMC = "Aldo";
+    public string namaNPC = "NPC";
+
+    private readonly List<BubbleAktif> daftarBubble = new List<BubbleAktif>();
+    private readonly List<GameObject> daftarSedangHilang = new List<GameObject>();
     private Coroutine prosesChatAktif;
-
-    // Tambahan AudioSource untuk memutar clip chat
     private AudioSource audioSourceChat;
 
 
@@ -59,44 +86,68 @@ public class Manager_Chat : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
 
-        // Otomatis membuat komponen AudioSource di belakang layar
-        // audioSourceChat = gameObject.AddComponent<AudioSource>();
-        // audioSourceChat.playOnAwake = false;
-    }
-
-    void Start()
-    {
         audioSourceChat = GetComponent<AudioSource>();
-        // Tetap dibiarkan KOSONG agar NpcEntranceManager yang memanggil MulaiChatBaru()
+        if (audioSourceChat == null)
+            audioSourceChat = gameObject.AddComponent<AudioSource>();
+        audioSourceChat.playOnAwake = false;
     }
 
+    // ==========================================
+    // --- ACC / REJECT -> CLEAR HISTORY ---
+    // ==========================================
+
+    // Hubungkan ke tombol Accept
+    public void OnAccept() => ClearHistory();
+
+    // Hubungkan ke tombol Reject
+    public void OnReject() => ClearHistory();
+
+    public void ClearHistory()
+    {
+        historyChat.Clear();
+        BersihkanChat();
+
+        if (teksHistory != null)
+            teksHistory.text = "";
+
+        if (panelHistory != null)
+            panelHistory.SetActive(false);
+    }
+
+    // Membersihkan popup HUD seketika (history tidak ikut terhapus)
     public void BersihkanChat()
     {
         if (prosesChatAktif != null)
+        {
             StopCoroutine(prosesChatAktif);
+            prosesChatAktif = null;
+        }
 
-        // === [AWAL PERUBAHAN 3: HENTIKAN SUARA SAAT DIBERSIHKAN] ===
         if (audioSourceChat != null && audioSourceChat.isPlaying)
-        {
             audioSourceChat.Stop();
-        }
-        // === [AKHIR PERUBAHAN 3] ===
 
-        foreach (GameObject pesanLama in daftarPesanAktif)
-        {
-            if (pesanLama != null)
-                Destroy(pesanLama);
-        }
-        daftarPesanAktif.Clear();
+        foreach (BubbleAktif b in daftarBubble)
+            HancurkanSeketika(b.go);
+        daftarBubble.Clear();
 
-        posisiYSelanjutnya = 0f;
-        apakahMCSebelumnya = null;
+        foreach (GameObject g in daftarSedangHilang)
+            HancurkanSeketika(g);
+        daftarSedangHilang.Clear();
     }
+
+    static void HancurkanSeketika(GameObject go)
+    {
+        if (go == null) return;
+        go.transform.DOKill();
+        Destroy(go);
+    }
+
+    // ==========================================
+    // --- MULAI CHAT BARU (NPC DATANG) ---
+    // ==========================================
 
     public void MulaiChatBaru()
     {
@@ -110,14 +161,12 @@ public class Manager_Chat : MonoBehaviour
 
         if (currentTopic == null)
         {
-            Debug.LogWarning("ChatTopic belum di-assignment di Inspector!");
+            Debug.LogWarning("ChatTopic belum di-assign di Inspector!");
             yield break;
         }
 
         if (!currentTopic.ShouldSpeak())
-        {
             yield break;
-        }
 
         List<ContentChat> chats = currentTopic.GetRandomMessage();
         if (chats == null)
@@ -126,78 +175,217 @@ public class Manager_Chat : MonoBehaviour
             yield break;
         }
 
-        foreach (ContentChat chat in chats)
+        for (int i = 0; i < chats.Count; i++)
         {
-            bool isMC = chat.isMC;
-            float offsetX = isMC ? geserKiriNPC : geserKananMC;
-            GameObject prefab = isMC ? prefabBubbleMC : prefabBubbleNPC;
+            ContentChat chat = chats[i];
 
-            yield return StartCoroutine(
-                MunculkanPesan(prefab, chat.textChat, chat.clip, offsetX, isMC)
-            );
+            // 1. Simpan ke history
+            historyChat.Add(chat);
+            if (panelHistory != null && panelHistory.activeSelf)
+                RenderPanelHistory();
+
+            // 2. Tampilkan bubble + audio
+            TampilkanBubble(chat);
+
+            // 3. Tunggu sebelum pesan berikutnya (atau sebelum bubble mulai hilang)
+            bool terakhir = (i == chats.Count - 1);
+            float tunggu = terakhir ? durasiTampilPopup : jedaAntarPesan;
+            if (tungguAudioSelesai && chat.clip != null)
+                tunggu = Mathf.Max(tunggu, chat.clip.length);
+
+            yield return new WaitForSeconds(tunggu);
         }
+
+        // 4. Semua chat selesai -> bubble hilang satu per satu dari yang paling atas
+        while (daftarBubble.Count > 0)
+        {
+            HapusBubbleTeratas(false);
+            yield return new WaitForSeconds(jedaAntarHilang);
+        }
+
+        prosesChatAktif = null;
     }
 
     // === [AWAL PERUBAHAN 5: PARAMETER TAMBAHAN UNTUK AUDIOCLIP] ===
-    IEnumerator MunculkanPesan(
-        GameObject prefab,
-        string teks,
-        AudioClip suara,
-        float offsetX,
-        bool isMC
-    )
+
+    Vector3 PosisiBubble(BubbleAktif b)
     {
-        if (daftarPesanAktif.Count >= batasMaksimalPesan)
+        return transform.position + new Vector3(b.offsetX, b.y, 0f);
+    }
+
+    void TampilkanBubble(ContentChat chat)
+    {
+        GameObject prefab = chat.isMC ? prefabBubbleMC : prefabBubbleNPC;
+        if (prefab == null) return;
+
+        // Melewati batas -> bubble paling atas hilang dulu
+        if (batasMaksimalPesan > 0)
         {
-            foreach (GameObject pesanLama in daftarPesanAktif)
-            {
-                if (pesanLama != null)
-                    Destroy(pesanLama);
-            }
-            daftarPesanAktif.Clear();
-            posisiYSelanjutnya = 0f;
-            apakahMCSebelumnya = null;
+            while (daftarBubble.Count >= batasMaksimalPesan)
+                HapusBubbleTeratas(geserTumpukanSetelahHapus);
         }
 
-        if (apakahMCSebelumnya != null)
+        // Hitung posisi: di bawah bubble terakhir
+        float y = 0f;
+        if (daftarBubble.Count > 0)
         {
-            if (isMC == apakahMCSebelumnya)
-                posisiYSelanjutnya -= jarakSamaKarakter;
-            else
-                posisiYSelanjutnya -= jarakBedaKarakter;
+            BubbleAktif terakhir = daftarBubble[daftarBubble.Count - 1];
+            y = terakhir.y - (chat.isMC == terakhir.isMC ? jarakSamaKarakter : jarakBedaKarakter);
         }
 
-        Vector3 posisiMuncul = transform.position + new Vector3(offsetX, posisiYSelanjutnya, 0);
+        var data = new BubbleAktif
+        {
+            y = y,
+            isMC = chat.isMC,
+            offsetX = chat.isMC ? geserKananMC : geserKiriNPC
+        };
 
         Vector3 originalScale = prefab.transform.localScale;
-        GameObject pesanBaru = Instantiate(prefab, posisiMuncul, Quaternion.identity, transform);
-        Destroy(pesanBaru, 3f);
-        pesanBaru.transform.localScale = Vector3.zero;
-        daftarPesanAktif.Add(pesanBaru);
+        data.go = Instantiate(prefab, PosisiBubble(data), Quaternion.identity, transform);
+        data.go.transform.localScale = Vector3.zero;
+        daftarBubble.Add(data);
 
-        pesanBaru.transform.DOScale(originalScale, 0.4f).SetEase(Ease.OutBack);
+        data.go.transform.DOScale(originalScale, 0.3f)
+            .SetEase(Ease.OutBack)
+            .SetLink(data.go);
 
-        // Putar suara jika AudioClip-nya diisi di Inspector
-        if (suara != null && audioSourceChat != null)
-        {
-            audioSourceChat.Stop(); // Hentikan suara sebelumnya (jika menumpuk)
-            audioSourceChat.clip = suara;
-            audioSourceChat.Play();
-        }
-
-        TextMeshPro teks3D = pesanBaru.GetComponentInChildren<TextMeshPro>();
+        // Teks langsung muncul (tanpa typing)
+        TextMeshPro teks3D = data.go.GetComponentInChildren<TextMeshPro>();
         if (teks3D != null)
         {
-            teks3D.text = "";
-            yield return new WaitForSeconds(0.2f);
+            teks3D.text = chat.textChat;
+        }
+        else
+        {
+            TextMeshProUGUI teksUI = data.go.GetComponentInChildren<TextMeshProUGUI>();
+            if (teksUI != null) teksUI.text = chat.textChat;
+        }
 
-            foreach (char huruf in teks.ToCharArray())
+        // Audio
+        if (chat.clip != null && audioSourceChat != null)
+        {
+            audioSourceChat.Stop();
+            audioSourceChat.clip = chat.clip;
+            audioSourceChat.Play();
+        }
+    }
+
+    // Menghilangkan bubble paling atas (yang paling lama)
+    void HapusBubbleTeratas(bool geserSisa)
+    {
+        if (daftarBubble.Count == 0) return;
+
+        BubbleAktif atas = daftarBubble[0];
+        daftarBubble.RemoveAt(0);
+
+        float delta = 0f;
+        if (daftarBubble.Count > 0)
+            delta = atas.y - daftarBubble[0].y;
+
+        AnimasiHilang(atas.go);
+
+        // Sisa bubble naik menutup ruang kosong
+        if (geserSisa && delta > 0f)
+        {
+            foreach (BubbleAktif b in daftarBubble)
             {
-                teks3D.text += huruf;
-                yield return new WaitForSeconds(kecepatanKetik);
+                b.y += delta;
+                if (b.go != null)
+                    b.go.transform.DOMove(PosisiBubble(b), durasiGeser)
+                        .SetEase(Ease.OutQuad)
+                        .SetLink(b.go);
             }
         }
-        apakahMCSebelumnya = isMC;
     }
-    // === [AKHIR PERUBAHAN 5] ===
+
+    // Naik sedikit sambil memudar, lalu dihapus (naik hanya efek visual)
+    void AnimasiHilang(GameObject go)
+    {
+        if (go == null) return;
+
+        daftarSedangHilang.Add(go);
+        go.transform.DOKill();
+
+        SpriteRenderer[] sprites = go.GetComponentsInChildren<SpriteRenderer>(true);
+        TMP_Text[] teksList = go.GetComponentsInChildren<TMP_Text>(true);
+
+        float[] alphaSprite = new float[sprites.Length];
+        for (int i = 0; i < sprites.Length; i++) alphaSprite[i] = sprites[i].color.a;
+
+        float[] alphaTeks = new float[teksList.Length];
+        for (int i = 0; i < teksList.Length; i++) alphaTeks[i] = teksList[i].alpha;
+
+        Vector3 target = go.transform.position + Vector3.up * jarakNaikSaatHilang;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Join(go.transform.DOMove(target, durasiHilang).SetEase(Ease.OutQuad));
+        seq.Join(DOVirtual.Float(1f, 0f, durasiHilang, nilai =>
+        {
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                if (sprites[i] == null) continue;
+                Color c = sprites[i].color;
+                c.a = alphaSprite[i] * nilai;
+                sprites[i].color = c;
+            }
+            for (int i = 0; i < teksList.Length; i++)
+            {
+                if (teksList[i] == null) continue;
+                teksList[i].alpha = alphaTeks[i] * nilai;
+            }
+        }).SetEase(Ease.InQuad));
+        seq.SetLink(go);
+        seq.OnComplete(() =>
+        {
+            daftarSedangHilang.Remove(go);
+            if (go != null) Destroy(go);
+        });
+    }
+
+    // ==========================================
+    // --- PANEL HISTORY ---
+    // ==========================================
+
+    public void TogglePanelHistory()
+    {
+        if (panelHistory == null) return;
+
+        bool aktif = !panelHistory.activeSelf;
+        panelHistory.SetActive(aktif);
+        if (aktif) RenderPanelHistory();
+    }
+
+    public void BukaPanelHistory()
+    {
+        if (panelHistory == null) return;
+        panelHistory.SetActive(true);
+        RenderPanelHistory();
+    }
+
+    public void TutupPanelHistory()
+    {
+        if (panelHistory != null)
+            panelHistory.SetActive(false);
+    }
+
+    void RenderPanelHistory()
+    {
+        if (teksHistory == null) return;
+
+        var sb = new System.Text.StringBuilder();
+
+        // Tanpa scroll: tampilkan hanya N pesan terakhir agar muat di kertas (0 = semua)
+        int mulai = 0;
+        if (maksPesanHistory > 0 && historyChat.Count > maksPesanHistory)
+            mulai = historyChat.Count - maksPesanHistory;
+
+        for (int i = mulai; i < historyChat.Count; i++)
+        {
+            ContentChat chat = historyChat[i];
+            string nama = chat.isMC ? namaMC : namaNPC;
+            sb.AppendLine("<b>" + nama + " :</b> " + chat.textChat);
+            sb.AppendLine();
+        }
+        teksHistory.text = sb.ToString();
+    }
 }

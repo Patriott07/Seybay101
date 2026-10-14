@@ -1,0 +1,27 @@
+{
+  "moods": {
+    "PANICKED": {
+      "delivery": "URGENT",
+      "punctuation": "EXCLAMATION"
+    },
+    "CALM": {
+      "delivery": "NORMAL",
+      "punctuation": "NEUTRAL"
+    },
+    "ANGRY": {
+      "delivery": "AGGRESSIVE",
+      "punctuation": "EXCLAMATION"
+    }
+  },
+  "age_groups": {
+    "CHILD": {
+      "language_style": "SIMPLE"
+    },
+    "ADULT": {
+      "language_style": "NORMAL"
+    },
+    "ELDERLY": {
+      "language_style": "POLITE"
+    }
+  }
+}
