@@ -1,10 +1,16 @@
-using UnityEngine;
-using UnityEngine.UI;
+using Schema.data;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
+
+    [Header("--- Prefab ---")]
+    public GameObject PrefabCheckbox;
+    public GameObject ParentContainer;
+
     [Header("--- TIKET KARAKTER ---")]
     public Toggle toggleAldo;
     public Toggle toggleNasya;
@@ -16,17 +22,8 @@ public class ShopManager : MonoBehaviour
     public int hargaVirly = 21000;
     public int hargaKraisa = 32000;
 
-    // Format untuk menambahkan jenis obat berapapun secara bebas di Unity
-    [System.Serializable]
-    public struct DataObat
-    {
-        public string namaObat;
-        public int hargaObat;
-        public Toggle toggleCheckbox;
-    }
-
     [Header("--- OBAT-OBATAN ---")]
-    public DataObat[] daftarObat;
+    public ItemOnDay[] ListItemBuy;
 
     [Header("--- UI & NAVIGASI ---")]
     public TMP_Text textTotalUang;
@@ -35,8 +32,34 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
-        if (textPeringatan != null) textPeringatan.gameObject.SetActive(false);
+        if (textPeringatan != null)
+            textPeringatan.gameObject.SetActive(false);
+
+        // SetShouldBuy();
+        DrawCheckbox();
         UpdateTampilanUang();
+    }
+
+    public void SetShouldBuy(ItemOnDay Item)
+    {
+        // foreach (var Item in ListItemBuy)
+        // {
+            if (Item.toggleCheckbox != null && Item.isShouldBuy)
+            {
+                Item.toggleCheckbox.isOn = true;
+                Item.toggleCheckbox.interactable = false;
+            }
+        // }
+    }
+
+    public void DrawCheckbox()
+    {
+        foreach (var Item in ListItemBuy)
+        {
+            GameObject toggle = Instantiate(PrefabCheckbox, ParentContainer.transform);
+            SetShouldBuy(Item);
+        }
+        // PrefabCheckbox
     }
 
     public void UpdateTampilanUang()
@@ -50,24 +73,29 @@ public class ShopManager : MonoBehaviour
     // Dipanggil saat tombol "Buy" ditekan
     public void OnClickBuy()
     {
-        if (EconomyManager.Instance == null || SaveManager.Instance == null) return;
+        if (EconomyManager.Instance == null || SaveManager.Instance == null)
+            return;
 
         int totalBelanja = 0;
 
         // 1. Kalkulasi Harga Tiket yang dicentang
-        if (toggleAldo != null && toggleAldo.isOn) totalBelanja += hargaAldo;
-        if (toggleNasya != null && toggleNasya.isOn) totalBelanja += hargaNasya;
-        if (toggleVirly != null && toggleVirly.isOn) totalBelanja += hargaVirly;
-        if (toggleKraisa != null && toggleKraisa.isOn) totalBelanja += hargaKraisa;
+        if (toggleAldo != null && toggleAldo.isOn)
+            totalBelanja += hargaAldo;
+        if (toggleNasya != null && toggleNasya.isOn)
+            totalBelanja += hargaNasya;
+        if (toggleVirly != null && toggleVirly.isOn)
+            totalBelanja += hargaVirly;
+        if (toggleKraisa != null && toggleKraisa.isOn)
+            totalBelanja += hargaKraisa;
 
         // 2. Kalkulasi Harga Obat yang dicentang
-        if (daftarObat != null)
+        if (ListItemBuy != null)
         {
-            foreach (var obat in daftarObat)
+            foreach (var Item in ListItemBuy)
             {
-                if (obat.toggleCheckbox != null && obat.toggleCheckbox.isOn)
+                if (Item.toggleCheckbox != null && Item.toggleCheckbox.isOn)
                 {
-                    totalBelanja += obat.hargaObat;
+                    totalBelanja += Item.price;
                 }
             }
         }
@@ -78,19 +106,35 @@ public class ShopManager : MonoBehaviour
         if (uangBersih >= totalBelanja)
         {
             // Potong Uang & Catat Tiket
-            if (toggleAldo != null && toggleAldo.isOn) { EconomyManager.Instance.money -= hargaAldo; SaveManager.Instance.PurchaseTicket("Aldo"); }
-            if (toggleNasya != null && toggleNasya.isOn) { EconomyManager.Instance.money -= hargaNasya; SaveManager.Instance.PurchaseTicket("Nasya"); }
-            if (toggleVirly != null && toggleVirly.isOn) { EconomyManager.Instance.money -= hargaVirly; SaveManager.Instance.PurchaseTicket("Virly"); }
-            if (toggleKraisa != null && toggleKraisa.isOn) { EconomyManager.Instance.money -= hargaKraisa; SaveManager.Instance.PurchaseTicket("Kraisa"); }
+            if (toggleAldo != null && toggleAldo.isOn)
+            {
+                EconomyManager.Instance.money -= hargaAldo;
+                SaveManager.Instance.PurchaseTicket("Aldo");
+            }
+            if (toggleNasya != null && toggleNasya.isOn)
+            {
+                EconomyManager.Instance.money -= hargaNasya;
+                SaveManager.Instance.PurchaseTicket("Nasya");
+            }
+            if (toggleVirly != null && toggleVirly.isOn)
+            {
+                EconomyManager.Instance.money -= hargaVirly;
+                SaveManager.Instance.PurchaseTicket("Virly");
+            }
+            if (toggleKraisa != null && toggleKraisa.isOn)
+            {
+                EconomyManager.Instance.money -= hargaKraisa;
+                SaveManager.Instance.PurchaseTicket("Kraisa");
+            }
 
             // Potong Uang Obat
-            if (daftarObat != null)
+            if (ListItemBuy != null)
             {
-                foreach (var obat in daftarObat)
+                foreach (var Item in ListItemBuy)
                 {
-                    if (obat.toggleCheckbox != null && obat.toggleCheckbox.isOn)
+                    if (Item.toggleCheckbox != null && Item.toggleCheckbox.isOn)
                     {
-                        EconomyManager.Instance.money -= obat.hargaObat;
+                        EconomyManager.Instance.money -= Item.price;
                     }
                 }
             }
@@ -115,7 +159,8 @@ public class ShopManager : MonoBehaviour
     // Dipanggil saat tombol "Later ->" ditekan
     public void OnClickLater()
     {
-        if (SaveManager.Instance != null) SaveManager.Instance.AdvanceDay();
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.AdvanceDay();
         SceneManager.LoadScene(sceneSelanjutnya);
     }
 }

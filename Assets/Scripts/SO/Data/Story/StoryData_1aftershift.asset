@@ -53,7 +53,7 @@ MonoBehaviour:
   - contentText: .....
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
-  - contentText: Aku mengerti, Makasih ya sayang.
+  - contentText: Aku mengerti, Makasih ya.
     audioSource: {fileID: 8300000, guid: b90f18b2a3c26014587a8193551341a5, type: 3}
     textSpeed: 0.03
   - contentText: Syukurlah perusahaan bayar upahku tepat waktu karena ramai pengunjung.

@@ -6121,6 +6121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32a5cb9e8d7ce374db3a2840554b2281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  areaBatasDrag: {fileID: 0}
+  areaBatasBillboard: {fileID: 0}
+  objekBillboard: {fileID: 0}
+  batasYBillboardTampil: 5
   offset: {x: 0, y: 0, z: 0}
   snapSpeed: 40
   isOnDesk: 0

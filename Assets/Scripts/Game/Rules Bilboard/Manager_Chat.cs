@@ -54,6 +54,9 @@ public class Manager_Chat : MonoBehaviour
     // Tambahan AudioSource untuk memutar clip chat
     private AudioSource audioSourceChat;
 
+
+    // History of chat
+
     void Awake()
     {
         if (Instance == null)
@@ -168,6 +171,7 @@ public class Manager_Chat : MonoBehaviour
 
         Vector3 originalScale = prefab.transform.localScale;
         GameObject pesanBaru = Instantiate(prefab, posisiMuncul, Quaternion.identity, transform);
+        Destroy(pesanBaru, 3f);
         pesanBaru.transform.localScale = Vector3.zero;
         daftarPesanAktif.Add(pesanBaru);
 

@@ -303,10 +303,4 @@ public class LuggageManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-<<<<<<< HEAD
 }
-=======
-
-
-}
->>>>>>> 8055e2f36324f1bbe33f0dfe79d38c63abbd7e5b

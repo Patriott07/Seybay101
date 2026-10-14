@@ -24,7 +24,8 @@ public class EconomyManager : MonoBehaviour
     public int penaltyUangSalah = 5;
 
     [Header("Referensi UI")]
-    [SerializeField] GameObject detailedMistakeHUD;
+    [SerializeField]
+    GameObject detailedMistakeHUD;
     public TextMeshProUGUI textUangHUD;
     public TextMeshProUGUI textTrustHUD;
     public TextMeshProUGUI textWarningTrust;
@@ -46,7 +47,8 @@ public class EconomyManager : MonoBehaviour
     private void Start()
     {
         LoadFromSave();
-        HUDManager.Instance.UpdateStat(trust);
+        if (HUDManager.Instance != null)
+            HUDManager.Instance.UpdateStat(trust);
     }
 
     public void ResetDataGame()
@@ -98,7 +100,7 @@ public class EconomyManager : MonoBehaviour
     {
         trust = Mathf.Clamp(trust + jumlh, 0, maxTrustHarian);
         HUDManager.Instance.UpdateStat(trust);
-        
+
         // LoseCondition.Instance?.CheckLoseCondition();
     }
 
@@ -120,19 +122,20 @@ public class EconomyManager : MonoBehaviour
 
     public int GetNetMoney() => money - punish;
 
-
     public void DetailMistakeHUD()
     {
-        if (!detailedMistakeHUD.activeInHierarchy) detailedMistakeHUD.SetActive(true);
+        if (!detailedMistakeHUD.activeInHierarchy)
+            detailedMistakeHUD.SetActive(true);
         textTrustHUD.text = "trust is = " + trust.ToString();
         textUangHUD.text = "money amount = " + money.ToString();
-        if (trust <= 30) textWarningTrust.text = "Warning! trust is in critical condition(<30)";
-        else textWarningTrust.text = "trust currently above 30";
+        if (trust <= 30)
+            textWarningTrust.text = "Warning! trust is in critical condition(<30)";
+        else
+            textWarningTrust.text = "trust currently above 30";
     }
 
     public void DetailMistakeHUDCloseButton()
     {
-        
         detailedMistakeHUD.SetActive(false);
     }
 
@@ -158,6 +161,6 @@ public class EconomyManager : MonoBehaviour
     // {
     //     if (textUangHUD != null) textUangHUD.text = "$" + money;
     //     if (textTrustHUD != null) textTrustHUD.text = trust + "%";
-    //     
+    //
     // }
 }

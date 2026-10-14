@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Schema.data
 {
@@ -200,5 +202,16 @@ namespace Schema.data
     {
         Man,
         Woman,
+    }
+
+    // Format untuk menambahkan jenis obat berapapun secara bebas di Unity
+    [System.Serializable]
+    public struct ItemOnDay
+    {
+        public string name_item;
+        public int price;
+        public bool isShouldBuy; // wajib beli ga
+        public Toggle toggleCheckbox;
+        public UnityEvent onBuy, onNotBuy;
     }
 }
