@@ -53,6 +53,7 @@ namespace Schema.data
     {
         public string passNumber; // nomor uniq contoh “AR-28491“ Azure rocket
         public string destination; // "Seybay Outpost";
+
         // public string estimationTime; // 2 Day / 48 Hours (fix gabisa diganti2)
         public string seat;
         public string passengerName; // namanya sesuai ga sama passport
@@ -212,6 +213,132 @@ namespace Schema.data
         public int price;
         public bool isShouldBuy; // wajib beli ga
         public Toggle toggleCheckbox;
-        public UnityEvent onBuy, onNotBuy;
+        public UnityEvent onBuy,
+            onNotBuy;
+    }
+
+    // ============================================================
+    // 6. Arktype
+    // ============================================================
+    public enum Arktype
+    {
+        THE_ELITE,
+        ORDINARY_CITIZEN,
+        SICK_PERSON,
+        CHILD,
+        SCIENTIST,
+        LOYALIST,
+        WORKER,
+        AUDIT_AZURA,
+        THE_UNDERGROUND,
+    }
+
+    // ============================================================
+    // 7. EXPRESION
+    // ============================================================
+
+    public enum Mood
+    {
+        Sad,
+        Angry,
+        Neutral,
+        Anxious,
+        Pleading,
+        Arrogant,
+        ColdShy,
+        Scare,
+        Sick,
+        Confused,
+        Taunting,
+        Relieved,
+    }
+
+    public enum IssueDetail { }
+
+    public enum Issues
+    {
+        Missmatch_Passport,
+        Invalid_Passport,
+        Missmatch_Ticket,
+        Invalid_Ticket,
+        Missmatch_Worker_Paper,
+        Invalid_Worker_Paper,
+        Invalid_Age,
+        Invalid_Sertification_Paper,
+        Missmatch_Sertification_Paper,
+        Missmatch_Form_Spesial_Way,
+        Invalid_Form_Spesial_Way,
+        Missmatch_Medical_Check_Paper,
+        Invalid_Medical_Check_Paper,
+        Missmatch_Vaccine_Paper,
+        Invalid_Vaccine_Paper,
+    }
+
+    public enum Tactic
+    {
+        Honest, // Jujur dan kooperatif mengikuti semua prosedur
+        Pretending_BeConfused, // pura2 bingung / gapaham
+        Bribe, // Mencoba menyogok dengan uang/barang berharga
+        GuiltTrip, // Memanfaatkan emosi/iba (menceritakan nasib anak/keluarga)
+        Intimidation, // Mengancam Aldo (mengaku kenal petinggi Azura Corp atau The Underground)
+        Begging, // Memohon-mohon tanpa memberikan barang apa pun
+        Force, // Memaksa/menerobos barikade secara fisik
+    }
+
+    public enum LayerSystemAudit
+    {
+        EMERGENCY_RULE, // aturan yang tidak bisa dilanggar siapapun
+        ARKTYPE_PRIORITY, // Orang-orang yang bisa melewati rule basic
+        BASIC_RULE, // aturan basic
+    }
+
+    public enum WorkerSertification
+    {
+        BEGINNER,
+        INTERMEDIATE,
+        EXPERT,
+    }
+
+    public enum RequestWorkerJob
+    {
+        FARMER,
+        LIVESTOCK_HANDLER,
+        ARSITECHTURE,
+        TUNNEL_DIGGER,
+        BIOMASS_HANDLER,
+    }
+
+    public enum FamilyMood
+    {
+        Happy, // Sehat & Tenang
+        Anxious, // Cemas/Ketakutan
+        Depressed, // Sedih/Putus Asa
+        Rebellious, // Benci Azura Corp
+    }
+
+    [System.Serializable]
+    public struct FamilyMemberStatus
+    {
+        public string name;
+        public int starving; // 0 (Kenyang) - 100 (Kritis Kelaparan)
+        public int sick; // 0 (Sehat) - 100 (Silikosis Stadium Akhir)
+        public int mutasi; // 0 (Murni) - 100 (Mutasi Fisik Total)
+        public FamilyMood mood;
+    }
+
+    public struct WorldState
+    {
+        public float temperature; // Memengaruhi biaya bahan bakar rumah
+        public float pollution_level; // Memengaruhi jumlah pasien Silikosis di loket
+        public float food_water_supply; // Memengaruhi harga kebutuhan pokok di malam hari
+        public float unrest_level; // Memengaruhi potensi serangan/terorisme di pos
+        public float azura_control; // Memengaruhi tingkat ketatnya audit & denda
+    }
+
+    public struct AldoStateGame
+    {
+        public int stressLevel;
+        public int sickLevel;
+        public int sleepyLevel;
     }
 }

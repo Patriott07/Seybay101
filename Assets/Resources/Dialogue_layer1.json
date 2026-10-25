@@ -2,19 +2,41 @@
   "PANICKED": {
     "CHILD": [
       {
-        "dialog" : "Saya belum sempat memperpanjang izin", 
+        "dialog" : "Aku.. tidak tahu", 
         "continue_bubble" : true
       },
-      "Saya belum sempat memperpanjang izin",
-      "Saya masih harus bekerja, Pak"
+      {
+        "dialog" : "Hahh?", 
+        "continue_bubble" : true
+      },
+      {
+        "dialog" : "...", 
+        "continue_bubble" : true
+      },
+      {
+        "dialog" : "Aku tidak mengerti", 
+        "continue_bubble" : true
+      }
     ],
     "ADULT": [
-      "Selesaikan masalah ini sekarang",
-      "Saya tidak punya waktu untuk ini"
+      {
+        "dialog" : "Selesaikan masalah ini sekarang", 
+        "continue_bubble" : true
+      },
+      {
+        "dialog" : "Saya tidak punya waktu untuk ini", 
+        "continue_bubble" : true
+      }
     ],
     "ELDERLY": [
-      "Saya melewatkan tanggal perpanjangan",
-      "Apakah ada prosedur untuk memperbaikinya?"
+      {
+        "dialog" : "Selesaikan masalah ini sekarang", 
+        "continue_bubble" : true
+      },
+      {
+        "dialog" : "Saya tidak punya waktu untuk ini", 
+        "continue_bubble" : true
+      }
     ]
   }
 }
