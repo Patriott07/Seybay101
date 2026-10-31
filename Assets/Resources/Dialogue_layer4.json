@@ -1,28 +1,266 @@
 {
-  "FOOD_RATION_CRISIS": {
-    "THE_WORKER": {
-      "PANICKED": [
-        "Kalau saya tidak masuk kerja hari ini, keluarga saya tidak dapat jatah makanan!"
-      ],
-      "DEPRESSED": [
-        "Entahlah... mungkin keluarga saya memang harus kelaparan hari ini."
+  "layerData": [
+    {
+      "situationName": "FAMILYHUNGRY",
+      "arktypes": [
+        {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "ANGRY",
+              "lines": [
+                {"dialog": "Kau tahu berapa banyak orang yang bisa kehilangan pekerjaan karena keputusanmu?", "continue_bubble": true},
+                {"dialog": "Saya harap Anda memahami dampak keputusan ini.", "continue_bubble": true}
+              ]
+            },
+            {
+              "moodName": "SAD",
+              "lines": [
+                {"dialog": "Entahlah... mungkin keluarga saya memang harus kelaparan hari ini.", "continue_bubble": true},
+                {"dialog": "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk.", "continue_bubble": true}
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "ANGRY",
+              "lines": [
+                {"dialog": "Kalau saya tidak masuk kerja hari ini, keluarga saya tidak dapat jatah makanan!", "continue_bubble": true}
+              ]
+            },
+            {
+              "moodName": "DEPRESSED",
+              "lines": [
+                {"dialog": "Entahlah... maybe keluarga saya memang harus kelaparan hari ini.", "continue_bubble": true}
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "FEARFUL",
+              "lines": [
+                {"dialog": "Kalau saya tidak bisa lewat, siapa yang akan membelikan obat untuk saya?", "continue_bubble": true}
+              ]
+            },
+            {
+              "moodName": "SAD",
+              "lines": [
+                {"dialog": "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
       ]
     },
-    "THE_ELITE": {
-      "ANGRY": [
-        "Kau tahu berapa banyak orang yang bisa kehilangan pekerjaan karena keputusanmu?"
-      ],
-      "CALM": [
-        "Saya harap Anda memahami dampak keputusan ini."
+    {
+      "situationName": "FAMILYSICK",
+      "arktypes": [
+        {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "ANGRY",
+              "lines": [
+                {"dialog": "Kesehatan keluarga ini menjadi tanggung jawab saya utuh.", "continue_bubble": true}
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "SICK",
+              "lines": [
+                {"dialog": "Saya tidak bisa bekerja jika keluarga sakit.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
       ]
     },
-    "THE_DEPENDENT": {
-      "FEARFUL": [
-        "Kalau saya tidak bisa lewat, siapa yang akan membelikan obat untuk saya?"
-      ],
-      "SAD": [
-        "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk."
+    {
+      "situationName": "FAMILYMUTATION",
+      "arktypes": [
+        {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "ARROGANT",
+              "lines": [
+                {"dialog": "Mutasi adalah keberanian yang wajar untuk kemajuan.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "ALDOSICK",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "SICK",
+              "lines": [
+                {"dialog": "Sakit kepala lagi Pak, saya butuh istirahat.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "ALDOSLEEPY",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "SLEEPY",
+              "lines": [
+                {"dialog": "Saya butuh istirahat sebentar Pak, baru bisa kerja.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "ALDOHUNGRY",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "HUNGRY",
+              "lines": [
+                {"dialog": "Saya tidak maki sejak pagi, permintaan makanan segera!", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "ALDOMUTATION",
+      "arktypes": [
+        {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "ARROGANT",
+              "lines": [
+                {"dialog": "Mutasi adalah bagian dari evolusi yang wajar.", "continue_bubble": true}
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "FEARFUL",
+              "lines": [
+                {"dialog": "Apa yang terjadi dengan tubuh saya Pak?", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "NORMALTEMPERATURE",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {"dialog": "Suhu di ruangan ini cukup nyaman untuk bekerja.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "HOTTEMPERATURE",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "ANXIOUS",
+              "lines": [
+                {"dialog": "Suhu di sini terlalu panas, saya kesulitan fokus.", "continue_bubble": true}
+              ]
+            },
+            {
+              "moodName": "ANGRY",
+              "lines": [
+                {"dialog": "Panik ini karena suhu, tolong kurangi pemanasan!", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "UNNORMALTEMPERATURE",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "CONFUSED",
+              "lines": [
+                {"dialog": "Suhu ini aneh-aneh Pak, apakah ada masalah?", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "NORMALPOLUTION",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {"dialog": "Level polusi hari ini normal saja Pak.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "situationName": "UNNORMALPOLUTION",
+      "arktypes": [
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "ANXIOUS",
+              "lines": [
+                {"dialog": "Polusi di sini sangat tinggi, saya takut kesakitan.", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
       ]
     }
-  }
+  ]
 }

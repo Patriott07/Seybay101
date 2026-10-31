@@ -1,22 +1,36 @@
 {
-  "EXPIRED_PERMIT": {
-    "PANICKED": {
-      "THE_WORKER": [
+  "layerData": [
+    {
+      "issueID": "EXPIRED_PERMIT",
+      "expressions": [
         {
-          "dialog": "Saya masih harus bekerja, Pak",
-          "continue_bubble": true
-        },
-        "Saya belum sempat memperpanjang izin",
-        "Saya masih harus bekerja, Pak"
-      ],
-      "THE_ELITE": [
-        "Selesaikan masalah ini sekarang",
-        "Saya tidak punya waktu untuk ini"
-      ],
-      "ACADEMIA": [
-        "Saya melewatkan tanggal perpanjangan",
-        "Apakah ada prosedur untuk memperbaikinya?"
+          "expressionName": "PANICKED",
+          "ageGroups": [
+            {
+              "ageGroupName": "THE_WORKER",
+              "lines": [
+                {"dialog": "Saya masih harus bekerja, Pak", "continue_bubble": true},
+                {"dialog": "Saya belum sempat memperpanjang izin", "continue_bubble": true},
+                {"dialog": "Saya masih harus bekerja, Pak", "continue_bubble": true}
+              ]
+            },
+            {
+              "ageGroupName": "THE_ELITE",
+              "lines": [
+                {"dialog": "Selesaikan masalah ini sekarang", "continue_bubble": true},
+                {"dialog": "Saya tidak punya waktu untuk ini", "continue_bubble": true}
+              ]
+            },
+            {
+              "ageGroupName": "ACADEMIA",
+              "lines": [
+                {"dialog": "Saya melewatkan tanggal perpanjangan", "continue_bubble": true},
+                {"dialog": "Apakah ada prosedur untuk memperbaikinya?", "continue_bubble": true}
+              ]
+            }
+          ]
+        }
       ]
     }
-  }
+  ]
 }

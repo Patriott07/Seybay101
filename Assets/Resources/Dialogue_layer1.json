@@ -1,42 +1,32 @@
 {
-  "PANICKED": {
-    "CHILD": [
-      {
-        "dialog" : "Aku.. tidak tahu", 
-        "continue_bubble" : true
-      },
-      {
-        "dialog" : "Hahh?", 
-        "continue_bubble" : true
-      },
-      {
-        "dialog" : "...", 
-        "continue_bubble" : true
-      },
-      {
-        "dialog" : "Aku tidak mengerti", 
-        "continue_bubble" : true
-      }
-    ],
-    "ADULT": [
-      {
-        "dialog" : "Selesaikan masalah ini sekarang", 
-        "continue_bubble" : true
-      },
-      {
-        "dialog" : "Saya tidak punya waktu untuk ini", 
-        "continue_bubble" : true
-      }
-    ],
-    "ELDERLY": [
-      {
-        "dialog" : "Selesaikan masalah ini sekarang", 
-        "continue_bubble" : true
-      },
-      {
-        "dialog" : "Saya tidak punya waktu untuk ini", 
-        "continue_bubble" : true
-      }
-    ]
-  }
+  "layerExpresion": [
+    {
+      "expressionName": "PANICKED",
+      "ageGroups": [
+        {
+          "ageGroupName": "CHILD",
+          "lines": [
+            {"dialog" : "Aku.. tidak tahu", "continue_bubble" : true},
+            {"dialog" : "Hahh?", "continue_bubble" : true},
+            {"dialog" : "...", "continue_bubble" : true},
+            {"dialog" : "Aku tidak mengerti", "continue_bubble" : true}
+          ]
+        },
+        {
+          "ageGroupName": "ADULT",
+          "lines": [
+            {"dialog" : "Selesaikan masalah ini sekarang", "continue_bubble" : true},
+            {"dialog" : "Saya tidak punya waktu untuk ini", "continue_bubble" : true}
+          ]
+        },
+        {
+          "ageGroupName": "ELDERLY",
+          "lines": [
+            {"dialog" : "Selesaikan masalah ini sekarang", "continue_bubble" : true},
+            {"dialog" : "Saya tidak punya waktu untuk ini", "continue_bubble" : true}
+          ]
+        }
+      ]
+    }
+  ]
 }

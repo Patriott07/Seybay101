@@ -253,6 +253,13 @@ namespace Schema.data
         Relieved,
     }
 
+    public enum AgeGroup
+    {
+        CHILD,
+        ADULT,
+        ELDERLY,
+    }
+
     public enum IssueDetail { }
 
     public enum Issues
@@ -326,13 +333,33 @@ namespace Schema.data
         public FamilyMood mood;
     }
 
+    public enum InternalSituation
+    {
+        FAMILYHUNGRY,
+        FAMILYSICK,
+        FAMILYMUTATION,
+        ALDOSICK,
+        ALDOSLEEPY,
+        ALDOHUNGRY,
+        ALDOMUTATION,
+    }
+
     public struct WorldState
     {
-        public float temperature; // Memengaruhi biaya bahan bakar rumah
+        public float temperature; // Memengaruhi suasana dilayar
         public float pollution_level; // Memengaruhi jumlah pasien Silikosis di loket
         public float food_water_supply; // Memengaruhi harga kebutuhan pokok di malam hari
         public float unrest_level; // Memengaruhi potensi serangan/terorisme di pos
-        public float azura_control; // Memengaruhi tingkat ketatnya audit & denda
+    }
+
+    public enum WorldSituation
+    {
+        NORMALTEMPERATURE,
+        HOTTEMPERATURE,
+        UNNORMALTEMPERATURE,
+        NORMALPOLUTION,
+        UNNORMALPOLUTION,
+        // NORMALPOLUTION,
     }
 
     public struct AldoStateGame
@@ -340,5 +367,110 @@ namespace Schema.data
         public int stressLevel;
         public int sickLevel;
         public int sleepyLevel;
+    }
+
+    [System.Serializable]
+    public class DialogueLine
+    {
+        public string dialog;
+        public bool continue_bubble;
+    }
+
+    // ===============================
+    // Layer 1 (Dialogue)
+    // ===============================
+
+    [System.Serializable]
+    public class AgeGroupData
+    {
+        public string ageGroupName; // "CHILD", "ADULT", "ELDERLY"
+        public List<DialogueLine> lines;
+    }
+
+    [System.Serializable]
+    public class ExpressionData
+    {
+        public string expressionName;
+        public List<AgeGroupData> ageGroups;
+    }
+
+    [System.Serializable]
+    public class DialogueDatabaseLayer1
+    {
+        public List<ExpressionData> layerExpresion;
+    }
+
+    [System.Serializable]
+    public class DialogueDatabaseLayer2
+    {
+        public List<Layer2Entry> layerData;
+    }
+
+    [System.Serializable]
+    public class Layer2Entry
+    {
+        public string issueID;
+        public List<ExpressionData2> expressions;
+    }
+
+    [System.Serializable]
+    public class ExpressionData2
+    {
+        public string expressionName;
+        public List<AgeGroupData2> ageGroups;
+    }
+
+    [System.Serializable]
+    public class AgeGroupData2
+    {
+        public string ageGroupName;
+        public List<DialogueLine> lines;
+    }
+
+    [System.Serializable]
+    public class DialogueDatabaseLayer3
+    {
+        public List<Layer3Entry> layerData;
+    }
+
+    [System.Serializable]
+    public class Layer3Entry
+    {
+        public string tacticName;
+        public List<AgeGroupData3> ageGroups;
+    }
+
+    [System.Serializable]
+    public class AgeGroupData3
+    {
+        public string ageGroupName;
+        public List<DialogueLine> lines;
+    }
+
+    [System.Serializable]
+    public class DialogueDatabaseLayer4
+    {
+        public List<Layer4Entry> layerData;
+    }
+
+    [System.Serializable]
+    public class Layer4Entry
+    {
+        public string situationName;
+        public List<ArktypeData4> arktypes;
+    }
+
+    [System.Serializable]
+    public class ArktypeData4
+    {
+        public string arktype;
+        public List<MoodData4> moods;
+    }
+
+    [System.Serializable]
+    public class MoodData4
+    {
+        public string moodName;
+        public List<DialogueLine> lines;
     }
 }
