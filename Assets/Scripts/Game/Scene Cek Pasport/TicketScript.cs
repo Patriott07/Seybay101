@@ -29,25 +29,20 @@ public class TicketScript : MonoBehaviour
     private const float TICKET_INVALID_CHANCE = 0.3f; // 30% chance ticket is invalid
     private const float TICKET_NAMEPASSEGER_INVALID_CHANCE = 0.3f; // 30% chance ticket is invalid
 
-    void Awake()
-    {
-        Instance = this;
-        // Subscribe to boarding pass generation event
-    }
+void Awake()
+{
+    Instance = this;
+    GameEvent.GenerateNewBoardingPass += GenerateData;
+}
 
-    void OnEnable()
-    {
-        GameEvent.GenerateNewBoardingPass += GenerateData;
-    }
-
-    void OnDestroy()
-    {
-        GameEvent.GenerateNewBoardingPass -= GenerateData;
-    }
-
+void OnDestroy()
+{
+    GameEvent.GenerateNewBoardingPass -= GenerateData;
+}
     // Called when NPC arrives — generates boarding pass data
     public void GenerateData(PassportSchema passport)
     {
+        if (passport == null) return;
         // AudioManager.Instance.PlaySfxTicket();
 
         // int currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;

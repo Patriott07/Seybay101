@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class ContentChat
@@ -26,6 +27,13 @@ public class Manager_Chat : MonoBehaviour
         public bool isMC;
     }
 
+    public enum PosisiVertikalProgress
+    {
+        DiBawahBubble,
+        TengahBubble,
+        DiAtasBubble
+    }
+
     [Header("Prefab Popup HUD")]
     public GameObject prefabBubbleMC;
     public GameObject prefabBubbleNPC;
@@ -45,14 +53,35 @@ public class Manager_Chat : MonoBehaviour
     public bool geserTumpukanSetelahHapus = true;
     public float durasiGeser = 0.25f;
 
+    [Header("Kontrol Dialog")]
+    [Tooltip("Tekan tombol ini untuk menampilkan pesan berikutnya")]
+    public KeyCode tombolLanjut = KeyCode.Space;
+    [Tooltip("Aktifkan jika dialog biasa juga ingin dilanjutkan dengan klik kiri mouse")]
+    public bool izinkanKlikMouse = true;
+    [Tooltip("Durasi Space harus ditahan setelah bubble MC muncul untuk melanjutkan dialog")]
+    [Min(0.1f)] public float durasiHoldSpaceMC = 0.6f;
+    [Tooltip("Opsional: Image progress bar dengan Image Type = Filled. Fill Amount akan bergerak saat Space ditahan.")]
+    public Image progressHoldSpaceMC;
+    [Tooltip("Opsional: GameObject progress bar yang diaktifkan hanya saat menahan Space.")]
+    public GameObject objekProgressHoldMC;
+
+    [Header("Posisi Progress Bar MC")]
+    [Tooltip("Canvas tempat progress bar berada. Kosong = dicari otomatis dari parent progress bar.")]
+    public Canvas canvasProgressMC;
+    [Tooltip("Kamera yang merender bubble. Kosong = Camera.main.")]
+    public Camera kameraBubbleMC;
+    [Tooltip("Sisi kiri progress bar selalu menempel di ujung kiri bubble MC. Ini mengatur posisi vertikalnya.")]
+    public PosisiVertikalProgress posisiVertikal = PosisiVertikalProgress.DiBawahBubble;
+    [Tooltip("Jarak (pixel layar) antara bubble dan progress bar. Dipakai untuk Di Bawah / Di Atas.")]
+    public float jarakProgressDariBubble = 10f;
+    [Tooltip("Geser tambahan (pixel layar). X negatif = lebih ke kiri, Y positif = lebih ke atas.")]
+    public Vector2 geserTambahanPixel = Vector2.zero;
+    [Tooltip("ON: lebar progress bar mengikuti lebar bubble MC. " +
+             "Jika bar punya anak Image, buat anak itu anchor stretch agar ikut melebar.")]
+    public bool samakanLebarDenganBubble = false;
+
     [Header("Waktu Percakapan")]
     public float delaySebelumMulai = 0.5f;
-    [Tooltip("Jeda sebelum pesan berikutnya muncul")]
-    public float jedaAntarPesan = 1.5f;
-    [Tooltip("Jeda sebelum pesan berikutnya muncul minimal selama audio clip-nya")]
-    public bool tungguAudioSelesai = true;
-    [Tooltip("Setelah pesan TERAKHIR muncul, semua bubble bertahan selama ini lalu hilang satu per satu")]
-    public float durasiTampilPopup = 3.0f;
 
     [Header("Animasi Hilang (naik sedikit + memudar)")]
     [Tooltip("Jarak naik secara visual saat hilang (unit dunia)")]
@@ -64,25 +93,19 @@ public class Manager_Chat : MonoBehaviour
     [Header("Daftar Percakapan")]
     public ChatTopic currentTopic;
 
-    [Header("=== SYSTEM HISTORY CHAT ===")]
+    [Header("=== DATA HISTORY CHAT ===")]
+    [Tooltip("Dibaca oleh PhoneManager untuk panel History di HP")]
     public List<ContentChat> historyChat = new List<ContentChat>();
-
-    [Header("UI Panel History")]
-    public GameObject panelHistory;
-    [Tooltip("Satu TextMeshProUGUI di dalam panel history")]
-    public TextMeshProUGUI teksHistory;
-    [Tooltip("Batas pesan yang ditampilkan di kertas (0 = tanpa batas)")]
-    public int maksPesanHistory = 8;
-    public string namaMC = "Aldo";
-    public string namaNPC = "NPC";
 
     private readonly List<BubbleAktif> daftarBubble = new List<BubbleAktif>();
     private readonly List<GameObject> daftarSedangHilang = new List<GameObject>();
     private Coroutine prosesChatAktif;
     private AudioSource audioSourceChat;
 
-
-    // History of chat
+    // Bubble MC yang sedang menunggu hold Space (untuk posisi progress bar)
+    private Transform bubbleMCAktif;
+    private Renderer[] rendererBubbleMC;
+    private RectTransform rectProgressMC;
 
     void Awake()
     {
@@ -110,11 +133,9 @@ public class Manager_Chat : MonoBehaviour
         historyChat.Clear();
         BersihkanChat();
 
-        if (teksHistory != null)
-            teksHistory.text = "";
-
-        if (panelHistory != null)
-            panelHistory.SetActive(false);
+        // Panel History di HP ikut dikosongkan jika sedang terbuka
+        if (PhoneManager.Instance != null)
+            PhoneManager.Instance.SegarkanHistoryJikaTerbuka();
     }
 
     // Membersihkan popup HUD seketika (history tidak ikut terhapus)
@@ -129,9 +150,16 @@ public class Manager_Chat : MonoBehaviour
         if (audioSourceChat != null && audioSourceChat.isPlaying)
             audioSourceChat.Stop();
 
+        if (progressHoldSpaceMC != null)
+            progressHoldSpaceMC.fillAmount = 0f;
+        if (objekProgressHoldMC != null)
+            objekProgressHoldMC.SetActive(false);
+
         foreach (BubbleAktif b in daftarBubble)
             HancurkanSeketika(b.go);
         daftarBubble.Clear();
+        bubbleMCAktif = null;
+        rendererBubbleMC = null;
 
         foreach (GameObject g in daftarSedangHilang)
             HancurkanSeketika(g);
@@ -162,51 +190,276 @@ public class Manager_Chat : MonoBehaviour
         if (currentTopic == null)
         {
             Debug.LogWarning("ChatTopic belum di-assign di Inspector!");
+            prosesChatAktif = null;
             yield break;
         }
 
         if (!currentTopic.ShouldSpeak())
+        {
+            prosesChatAktif = null;
             yield break;
+        }
 
         List<ContentChat> chats = currentTopic.GetRandomMessage();
-        if (chats == null)
+        if (chats == null || chats.Count == 0)
         {
             Debug.LogWarning("List messages di ChatTopic kosong!");
+            prosesChatAktif = null;
             yield break;
         }
 
         for (int i = 0; i < chats.Count; i++)
         {
             ContentChat chat = chats[i];
+            if (chat == null) continue;
 
-            // 1. Simpan ke history
+            // NPC pertama muncul otomatis. NPC berikutnya menunggu input biasa.
+            // Bubble MC ditampilkan terlebih dahulu, lalu pemain menahan Space
+            // untuk menyelesaikan progress sebelum dialog berlanjut.
+            if (!chat.isMC && i > 0)
+                yield return StartCoroutine(TungguInputNPC());
+
+            // Simpan ke history saat pesan ditampilkan agar tetap muncul di HP.
             historyChat.Add(chat);
-            if (panelHistory != null && panelHistory.activeSelf)
-                RenderPanelHistory();
+            if (PhoneManager.Instance != null)
+                PhoneManager.Instance.SegarkanHistoryJikaTerbuka();
 
-            // 2. Tampilkan bubble + audio
             TampilkanBubble(chat);
 
-            // 3. Tunggu sebelum pesan berikutnya (atau sebelum bubble mulai hilang)
-            bool terakhir = (i == chats.Count - 1);
-            float tunggu = terakhir ? durasiTampilPopup : jedaAntarPesan;
-            if (tungguAudioSelesai && chat.clip != null)
-                tunggu = Mathf.Max(tunggu, chat.clip.length);
-
-            yield return new WaitForSeconds(tunggu);
+            // MC sudah terlihat; hold Space sekarang mengisi progress dan
+            // menahan alur sebelum pesan berikutnya ditampilkan.
+            if (chat.isMC)
+                yield return StartCoroutine(TungguHoldSpaceMC());
         }
 
-        // 4. Semua chat selesai -> bubble hilang satu per satu dari yang paling atas
+        // Semua baris selesai: bubble hilang satu per satu seperti sebelumnya.
         while (daftarBubble.Count > 0)
         {
-            HapusBubbleTeratas(false);
+            HapusBubbleTeratas(geserTumpukanSetelahHapus);
             yield return new WaitForSeconds(jedaAntarHilang);
         }
 
         prosesChatAktif = null;
     }
 
-    // === [AWAL PERUBAHAN 5: PARAMETER TAMBAHAN UNTUK AUDIOCLIP] ===
+    IEnumerator TungguInputNPC()
+    {
+        // Pastikan input yang dipakai untuk memulai percakapan tidak langsung
+        // melompati pesan berikutnya.
+        yield return new WaitUntil(() => !Input.GetKey(tombolLanjut));
+
+        while (true)
+        {
+            if (Input.GetKeyDown(tombolLanjut) ||
+                (izinkanKlikMouse && Input.GetMouseButtonDown(0)))
+                yield break;
+
+            yield return null;
+        }
+    }
+
+    IEnumerator TungguHoldSpaceMC()
+    {
+        if (objekProgressHoldMC != null)
+            objekProgressHoldMC.SetActive(true);
+
+        if (progressHoldSpaceMC != null)
+            progressHoldSpaceMC.fillAmount = 0f;
+
+        // Wajib melepas Space terlebih dahulu agar tombol yang dipakai
+        // untuk memulai interaksi tidak langsung dihitung sebagai hold.
+        yield return new WaitUntil(() => !Input.GetKey(tombolLanjut));
+
+        while (true)
+        {
+            yield return new WaitUntil(() => Input.GetKeyDown(tombolLanjut));
+
+            float waktuHold = 0f;
+            while (Input.GetKey(tombolLanjut) && waktuHold < durasiHoldSpaceMC)
+            {
+                waktuHold += Time.deltaTime;
+                if (progressHoldSpaceMC != null)
+                    progressHoldSpaceMC.fillAmount = Mathf.Clamp01(waktuHold / durasiHoldSpaceMC);
+                yield return null;
+            }
+
+            if (waktuHold >= durasiHoldSpaceMC)
+                break;
+
+            // Space dilepas terlalu cepat: progress kembali ke nol dan pemain
+            // harus menahan lagi dari awal.
+            if (progressHoldSpaceMC != null)
+                progressHoldSpaceMC.fillAmount = 0f;
+        }
+
+        if (progressHoldSpaceMC != null)
+            progressHoldSpaceMC.fillAmount = 0f;
+        if (objekProgressHoldMC != null)
+            objekProgressHoldMC.SetActive(false);
+    }
+
+    // ==========================================
+    // --- POSISI PROGRESS BAR MC ---
+    // ==========================================
+
+    void LateUpdate()
+    {
+        UpdatePosisiProgressMC();
+    }
+
+    void UpdatePosisiProgressMC()
+    {
+        if (bubbleMCAktif == null || objekProgressHoldMC == null)
+            return;
+
+        if (!objekProgressHoldMC.activeSelf)
+            return;
+
+        if (rectProgressMC == null)
+            rectProgressMC = objekProgressHoldMC.GetComponent<RectTransform>();
+        if (rectProgressMC == null)
+            return;
+
+        RectTransform parentRect = rectProgressMC.parent as RectTransform;
+        if (parentRect == null)
+            return;
+
+        // Kamera UI (null untuk Screen Space - Overlay)
+        Canvas canvas = canvasProgressMC != null
+            ? canvasProgressMC
+            : rectProgressMC.GetComponentInParent<Canvas>();
+        if (canvas == null)
+            return;
+        canvas = canvas.rootCanvas;
+
+        Camera kameraUI = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : canvas.worldCamera;
+
+        // Kamera yang merender bubble
+        Camera kameraDunia = kameraBubbleMC != null ? kameraBubbleMC : Camera.main;
+        if (kameraDunia == null)
+            return;
+
+        // Kotak bubble MC di layar (mengikuti ukuran bubble yang sebenarnya)
+        if (!HitungKotakBubbleDiLayar(kameraDunia,
+                out float kiri, out float kanan, out float bawah, out float atas))
+            return;
+
+        // Titik acuan vertikal + titik pada bar yang harus menempel di sana
+        // ay = 1 -> sisi ATAS bar menempel, 0.5 -> tengah bar, 0 -> sisi BAWAH bar
+        float yAcuan;
+        float ay;
+        switch (posisiVertikal)
+        {
+            case PosisiVertikalProgress.TengahBubble:
+                yAcuan = (atas + bawah) * 0.5f;
+                ay = 0.5f;
+                break;
+            case PosisiVertikalProgress.DiAtasBubble:
+                yAcuan = atas + jarakProgressDariBubble;
+                ay = 0f;
+                break;
+            default: // DiBawahBubble
+                yAcuan = bawah - jarakProgressDariBubble;
+                ay = 1f;
+                break;
+        }
+
+        Vector2 titikKiriLayar = new Vector2(kiri, yAcuan) + geserTambahanPixel;
+        Vector2 titikKananLayar = new Vector2(kanan, yAcuan) + geserTambahanPixel;
+
+        if (!RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                parentRect, titikKiriLayar, kameraUI, out Vector3 titikKiriDunia))
+            return;
+
+        // Lebar progress bar = lebar bubble (opsional)
+        if (samakanLebarDenganBubble &&
+            RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                parentRect, titikKananLayar, kameraUI, out Vector3 titikKananDunia))
+        {
+            float skalaX = Mathf.Abs(rectProgressMC.lossyScale.x);
+            if (skalaX > 0.0001f)
+            {
+                float lebarLokal = Mathf.Abs(titikKananDunia.x - titikKiriDunia.x) / skalaX;
+                if (Mathf.Abs(rectProgressMC.rect.width - lebarLokal) > 0.01f)
+                    rectProgressMC.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, lebarLokal);
+            }
+        }
+
+        // Kompensasi pivot: sisi kiri bar (x = 0) dan titik vertikal (ay) tepat di titik acuan,
+        // apa pun anchor dan pivot bar-nya.
+        Vector2 ukuranDunia = new Vector2(
+            rectProgressMC.rect.width * Mathf.Abs(rectProgressMC.lossyScale.x),
+            rectProgressMC.rect.height * Mathf.Abs(rectProgressMC.lossyScale.y));
+        Vector2 pivot = rectProgressMC.pivot;
+
+        rectProgressMC.position = titikKiriDunia + new Vector3(
+            pivot.x * ukuranDunia.x,
+            (pivot.y - ay) * ukuranDunia.y,
+            0f);
+    }
+
+    // Gabungan semua renderer bubble MC -> kotak di koordinat layar (pixel)
+    bool HitungKotakBubbleDiLayar(Camera kamera,
+        out float kiri, out float kanan, out float bawah, out float atas)
+    {
+        kiri = bawah = float.MaxValue;
+        kanan = atas = float.MinValue;
+        bool ada = false;
+
+        if (rendererBubbleMC == null)
+            return false;
+
+        for (int r = 0; r < rendererBubbleMC.Length; r++)
+        {
+            Renderer rend = rendererBubbleMC[r];
+            if (rend == null || !rend.enabled || !rend.gameObject.activeInHierarchy)
+                continue;
+
+            // SpriteRenderer tanpa sprite tidak punya ukuran, lewati
+            SpriteRenderer sr = rend as SpriteRenderer;
+            if (sr != null && sr.sprite == null)
+                continue;
+
+            Bounds b = rend.bounds;
+            Vector3 c = b.center;
+            Vector3 e = b.extents;
+
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 sudut = c + new Vector3(
+                    (i & 1) == 0 ? -e.x : e.x,
+                    (i & 2) == 0 ? -e.y : e.y,
+                    (i & 4) == 0 ? -e.z : e.z);
+
+                Vector3 p = kamera.WorldToScreenPoint(sudut);
+                if (p.z <= 0f) continue;
+
+                if (p.x < kiri) kiri = p.x;
+                if (p.x > kanan) kanan = p.x;
+                if (p.y < bawah) bawah = p.y;
+                if (p.y > atas) atas = p.y;
+                ada = true;
+            }
+        }
+
+        return ada;
+    }
+
+    // Bubble MC = semua SpriteRenderer (badan bubble). Jika tidak ada, pakai semua Renderer.
+    static Renderer[] AmbilRendererBubble(GameObject go)
+    {
+        SpriteRenderer[] sprites = go.GetComponentsInChildren<SpriteRenderer>(true);
+        if (sprites.Length > 0)
+            return sprites;
+
+        return go.GetComponentsInChildren<Renderer>(true);
+    }
+
+    // ==========================================
+    // --- BUBBLE ---
+    // ==========================================
 
     Vector3 PosisiBubble(BubbleAktif b)
     {
@@ -245,6 +498,12 @@ public class Manager_Chat : MonoBehaviour
         data.go.transform.localScale = Vector3.zero;
         daftarBubble.Add(data);
 
+        if (chat.isMC)
+        {
+            bubbleMCAktif = data.go.transform;
+            rendererBubbleMC = AmbilRendererBubble(data.go);
+        }
+
         data.go.transform.DOScale(originalScale, 0.3f)
             .SetEase(Ease.OutBack)
             .SetLink(data.go);
@@ -254,6 +513,7 @@ public class Manager_Chat : MonoBehaviour
         if (teks3D != null)
         {
             teks3D.text = chat.textChat;
+            teks3D.ForceMeshUpdate(); // ukuran teks langsung benar agar bubble & progress bar pas
         }
         else
         {
@@ -340,52 +600,5 @@ public class Manager_Chat : MonoBehaviour
             daftarSedangHilang.Remove(go);
             if (go != null) Destroy(go);
         });
-    }
-
-    // ==========================================
-    // --- PANEL HISTORY ---
-    // ==========================================
-
-    public void TogglePanelHistory()
-    {
-        if (panelHistory == null) return;
-
-        bool aktif = !panelHistory.activeSelf;
-        panelHistory.SetActive(aktif);
-        if (aktif) RenderPanelHistory();
-    }
-
-    public void BukaPanelHistory()
-    {
-        if (panelHistory == null) return;
-        panelHistory.SetActive(true);
-        RenderPanelHistory();
-    }
-
-    public void TutupPanelHistory()
-    {
-        if (panelHistory != null)
-            panelHistory.SetActive(false);
-    }
-
-    void RenderPanelHistory()
-    {
-        if (teksHistory == null) return;
-
-        var sb = new System.Text.StringBuilder();
-
-        // Tanpa scroll: tampilkan hanya N pesan terakhir agar muat di kertas (0 = semua)
-        int mulai = 0;
-        if (maksPesanHistory > 0 && historyChat.Count > maksPesanHistory)
-            mulai = historyChat.Count - maksPesanHistory;
-
-        for (int i = mulai; i < historyChat.Count; i++)
-        {
-            ContentChat chat = historyChat[i];
-            string nama = chat.isMC ? namaMC : namaNPC;
-            sb.AppendLine("<b>" + nama + " :</b> " + chat.textChat);
-            sb.AppendLine();
-        }
-        teksHistory.text = sb.ToString();
     }
 }

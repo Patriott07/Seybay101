@@ -1,140 +1,97 @@
-using System.Collections;
-using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InspectableObject : MonoBehaviour
 {
-    [Header("Pengaturan Inspeksi")]
-    public Transform titikInspeksi;
-    public float skalaZoom = 2f;
-    public float kecepatanAnimasi = 8f;
-    public SpriteRenderer bg;
+    [Header("Panel yang dibuka saat klik 2x")]
+    public BookPanelController panel;
 
-    private static InspectableObject currentInspectedObject;
-    private Vector3 posisiMeja;
-    private Vector3 skalaAwal;
-    private int urutanLayerAwal;
+    [Tooltip("Urutan bagian di list 'bagian' BookPanelController. Contoh: 0 = Rules, 1 = Guide")]
+    public int indexBagian = 0;
 
-    private bool isInspected = false;
-    private bool sedangAnimasi = false;
-    private SpriteRenderer spriteRenderer;
+    [Header("Pengaturan")]
+    public float clickThreshold = 0.3f;
 
-    private float clickThreshold = 0.3f;
+    [Header("Debug")]
+    [Tooltip("Tampilkan di Console apakah klik diterima atau diblokir (dan alasannya).")]
+    public bool logDebug = true;
+
     private float lastClickTime = 0f;
     private int clickCount = 0;
 
-    Draggable draggableScript;
+    // Dipertahankan agar script lain yang memanggil GetIsInspect() tidak error
+    public bool GetIsInspect() => BookPanelController.IsPanelOpen;
 
-    void Awake()
+    void Log(string pesan)
     {
-        skalaAwal = transform.localScale;
+        if (logDebug) Debug.Log("[Inspectable] " + name + ": " + pesan, this);
     }
 
-    void Start()
-    {
-        draggableScript = GetComponent<Draggable>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        urutanLayerAwal = spriteRenderer.sortingOrder;
-    }
+    // Hanya UI yang bisa diklik (Button dst) yang memblokir klik. Background UI full-screen tidak.
+    static readonly System.Collections.Generic.List<RaycastResult> hasilRaycastUI =
+        new System.Collections.Generic.List<RaycastResult>();
 
-    public bool GetIsInspect() => isInspected;
+    static bool PointerDiAtasUIInteraktif()
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        var data = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+
+        hasilRaycastUI.Clear();
+        EventSystem.current.RaycastAll(data, hasilRaycastUI);
+
+        foreach (var r in hasilRaycastUI)
+            if (r.gameObject != null &&
+                ExecuteEvents.GetEventHandler<IPointerClickHandler>(r.gameObject) != null)
+                return true;
+
+        return false;
+    }
 
     void OnMouseDown()
     {
-        if (sedangAnimasi)
-            return;
+        Log("OnMouseDown diterima");
 
-        if (draggableScript != null && draggableScript.isOnDesk == false)
-            return;
-
-        float timeSinceLastClick = Time.time - lastClickTime;
-
-        if (timeSinceLastClick <= clickThreshold)
+        // Saat panel terbuka, objek di luar panel tidak bisa di-interact
+        if (BookPanelController.IsPanelOpen)
         {
+            Log("diblokir, panel buku sedang terbuka");
+            return;
+        }
+
+        // Hanya UI yang bisa diklik (Button dst) yang memblokir. Background UI tidak.
+        if (PointerDiAtasUIInteraktif())
+        {
+            Log("diblokir, pointer di atas UI interaktif");
+            return;
+        }
+
+        if (Time.time - lastClickTime <= clickThreshold)
             clickCount++;
-        }
         else
-        {
             clickCount = 1;
-        }
+
         lastClickTime = Time.time;
 
         if (clickCount < 2)
             return;
 
-        // === DOUBLE CLICK DETECTED ===
+        // === DOUBLE CLICK ===
         clickCount = 0;
 
-        if (!isInspected)
+        if (panel == null)
         {
-            if (currentInspectedObject != null && currentInspectedObject != this)
-            {
-                currentInspectedObject.PaksaZoomOut();
-            }
-
-            currentInspectedObject = this;
-            posisiMeja = transform.position;
-            sedangAnimasi = true;
-            StartCoroutine(AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true));
-            AudioManager.Instance.PlaySfxTicket();
-        }
-        else
-        {
-            StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
-            AudioManager.Instance.PlaySfxTicket();
-        }
-    }
-
-    IEnumerator AnimasiGerak(Vector3 targetPos, Vector3 targetScale, int targetLayer, bool openBG)
-    {
-        sedangAnimasi = true;
-
-        if (!isInspected)
-            spriteRenderer.sortingOrder = targetLayer;
-
-        isInspected = !isInspected;
-
-        float time = 0;
-        Vector3 startPos = transform.position;
-        Vector3 startScale = transform.localScale;
-
-        bg.DOKill();
-        if (openBG)
-            bg.DOFade(0.92f, 0.5f).SetDelay(0.3f);
-        else
-            bg.DOFade(0, 0.15f);
-
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanAnimasi;
-            transform.position = Vector3.Lerp(startPos, targetPos, time);
-            transform.localScale = Vector3.Lerp(startScale, targetScale, time);
-            yield return null;
+            Debug.LogWarning("[Inspectable] " + name + ": field 'panel' belum diisi!", this);
+            return;
         }
 
-        if (!isInspected)
-            spriteRenderer.sortingOrder = targetLayer;
+        // Jika sedang di Desk View, posisi awal animasi dihitung dari Kamera 2
+        Camera kameraAsal = DeskViewController.IsViewOpen
+            ? DeskViewController.AktifView.deskCamera
+            : null;
 
-        sedangAnimasi = false;
-    }
-
-    public void PaksaZoomIn()
-    {
-        if (!isInspected && !sedangAnimasi)
-        {
-            currentInspectedObject = this;
-            posisiMeja = transform.position;
-            sedangAnimasi = true;
-            StartCoroutine(AnimasiGerak(titikInspeksi.position, skalaAwal * skalaZoom, 50, true));
-        }
-    }
-
-    public void PaksaZoomOut()
-    {
-        if (isInspected && !sedangAnimasi)
-        {
-            StartCoroutine(AnimasiGerak(posisiMeja, skalaAwal, urutanLayerAwal, false));
-            if (currentInspectedObject == this) currentInspectedObject = null;
-        }
+        panel.Buka(indexBagian, transform, kameraAsal);
+        AudioManager.Instance.PlaySfxTicket();
     }
 }

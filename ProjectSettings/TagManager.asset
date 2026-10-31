@@ -8,6 +8,7 @@ TagManager:
   - ZoneYes
   - ZoneNo
   - Billboard
+  - DeskView
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Water
   - UI
   - Identity
-  - 
-  - 
+  - UI Khusus
+  - DeskView
   - 
   - 
   - 

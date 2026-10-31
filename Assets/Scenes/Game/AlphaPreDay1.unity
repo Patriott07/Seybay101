@@ -1416,7 +1416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStory: {fileID: 11400000, guid: 9eab832115146c74c8575f10fb9e3c65, type: 2}
   isLoadSceneInEnd: 0
-  mainDeskSceneName: AlphaDay1
+  mainDeskSceneName: Day 1 FIx
   AutoPlayText: 1
   isCanSkip: 1
   typingText: {fileID: 1604657537}

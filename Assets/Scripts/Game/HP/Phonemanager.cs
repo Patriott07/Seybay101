@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PhoneManager : MonoBehaviour
@@ -42,19 +40,13 @@ public class PhoneManager : MonoBehaviour
         public bool unread = false;
     }
 
-    // ---------- Data simpanan log Azura (file JSON) ----------
+    // ---------- Data berita (panel Browse) ----------
     [System.Serializable]
-    public class BarisTersimpan
+    public class BeritaData
     {
-        public string teks;
-        public bool dariAldo;
-    }
-
-    [System.Serializable]
-    public class LogTersimpan
-    {
-        public List<BarisTersimpan> baris = new List<BarisTersimpan>();
-        public bool unread;
+        public string judul;
+        [TextArea(4, 12)] public string isi;
+        public Sprite gambar;
     }
 
     private readonly Dictionary<PhoneContactSO, ContactState> state =
@@ -66,20 +58,71 @@ public class PhoneManager : MonoBehaviour
     [Tooltip("Kirim pesan stage pertama semua kontak biasa saat game mulai")]
     public bool kirimStageAwalOtomatis = true;
 
-    [Header("Panel")]
-    public GameObject panelPhone;
-    public GameObject panelInbox;
-    public GameObject panelChat;
+    // ==========================================
+    // --- PANEL / HALAMAN ---
+    // ==========================================
 
-    [Header("Tombol")]
-    [Tooltip("Tab 'Chat' di bagian atas layar")]
+    [Header("Panel HP (container utama)")]
+    [Tooltip("Root HP. Harus UI (RectTransform). Dianimasikan masuk dari kanan ke kiri.")]
+    public GameObject panelPhone;
+    [Tooltip("Seberapa jauh (pixel) HP berada di kanan layar sebelum masuk")]
+    public float jarakGeserHp = 1200f;
+    public float durasiGeserHp = 0.35f;
+
+    [Header("Blokir Interaksi (saat HP terbuka / lockdown)")]
+    [Tooltip("Image transparan full-screen di Canvas HP, anak PERTAMA di BELAKANG Panel Phone. Memblokir semua UI di luar HP saat HP terbuka.")]
+    public GameObject penghalangInput;
+    [Tooltip("Kamera yang diblokir dari OnMouseDown/Up/Drag saat HP terbuka atau lockdown. Kosong = Camera.main")]
+    public List<Camera> kameraDiblokir = new List<Camera>();
+
+    [Header("Halaman di dalam HP")]
+    [Tooltip("Home screen: 3 tombol (Browse, Chat, Call)")]
+    public GameObject panelHome;
+    [Tooltip("History chat dengan NPC (daftar kontak)")]
+    public GameObject panelInbox;
+    [Tooltip("Isi chat dengan satu kontak")]
+    public GameObject panelChat;
+    [Tooltip("Daftar berita terkini")]
+    public GameObject panelBrowse;
+    [Tooltip("Isi satu berita + 1 gambar")]
+    public GameObject panelBeritaDetail;
+    [Tooltip("Halaman panggilan (dering lalu panggilan berjalan)")]
+    public GameObject panelPanggilan;
+    public float durasiTransisiHalaman = 0.25f;
+
+    [Header("Panel History")]
+    [Tooltip("Panel history (tujuan swipe KIRI dari Home)")]
+    public GameObject panelHistory;
+    public Button tombolKembaliDariHistory;
+    [Tooltip("PhoneSwipeArea di Panel History untuk swipe KANAN kembali ke Home (opsional)")]
+    public PhoneSwipeArea swipeHistory;
+    [Tooltip("Satu TextMeshProUGUI di dalam Content panel history (Rich Text aktif)")]
+    public TextMeshProUGUI teksHistory;
+    [Tooltip("Scroll View panel history (opsional, otomatis scroll ke pesan terbaru)")]
+    public ScrollRect scrollHistory;
+    [Tooltip("Batas pesan terakhir yang ditampilkan (0 = semua)")]
+    public int maksPesanHistory = 0;
+    public string namaMC = "Aldo";
+    public string namaNPC = "NPC";
+
+    [Header("Home Screen")]
+    public Button tombolBrowse;
+    public Button tombolChat;
+    public Button tombolCall;
+    [Tooltip("Pasang PhoneSwipeArea di Panel Home (Image dengan Raycast Target aktif)")]
+    public PhoneSwipeArea swipeHome;
+    [Tooltip("Pasang PhoneSwipeArea di Panel Inbox untuk swipe KANAN kembali ke Home (opsional)")]
+    public PhoneSwipeArea swipeInbox;
+    [Tooltip("Tombol tutup HP di Home (opsional)")]
+    public Button tombolTutupDariHome;
+
+    [Header("Tombol Umum")]
+    [Tooltip("Tombol di HUD untuk membuka HP")]
     public Button tombolBukaHp;
-    [Tooltip("Tombol 'Back work' di Inbox")]
-    public Button tombolBackWork;
+    [Tooltip("Tombol kembali ke Home dari Inbox (opsional)")]
+    public Button tombolHomeDariInbox;
     [Tooltip("Tombol '<' di header chat")]
     public Button tombolKembaliKeInbox;
-    [Tooltip("Titik merah di tab Chat jika ada pesan belum dibaca (opsional)")]
-    public GameObject badgeNotif;
 
     [Header("Inbox")]
     public Transform containerKontak;
@@ -94,11 +137,72 @@ public class PhoneManager : MonoBehaviour
     public float lebarMaksBubble = 380f;
     public Color warnaBubbleKontak = Color.white;
     public Color warnaBubbleAldo = new Color(0.75f, 0.9f, 1f);
+    [Tooltip("Centang = pesan terlama juga dihapus dari riwayat (tidak muncul lagi saat chat dibuka ulang). Hilangkan centang = hanya bubble yang dibuang, riwayat tetap utuh.")]
+    public bool hapusRiwayatSaatPenuh = true;
+
+    [Header("Browse / Berita")]
+    public List<BeritaData> daftarBerita = new List<BeritaData>();
+    public Transform containerBerita;
+    public PhoneNewsItem prefabBeritaItem;
+    public Button tombolKembaliHomeDariBrowse;
+    [Header("Detail Berita")]
+    public TextMeshProUGUI judulDetail;
+    public TextMeshProUGUI isiDetail;
+    public Image gambarDetail;
+    public ScrollRect scrollBerita;
+    public Button tombolKembaliKeBrowse;
+
+    [Header("Panggilan (Call)")]
+    [Tooltip("Logo handphone calling (bergerak naik setelah panggilan diangkat)")]
+    public RectTransform logoTelepon;
+    [Tooltip("Halaman daftar kontak yang bisa ditelepon (tampil setelah tombol Call di Home ditekan)")]
+    public GameObject panelKontakCall;
+    [Tooltip("Content tempat item kontak dibuat (memakai Prefab Kontak Item yang sama dengan Inbox)")]
+    public Transform containerKontakCall;
+    public Button tombolKembaliDariKontakCall;
+    public string teksPreviewCall = "Ketuk untuk menelepon";
+    [Tooltip("Nama kontak yang sedang ditelepon (opsional)")]
+    public TextMeshProUGUI namaPanggilan;
+    [Tooltip("Avatar kontak yang sedang ditelepon (opsional)")]
+    public Image avatarPanggilan;
+
+    // Pengaturan khusus per kontak (opsional). Kontak yang tidak terdaftar memakai pengaturan default di bawah.
+    [System.Serializable]
+    public class DataPanggilan
+    {
+        public PhoneContactSO kontak;
+        [Tooltip("Audio saat tersambung (kosong = pakai Audio Panggilan default)")]
+        public AudioClip audio;
+        [Tooltip("Lama panggilan dalam detik (0 = pakai Durasi Panggilan default)")]
+        public float durasiDetik;
+    }
+    public List<DataPanggilan> dataPanggilan = new List<DataPanggilan>();
+    [Tooltip("Teks status: Memanggil... / Tersambung (opsional)")]
+    public TextMeshProUGUI teksStatusPanggilan;
+    [Tooltip("Panel yang tampil setelah diangkat: berisi timer (awalnya dimatikan, anak dari Panel Panggilan)")]
+    public GameObject panelPanggilanBerjalan;
+    public TextMeshProUGUI teksTimerPanggilan;
+    [Tooltip("Audio percakapan yang diputar setelah diangkat")]
+    public AudioClip audioPanggilan;
+    [Tooltip("Nada dering (loop) selama menunggu diangkat (opsional)")]
+    public AudioClip sfxDering;
+    public float kecepatanDenyut = 6f;
+    [Tooltip("Besar perubahan skala logo telepon saat berdering (0.15 = 85%-115%)")]
+    public float besarDenyut = 0.15f;
+    [Tooltip("Jeda setelah diangkat sebelum logo naik")]
+    public float jedaSetelahAngkat = 1f;
+    public float jarakLogoNaik = 300f;
+    public float durasiLogoNaik = 0.5f;
+    [Tooltip("Lama berdering sebelum tersambung (detik)")]
+    public float jedaDering = 2f;
+    [Tooltip("Lama panggilan setelah tersambung sampai otomatis selesai (detik)")]
+    public float durasiPanggilanDetik = 10f;
+    [Tooltip("Jeda menampilkan 'Panggilan berakhir' sebelum kembali ke Home")]
+    public float jedaSetelahSelesai = 1f;
 
     [Header("Balas Pesan")]
     public PhoneHoldButton tombolBalas;
     public TextMeshProUGUI teksInput;
-    public string placeholderInput = "";
     public float kecepatanKetik = 0.04f;
     [Tooltip("Jeda sebelum tiap pesan kontak muncul (setelah Aldo membalas)")]
     public float jedaResponKontak = 0.8f;
@@ -119,19 +223,14 @@ public class PhoneManager : MonoBehaviour
     public float intervalSpamMin = 0.6f;
     [Tooltip("Batas jumlah pesan jika Kirim Baris Sekali dimatikan (mode spam berulang)")]
     public int maksPesanSpam = 40;
-    [Tooltip("Dipakai jika asset Manager_Boo tidak punya baris pesan di stages")]
-    public string[] pesanSpamCadangan = { "Aldo!!", "Kamu di mana?!", "Balas sekarang!", "Ini serius!" };
     [Tooltip("Centang = semua baris Boo dikirim berurutan SEKALI lalu berhenti. Hilangkan centang = diulang terus (spam) sampai chat dibuka.")]
     public bool kirimBarisSekali = true;
-    [Tooltip("Centang = event 'On Manager Boo Dibuka' dipanggil setelah chat dibuka DAN semua pesan sudah masuk. Hilangkan = langsung saat chat dibuka (spam berhenti).")]
+    [Tooltip("Centang = event OnManagerBooDibuka dipanggil setelah chat dibuka DAN semua pesan sudah masuk. Hilangkan = langsung saat chat dibuka (spam berhenti).")]
     public bool tungguSemuaPesanSebelumEvent = true;
     [Tooltip("Jeda membaca pesan terakhir sebelum event dipanggil")]
     public float jedaSetelahPesanTerakhir = 1.5f;
     [Tooltip("Object yang dimatikan saat lockdown (mis. panel Accept/Reject, dokumen). JANGAN masukkan tombol HP.")]
     public List<GameObject> matikanSaatLockdown = new List<GameObject>();
-    public UnityEvent onLockdownMulai;
-    [Tooltip("Dipanggil saat pemain membuka chat Manager_Boo (pasang fade di sini nanti)")]
-    public UnityEvent onManagerBooDibuka;
 
     [Header("Audio (opsional)")]
     public AudioClip sfxPesanMasuk;
@@ -141,6 +240,10 @@ public class PhoneManager : MonoBehaviour
     private Coroutine ketikCoroutine;
     private bool sedangMengetik;
     private AudioSource audioSource;
+    private AudioSource callSource;
+
+    // Blokir interaksi dunia (OnMouse*)
+    private readonly Dictionary<Camera, int> eventMaskAsli = new Dictionary<Camera, int>();
 
     // Workflow
     private PhoneContactSO kontakAzura;
@@ -156,20 +259,33 @@ public class PhoneManager : MonoBehaviour
     // Violation terakhir
     private ViolationData violationTerakhir;
 
+    // Navigasi HP
+    private GameObject halamanAktif;
+    private Coroutine transisiCoroutine;
+    private Coroutine geserHpCoroutine;
+    private Vector2 posHpAsli;
+    private readonly Dictionary<GameObject, Vector2> posAsliHalaman = new Dictionary<GameObject, Vector2>();
+
+    // Panggilan
+    private bool panggilanBerjalan;
+    private Coroutine panggilanCoroutine;
+    private Vector2 posLogoAsli;
+
     // Violation
     [System.Serializable]
     public class ViolationData
     {
-    public string id;
-    public string nama;
-    public int penaltyTrust;
-    public bool sudahTerjadi;
+        public string id;
+        public string nama;
+        public int penaltyTrust;
+        public bool sudahTerjadi;
+
+        // Diisi saat runtime oleh TambahViolation (daftar rule yang gagal). Tidak disimpan di Inspector.
+        [System.NonSerialized] public string detail;
     }
 
     [Header("Violation System")]
     public List<ViolationData> daftarViolation = new List<ViolationData>();
-
-    private string PathLogAzura => Path.Combine(Application.persistentDataPath, "phone_azura_log.json");
 
     // ==========================================
     // --- LIFECYCLE ---
@@ -180,9 +296,13 @@ public class PhoneManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
 
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        AudioSource[] sources = GetComponents<AudioSource>();
+        audioSource = sources.Length > 0 ? sources[0] : gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+
+        // AudioSource terpisah untuk dering & suara panggilan (agar tidak terpotong SFX chat)
+        callSource = sources.Length > 1 ? sources[1] : gameObject.AddComponent<AudioSource>();
+        callSource.playOnAwake = false;
 
         foreach (var k in daftarKontak)
         {
@@ -192,32 +312,57 @@ public class PhoneManager : MonoBehaviour
             if (k.tipe == PhoneContactTipe.AzuraCorp && kontakAzura == null) kontakAzura = k;
             if (k.tipe == PhoneContactTipe.ManagerBoo && kontakBoo == null) kontakBoo = k;
         }
-
-        //MuatLogAzura();
     }
 
     void Start()
     {
+        // Tombol umum
         if (tombolBukaHp != null) tombolBukaHp.onClick.AddListener(BukaHp);
-        if (tombolBackWork != null) tombolBackWork.onClick.AddListener(TutupHp);
         if (tombolKembaliKeInbox != null) tombolKembaliKeInbox.onClick.AddListener(TampilkanInbox);
         if (tombolBalas != null) tombolBalas.OnHoldSelesai += MulaiBalas;
 
-        if (panelPhone != null) panelPhone.SetActive(false);
-        EconomyManager eco = EconomyManager.Instance;
-        if (eco != null)
+        // Home
+        if (tombolBrowse != null) tombolBrowse.onClick.AddListener(BukaBrowse);
+        if (tombolChat != null) tombolChat.onClick.AddListener(() => TampilkanInboxArah(1));
+        if (tombolCall != null) tombolCall.onClick.AddListener(BukaPanggilan);
+        if (tombolKembaliDariHistory != null) tombolKembaliDariHistory.onClick.AddListener(() => TampilkanHome(-1));
+        if (swipeHistory != null) swipeHistory.OnSwipe += SaatSwipeHistory;
+        if (tombolTutupDariHome != null) tombolTutupDariHome.onClick.AddListener(TutupHp);
+        if (tombolHomeDariInbox != null) tombolHomeDariInbox.onClick.AddListener(() => TampilkanHome(-1));
+
+        // Swipe
+        if (swipeHome != null) swipeHome.OnSwipe += SaatSwipeHome;
+        if (swipeInbox != null) swipeInbox.OnSwipe += SaatSwipeInbox;
+
+        // Browse / berita
+        if (tombolKembaliHomeDariBrowse != null) tombolKembaliHomeDariBrowse.onClick.AddListener(() => TampilkanHome(-1));
+        if (tombolKembaliKeBrowse != null) tombolKembaliKeBrowse.onClick.AddListener(() => PindahHalaman(panelBrowse, -1));
+
+        // Panggilan
+        if (tombolKembaliDariKontakCall != null) tombolKembaliDariKontakCall.onClick.AddListener(() => TampilkanHome(-1));
+
+        // Simpan posisi asli (sebelum dimatikan / dianimasikan)
+        if (panelPhone != null)
         {
-            trustSebelumnya = eco.trust;
-            sudahMenyimpanTrustAwal = true;
+            RectTransform rt = panelPhone.GetComponent<RectTransform>();
+            if (rt != null) posHpAsli = rt.anchoredPosition;
         }
+        if (logoTelepon != null) posLogoAsli = logoTelepon.anchoredPosition;
+        SimpanPosisiAsliHalaman();
+
+        // Semua halaman mati, HP mati
+        halamanAktif = null;
+        SelesaikanTransisi(null);
+        if (panelPhone != null) panelPhone.SetActive(false);
+        if (penghalangInput != null) penghalangInput.SetActive(false);
+
+        SimpanBaselineTrust();
 
         if (kirimStageAwalOtomatis)
         {
             foreach (var k in daftarKontak)
                 if (k != null && k.tipe == PhoneContactTipe.Biasa) KirimStageSaatIni(k, false);
         }
-
-        UpdateBadge();
     }
 
     void Update()
@@ -228,11 +373,67 @@ public class PhoneManager : MonoBehaviour
     void OnDestroy()
     {
         if (tombolBalas != null) tombolBalas.OnHoldSelesai -= MulaiBalas;
+        if (swipeHome != null) swipeHome.OnSwipe -= SaatSwipeHome;
+        if (swipeInbox != null) swipeInbox.OnSwipe -= SaatSwipeInbox;
+        if (swipeHistory != null) swipeHistory.OnSwipe -= SaatSwipeHistory;
+
         if (Instance == this)
         {
             IsPhoneOpen = false;
             IsLockdown = false;
+            PerbaruiBlokirInput(); // kembalikan event mask kamera
         }
+    }
+
+    // Hentikan animasi ketik balasan dan reset status mengetik
+    void HentikanKetik()
+    {
+        if (ketikCoroutine != null)
+        {
+            StopCoroutine(ketikCoroutine);
+            ketikCoroutine = null;
+        }
+        sedangMengetik = false;
+    }
+
+    // Simpan Trust saat ini sebagai acuan PantauTrust
+    void SimpanBaselineTrust()
+    {
+        EconomyManager eco = EconomyManager.Instance;
+        if (eco == null) return;
+
+        trustSebelumnya = eco.trust;
+        sudahMenyimpanTrustAwal = true;
+    }
+
+    // ==========================================
+    // --- BLOKIR INTERAKSI ---
+    // ==========================================
+
+    // HP terbuka: UI di luar HP diblokir penghalang, dunia (OnMouse*) diblokir lewat event mask kamera.
+    // Lockdown (HP ditutup): dunia tetap diblokir, UI bebas agar tombol HP bisa ditekan.
+    void PerbaruiBlokirInput()
+    {
+        if (penghalangInput != null) penghalangInput.SetActive(IsPhoneOpen);
+
+        if (IsPhoneOpen || IsLockdown)
+        {
+            if (kameraDiblokir.Count == 0 && Camera.main != null) BlokirKamera(Camera.main);
+            foreach (Camera c in kameraDiblokir) BlokirKamera(c);
+        }
+        else
+        {
+            foreach (var kv in eventMaskAsli)
+                if (kv.Key != null) kv.Key.eventMask = kv.Value;
+            eventMaskAsli.Clear();
+        }
+    }
+
+    void BlokirKamera(Camera c)
+    {
+        if (c == null) return;
+        if (!eventMaskAsli.ContainsKey(c)) eventMaskAsli[c] = c.eventMask;
+        c.eventMask = 0;
     }
 
     // ==========================================
@@ -261,47 +462,62 @@ public class PhoneManager : MonoBehaviour
 
     /// <summary>
     /// Dipanggil setiap kali Trust berkurang karena pemain melakukan kesalahan.
-    /// Tidak ada batas jumlah pesan per stage.
+    /// Jika ada violation yang baru dicatat (TambahViolation), pesan memuat nama, detail,
+    /// dan jumlah Trust yang benar-benar berkurang. Tidak ada batas jumlah pesan per stage.
     /// </summary>
     public void PicuKesalahan()
-{
-    if (kontakAzura == null) return;
-
-    if (violationTerakhir != null)
     {
-        string pesan =
-            "PELANGGARAN TERDETEKSI:\n" +
-            violationTerakhir.nama +
-            "\nTrust -" +
-            violationTerakhir.penaltyTrust;
+        if (kontakAzura == null) return;
 
-        KirimPesanSistem(kontakAzura, pesan);
+        if (violationTerakhir != null)
+        {
+            string pesan = "PELANGGARAN TERDETEKSI:\n" + violationTerakhir.nama;
 
-        violationTerakhir = null;
-    }
-    else
-    {
-        KirimPesanSistem(kontakAzura, pesanKesalahan);
-    }
-}
+            if (!string.IsNullOrEmpty(violationTerakhir.detail))
+                pesan += "\n" + violationTerakhir.detail;
 
-    public void TambahViolation(string id)
-{
-    ViolationData violation = daftarViolation.Find(v => v.id == id);
+            pesan += "\nTrust -" + violationTerakhir.penaltyTrust;
 
-    if (violation == null)
-    {
-        Debug.LogWarning("Violation dengan ID '" + id + "' tidak ditemukan.");
-        return;
+            KirimPesanSistem(kontakAzura, pesan, true);
+
+            violationTerakhir = null;
+        }
+        else
+        {
+            KirimPesanSistem(kontakAzura, pesanKesalahan, true);
+        }
     }
 
-    violation.sudahTerjadi = true;
-    violationTerakhir = violation;
+    /// <summary>
+    /// Catat violation terakhir. Panggil SEBELUM/SESUDAH Trust dikurangi (di frame yang sama).
+    /// detail         : alasan kesalahan, mis. "- Paspor kedaluwarsa" (opsional).
+    /// trustBerkurang : Trust yang benar-benar dikurangi. Kosongkan (-1) untuk memakai
+    ///                  nilai bawaan di daftarViolation.
+    /// </summary>
+    public void TambahViolation(string id, string detail = null, int trustBerkurang = -1)
+    {
+        ViolationData dasar = daftarViolation.Find(v => v.id == id);
 
-    Debug.Log(
-        "Violation: " + violation.nama
-    );
-}
+        if (dasar == null)
+        {
+            Debug.LogWarning("Violation dengan ID '" + id + "' tidak ditemukan.");
+            return;
+        }
+
+        dasar.sudahTerjadi = true;
+
+        // Salinan, supaya data asli di Inspector tidak ikut berubah.
+        violationTerakhir = new ViolationData
+        {
+            id = dasar.id,
+            nama = dasar.nama,
+            penaltyTrust = trustBerkurang >= 0 ? trustBerkurang : dasar.penaltyTrust,
+            sudahTerjadi = true,
+            detail = detail
+        };
+
+        Debug.Log("Violation: " + dasar.nama + (string.IsNullOrEmpty(detail) ? "" : "\n" + detail));
+    }
 
     public void PicuTrustHabis()
     {
@@ -319,10 +535,6 @@ public class PhoneManager : MonoBehaviour
             state[kontakAzura].unread = false;
         }
 
-        try { if (File.Exists(PathLogAzura)) File.Delete(PathLogAzura); }
-        catch (System.Exception e) { Debug.LogWarning("Gagal hapus log Azura: " + e.Message); }
-
-        UpdateBadge();
     }
 
     /// <summary>Buka HP langsung ke chat kontak tertentu (dipakai saat toast HUD diklik).</summary>
@@ -330,7 +542,7 @@ public class PhoneManager : MonoBehaviour
     {
         BukaHp();
         if (kontak != null && state.ContainsKey(kontak) && KontakTampil(kontak))
-            BukaChat(kontak);
+            BukaChat(kontak, 0);
     }
 
     /// <summary>
@@ -347,16 +559,12 @@ public class PhoneManager : MonoBehaviour
         booSudahDibuka = false;
         semuaPesanBooTerkirim = false;
         eventBooDipanggil = false;
-        EconomyManager eco = EconomyManager.Instance;
-        if (eco != null)
-        {
-            trustSebelumnya = eco.trust;
-            sudahMenyimpanTrustAwal = true;
-        }
+        SimpanBaselineTrust();
 
         foreach (var go in matikanSaatLockdown)
             if (go != null) go.SetActive(true);
 
+        PerbaruiBlokirInput();
         TerapkanLockdownUI();
         if (panelInbox != null && panelInbox.activeInHierarchy) RenderInbox();
     }
@@ -382,59 +590,558 @@ public class PhoneManager : MonoBehaviour
     }
 
     // ==========================================
-    // --- BUKA / TUTUP HP ---
+    // --- BUKA / TUTUP HP (SLIDE KANAN -> KIRI) ---
     // ==========================================
 
     public void BukaHp()
     {
         if (panelPhone == null) return;
-        panelPhone.SetActive(true);
+
+        bool sudahTerbuka = IsPhoneOpen;
         IsPhoneOpen = true;
+        PerbaruiBlokirInput();
 
         if (PhoneNotifHUD.Instance != null) PhoneNotifHUD.Instance.SembunyikanSegera();
 
-        TampilkanInbox();
+        if (sudahTerbuka)
+        {
+            // HP sudah di layar: cukup arahkan ke halaman awal
+            if (IsLockdown) TampilkanInboxArah(0); else TampilkanHome(0);
+            return;
+        }
+
+        RectTransform rt = panelPhone.GetComponent<RectTransform>();
+        if (rt != null && !panelPhone.activeSelf)
+            rt.anchoredPosition = posHpAsli + new Vector2(jarakGeserHp, 0f);
+
+        panelPhone.SetActive(true);
+
+        // Saat lockdown langsung ke inbox (hanya Manager_Boo yang bisa dibuka)
+        if (IsLockdown) TampilkanInboxArah(0); else TampilkanHome(0);
+
+        if (geserHpCoroutine != null) StopCoroutine(geserHpCoroutine);
+        geserHpCoroutine = StartCoroutine(GeserHp(true));
     }
 
     public void TutupHp()
     {
         if (IsLockdown) return; // saat lockdown HP tidak bisa ditutup
+        if (!IsPhoneOpen) return;
 
-        if (ketikCoroutine != null)
-        {
-            StopCoroutine(ketikCoroutine);
-            ketikCoroutine = null;
-        }
-        sedangMengetik = false;
-        if (teksInput != null) teksInput.text = placeholderInput;
+        HentikanKetik();
+        if (teksInput != null) teksInput.text = "";
 
-        if (panelPhone != null) panelPhone.SetActive(false);
+        AkhiriPanggilan(false);
+
         kontakAktif = null;
         IsPhoneOpen = false;
-        UpdateBadge();
+        PerbaruiBlokirInput();
+
+        if (panelPhone == null) return;
+        if (geserHpCoroutine != null) StopCoroutine(geserHpCoroutine);
+        geserHpCoroutine = StartCoroutine(GeserHp(false));
+    }
+
+    IEnumerator GeserHp(bool masuk)
+    {
+        RectTransform rt = panelPhone.GetComponent<RectTransform>();
+        if (rt == null)
+        {
+            panelPhone.SetActive(masuk);
+            yield break;
+        }
+
+        Vector2 dari = rt.anchoredPosition;
+        Vector2 ke = masuk ? posHpAsli : posHpAsli + new Vector2(jarakGeserHp, 0f);
+
+        float t = 0f;
+        float durasi = Mathf.Max(0.01f, durasiGeserHp);
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / durasi;
+            float e = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t));
+            rt.anchoredPosition = Vector2.LerpUnclamped(dari, ke, e);
+            yield return null;
+        }
+
+        rt.anchoredPosition = ke;
+        geserHpCoroutine = null;
+
+        if (!masuk)
+        {
+            panelPhone.SetActive(false);
+            rt.anchoredPosition = posHpAsli;
+        }
     }
 
     void TerapkanLockdownUI()
     {
-        if (tombolBackWork != null) tombolBackWork.interactable = !IsLockdown;
+        bool bebas = !IsLockdown;
+
+        if (tombolTutupDariHome != null) tombolTutupDariHome.interactable = bebas;
+        if (tombolHomeDariInbox != null) tombolHomeDariInbox.interactable = bebas;
+        if (tombolBrowse != null) tombolBrowse.interactable = bebas;
+        if (tombolCall != null) tombolCall.interactable = bebas;
+        if (tombolChat != null) tombolChat.interactable = bebas;
+        if (tombolKembaliDariHistory != null) tombolKembaliDariHistory.interactable = bebas;
     }
 
     // ==========================================
-    // --- INBOX ---
+    // --- NAVIGASI HALAMAN ---
     // ==========================================
 
-    public void TampilkanInbox()
+    List<GameObject> SemuaHalaman()
     {
-        if (ketikCoroutine != null)
+        return new List<GameObject> { panelHome, panelInbox, panelChat, panelBrowse, panelBeritaDetail, panelPanggilan, panelHistory, panelKontakCall };
+    }
+
+    void SimpanPosisiAsliHalaman()
+    {
+        foreach (GameObject go in SemuaHalaman())
         {
-            StopCoroutine(ketikCoroutine);
-            ketikCoroutine = null;
+            if (go == null) continue;
+            RectTransform rt = go.GetComponent<RectTransform>();
+            if (rt != null) posAsliHalaman[go] = rt.anchoredPosition;
         }
-        sedangMengetik = false;
+    }
+
+    void ResetPosisiHalaman(GameObject go)
+    {
+        if (go == null) return;
+        RectTransform rt = go.GetComponent<RectTransform>();
+        if (rt != null && posAsliHalaman.ContainsKey(go)) rt.anchoredPosition = posAsliHalaman[go];
+    }
+
+    // Hentikan transisi berjalan, hanya 'target' yang aktif, semua posisi dikembalikan
+    void SelesaikanTransisi(GameObject target)
+    {
+        if (transisiCoroutine != null)
+        {
+            StopCoroutine(transisiCoroutine);
+            transisiCoroutine = null;
+        }
+
+        foreach (GameObject go in SemuaHalaman())
+        {
+            if (go == null) continue;
+            ResetPosisiHalaman(go);
+            go.SetActive(go == target);
+        }
+    }
+
+    /// <summary>
+    /// Pindah halaman. arah: +1 = halaman baru masuk dari kanan, -1 = dari kiri, 0 = langsung.
+    /// </summary>
+    void PindahHalaman(GameObject tujuan, int arah)
+    {
+        if (tujuan == null) return;
+
+        SelesaikanTransisi(halamanAktif); // rapikan transisi sebelumnya (jika ada)
+
+        GameObject asal = halamanAktif;
+        halamanAktif = tujuan;
+
+        bool animasi = asal != null && asal != tujuan && arah != 0
+                       && panelPhone != null && panelPhone.activeInHierarchy;
+
+        if (!animasi)
+        {
+            SelesaikanTransisi(tujuan);
+            return;
+        }
+
+        transisiCoroutine = StartCoroutine(TransisiHalaman(asal, tujuan, arah));
+    }
+
+    IEnumerator TransisiHalaman(GameObject asal, GameObject tujuan, int arah)
+    {
+        RectTransform rtPhone = panelPhone.GetComponent<RectTransform>();
+        float lebar = rtPhone != null ? rtPhone.rect.width : 600f;
+        if (lebar <= 1f) lebar = 600f;
+
+        RectTransform rtAsal = asal.GetComponent<RectTransform>();
+        RectTransform rtTujuan = tujuan.GetComponent<RectTransform>();
+        Vector2 posAsal = posAsliHalaman.ContainsKey(asal) ? posAsliHalaman[asal] : Vector2.zero;
+        Vector2 posTujuan = posAsliHalaman.ContainsKey(tujuan) ? posAsliHalaman[tujuan] : Vector2.zero;
+
+        tujuan.SetActive(true);
+        asal.SetActive(true);
+
+        float t = 0f;
+        float durasi = Mathf.Max(0.01f, durasiTransisiHalaman);
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / durasi;
+            float e = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t));
+
+            if (rtTujuan != null) rtTujuan.anchoredPosition = posTujuan + new Vector2(arah * lebar * (1f - e), 0f);
+            if (rtAsal != null) rtAsal.anchoredPosition = posAsal + new Vector2(-arah * lebar * e, 0f);
+            yield return null;
+        }
+
+        transisiCoroutine = null;
+        SelesaikanTransisi(tujuan);
+    }
+
+    // ==========================================
+    // --- HOME & SWIPE ---
+    // ==========================================
+
+    public void TampilkanHome() { TampilkanHome(-1); }
+
+    void TampilkanHome(int arah)
+    {
+        if (IsLockdown) return;
+
+        HentikanKetik();
         kontakAktif = null;
 
-        panelInbox.SetActive(true);
-        panelChat.SetActive(false);
+        PindahHalaman(panelHome, arah);
+        TerapkanLockdownUI();
+    }
+
+    void SaatSwipeHome(int dir)
+    {
+        if (IsLockdown || halamanAktif != panelHome) return;
+
+        // Swipe KIRI di Home -> History masuk dari kanan
+        if (dir == -1) TampilkanHistory(1);
+    }
+
+    public void TampilkanHistory() { TampilkanHistory(1); }
+
+    void TampilkanHistory(int arah)
+    {
+        if (IsLockdown) return;
+
+        if (panelHistory == null)
+        {
+            Debug.LogWarning("PhoneManager: Panel History belum diisi di Inspector.");
+            return;
+        }
+
+        PindahHalaman(panelHistory, arah);
+        TerapkanLockdownUI();
+        RenderHistory();
+    }
+
+    void SaatSwipeHistory(int dir)
+    {
+        if (IsLockdown || halamanAktif != panelHistory) return;
+
+        // Swipe KANAN di History -> kembali ke Home (masuk dari kiri)
+        if (dir == 1) TampilkanHome(-1);
+    }
+
+    void SaatSwipeInbox(int dir)
+    {
+        if (IsLockdown || halamanAktif != panelInbox) return;
+
+        // Swipe KANAN di Inbox -> kembali ke Home (masuk dari kiri)
+        if (dir == 1) TampilkanHome(-1);
+    }
+
+    /// <summary>Buka HP langsung ke panel History (hubungkan ke tombol History di HUD).</summary>
+    public void BukaHpKeHistory()
+    {
+        BukaHp();
+        if (!IsLockdown) TampilkanHistory(0);
+    }
+
+    /// <summary>Dipanggil Manager_Chat saat history berubah. Hanya me-render jika panel sedang terbuka.</summary>
+    public void SegarkanHistoryJikaTerbuka()
+    {
+        if (panelHistory != null && panelHistory.activeInHierarchy) RenderHistory();
+    }
+
+    void RenderHistory()
+    {
+        if (teksHistory == null) return;
+
+        List<ContentChat> data = Manager_Chat.Instance != null ? Manager_Chat.Instance.historyChat : null;
+        if (data == null || data.Count == 0)
+        {
+            teksHistory.text = "";
+            return;
+        }
+
+        var sb = new System.Text.StringBuilder();
+
+        int mulai = 0;
+        if (maksPesanHistory > 0 && data.Count > maksPesanHistory)
+            mulai = data.Count - maksPesanHistory;
+
+        for (int i = mulai; i < data.Count; i++)
+        {
+            ContentChat chat = data[i];
+            string nama = chat.isMC ? namaMC : namaNPC;
+            sb.AppendLine("<b>" + nama + " :</b> " + chat.textChat);
+            sb.AppendLine();
+        }
+        teksHistory.text = sb.ToString();
+
+        if (scrollHistory != null && isActiveAndEnabled)
+            StartCoroutine(ScrollHistoryKeBawah());
+    }
+
+    IEnumerator ScrollHistoryKeBawah()
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+        if (scrollHistory != null && scrollHistory.content != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(scrollHistory.content);
+        if (scrollHistory != null) scrollHistory.verticalNormalizedPosition = 0f;
+    }
+
+    // ==========================================
+    // --- BROWSE / BERITA ---
+    // ==========================================
+
+    public void BukaBrowse()
+    {
+        if (IsLockdown) return;
+
+        RenderBerita();
+        PindahHalaman(panelBrowse, 1);
+    }
+
+    void RenderBerita()
+    {
+        if (containerBerita == null || prefabBeritaItem == null) return;
+
+        foreach (Transform child in containerBerita)
+            Destroy(child.gameObject);
+
+        foreach (BeritaData b in daftarBerita)
+        {
+            if (b == null) continue;
+            BeritaData data = b;
+            PhoneNewsItem item = Instantiate(prefabBeritaItem, containerBerita);
+            item.Setup(data.judul, data.gambar, () => BukaBerita(data));
+        }
+    }
+
+    void BukaBerita(BeritaData data)
+    {
+        if (data == null) return;
+
+        if (judulDetail != null) judulDetail.text = data.judul;
+        if (isiDetail != null) isiDetail.text = data.isi;
+        if (gambarDetail != null)
+        {
+            gambarDetail.sprite = data.gambar;
+            gambarDetail.enabled = data.gambar != null;
+        }
+        if (scrollBerita != null) scrollBerita.verticalNormalizedPosition = 1f;
+
+        PindahHalaman(panelBeritaDetail, 1);
+    }
+
+    // ==========================================
+    // --- PANGGILAN (CALL) ---
+    // ==========================================
+
+    // Tombol Call di Home: tampilkan daftar kontak yang bisa ditelepon
+    public void BukaPanggilan()
+    {
+        if (IsLockdown) return;
+
+        // Panggilan masih berjalan (mis. kembali dari History): tampilkan layar panggilan lagi
+        if (panggilanBerjalan)
+        {
+            PindahHalaman(panelPanggilan, 1);
+            return;
+        }
+
+        if (panelKontakCall == null)
+        {
+            Debug.LogWarning("PhoneManager: Panel Kontak Call belum diisi di Inspector.");
+            return;
+        }
+
+        RenderKontakCall();
+        PindahHalaman(panelKontakCall, 1);
+    }
+
+    void RenderKontakCall()
+    {
+        if (containerKontakCall == null || prefabKontakItem == null)
+        {
+            Debug.LogWarning("PhoneManager: Container Kontak Call / Prefab Kontak Item belum diisi di Inspector.");
+            return;
+        }
+
+        foreach (Transform child in containerKontakCall)
+            Destroy(child.gameObject);
+
+        foreach (var k in daftarKontak)
+        {
+            // Hanya kontak biasa (Azura Corp & Manager_Boo tidak bisa ditelepon)
+            if (k == null || k.tipe != PhoneContactTipe.Biasa) continue;
+
+            PhoneContactItem item = Instantiate(prefabKontakItem, containerKontakCall);
+            PhoneContactSO kontakIni = k;
+            item.Setup(k, teksPreviewCall, false, () => MulaiPanggilanKe(kontakIni));
+        }
+    }
+
+    // Pemain menekan kontak: panggilan keluar dimulai
+    void MulaiPanggilanKe(PhoneContactSO kontak)
+    {
+        if (IsLockdown || panggilanBerjalan || kontak == null) return;
+
+        panggilanBerjalan = true;
+        PindahHalaman(panelPanggilan, 1);
+
+        panggilanCoroutine = StartCoroutine(AlurPanggilan(kontak));
+    }
+
+    IEnumerator AlurPanggilan(PhoneContactSO kontak)
+    {
+        // Pengaturan per kontak, atau default
+        DataPanggilan data = dataPanggilan.Find(d => d != null && d.kontak == kontak);
+        AudioClip audio = (data != null && data.audio != null) ? data.audio : audioPanggilan;
+        float durasi = (data != null && data.durasiDetik > 0f) ? data.durasiDetik : durasiPanggilanDetik;
+
+        // Reset tampilan
+        if (logoTelepon != null)
+        {
+            logoTelepon.anchoredPosition = posLogoAsli;
+            logoTelepon.localScale = Vector3.one;
+        }
+        if (panelPanggilanBerjalan != null) panelPanggilanBerjalan.SetActive(false);
+        if (namaPanggilan != null) namaPanggilan.text = kontak.namaKontak;
+        if (avatarPanggilan != null)
+        {
+            avatarPanggilan.sprite = kontak.avatar;
+            avatarPanggilan.enabled = kontak.avatar != null;
+        }
+        if (teksStatusPanggilan != null) teksStatusPanggilan.text = "Memanggil...";
+        if (teksTimerPanggilan != null) teksTimerPanggilan.text = FormatWaktu(0f);
+
+        // Nada dering
+        if (sfxDering != null)
+        {
+            callSource.clip = sfxDering;
+            callSource.loop = true;
+            callSource.Play();
+        }
+
+        // Berdering: logo telepon membesar-mengecil
+        float waktu = 0f;
+        while (waktu < jedaDering)
+        {
+            waktu += Time.unscaledDeltaTime;
+            if (logoTelepon != null)
+                logoTelepon.localScale = Vector3.one * (1f + Mathf.Sin(waktu * kecepatanDenyut) * besarDenyut);
+            yield return null;
+        }
+
+        // Tersambung
+        callSource.Stop();
+        callSource.loop = false;
+        if (logoTelepon != null) logoTelepon.localScale = Vector3.one;
+        if (teksStatusPanggilan != null) teksStatusPanggilan.text = "Tersambung";
+
+        // Tunggu sebentar, lalu logo naik
+        yield return new WaitForSecondsRealtime(jedaSetelahAngkat);
+
+        if (logoTelepon != null)
+        {
+            Vector2 dari = logoTelepon.anchoredPosition;
+            Vector2 ke = dari + new Vector2(0f, jarakLogoNaik);
+            float t = 0f;
+            float durasiNaik = Mathf.Max(0.01f, durasiLogoNaik);
+            while (t < 1f)
+            {
+                t += Time.unscaledDeltaTime / durasiNaik;
+                logoTelepon.anchoredPosition = Vector2.LerpUnclamped(dari, ke, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)));
+                yield return null;
+            }
+            logoTelepon.anchoredPosition = ke;
+        }
+
+        // Panel panggilan berjalan: audio + timer
+        if (panelPanggilanBerjalan != null) panelPanggilanBerjalan.SetActive(true);
+
+        if (audio != null)
+        {
+            callSource.clip = audio;
+            callSource.loop = false;
+            callSource.Play();
+        }
+
+        float mulai = Time.unscaledTime;
+        while (true)
+        {
+            float lewat = Mathf.Min(Time.unscaledTime - mulai, durasi);
+            if (teksTimerPanggilan != null) teksTimerPanggilan.text = FormatWaktu(lewat);
+
+            if (lewat >= durasi) break; // waktu habis -> otomatis selesai
+            yield return null;
+        }
+
+        // Selesai otomatis
+        callSource.Stop();
+        if (teksStatusPanggilan != null) teksStatusPanggilan.text = "Panggilan berakhir";
+
+        yield return new WaitForSecondsRealtime(jedaSetelahSelesai);
+
+        panggilanCoroutine = null;
+        AkhiriPanggilan(true);
+    }
+
+    string FormatWaktu(float detik)
+    {
+        int total = Mathf.Max(0, Mathf.FloorToInt(detik));
+        int h = total / 3600;
+        int m = (total % 3600) / 60;
+        int s = total % 60;
+        return string.Format("{0:00}:{1:00}:{2:00}", h, m, s);
+    }
+
+    /// <summary>Hentikan panggilan. kembaliKeHome = true: pindah ke Home jika sedang di halaman panggilan.</summary>
+    void AkhiriPanggilan(bool kembaliKeHome)
+    {
+        bool adaPanggilan = panggilanBerjalan;
+
+        if (panggilanCoroutine != null)
+        {
+            StopCoroutine(panggilanCoroutine);
+            panggilanCoroutine = null;
+        }
+
+        if (callSource != null)
+        {
+            callSource.Stop();
+            callSource.loop = false;
+        }
+
+        panggilanBerjalan = false;
+
+        if (logoTelepon != null)
+        {
+            logoTelepon.localScale = Vector3.one;
+            logoTelepon.anchoredPosition = posLogoAsli;
+        }
+        if (panelPanggilanBerjalan != null) panelPanggilanBerjalan.SetActive(false);
+
+        if (adaPanggilan && kembaliKeHome && !IsLockdown && halamanAktif == panelPanggilan)
+            TampilkanHome(-1);
+    }
+
+    // ==========================================
+    // --- INBOX (HISTORY CHAT) ---
+    // ==========================================
+
+    public void TampilkanInbox() { TampilkanInboxArah(-1); }
+
+    void TampilkanInboxArah(int arah)
+    {
+        HentikanKetik();
+        kontakAktif = null;
+
+        PindahHalaman(panelInbox, arah);
         TerapkanLockdownUI();
         RenderInbox();
     }
@@ -452,6 +1159,12 @@ public class PhoneManager : MonoBehaviour
 
     void RenderInbox()
     {
+        if (containerKontak == null || prefabKontakItem == null)
+        {
+            Debug.LogWarning("PhoneManager: Container Kontak / Prefab Kontak Item belum diisi di Inspector.");
+            return;
+        }
+
         foreach (Transform child in containerKontak)
             Destroy(child.gameObject);
 
@@ -466,7 +1179,7 @@ public class PhoneManager : MonoBehaviour
 
             PhoneContactItem item = Instantiate(prefabKontakItem, containerKontak);
             PhoneContactSO kontakIni = k;
-            item.Setup(k, preview, s.unread, () => BukaChat(kontakIni));
+            item.Setup(k, preview, s.unread, () => BukaChat(kontakIni, 1));
 
             // Saat lockdown hanya Manager_Boo yang bisa diklik, dan ditaruh paling atas
             if (IsLockdown)
@@ -482,17 +1195,15 @@ public class PhoneManager : MonoBehaviour
     // --- CHAT ---
     // ==========================================
 
-    void BukaChat(PhoneContactSO kontak)
+    void BukaChat(PhoneContactSO kontak, int arah)
     {
         if (IsLockdown && kontak.tipe != PhoneContactTipe.ManagerBoo) return;
 
         kontakAktif = kontak;
         ContactState s = state[kontak];
         s.unread = false;
-        UpdateBadge();
 
-        panelInbox.SetActive(false);
-        panelChat.SetActive(true);
+        PindahHalaman(panelChat, arah);
 
         namaHeader.text = kontak.namaKontak;
         if (avatarHeader != null)
@@ -508,9 +1219,7 @@ public class PhoneManager : MonoBehaviour
             BuatBubble(line);
 
         SegarkanTombolBalas();
-        StartCoroutine(ScrollKeBawah());
-
-        //if (kontak.tipe == PhoneContactTipe.AzuraCorp) SimpanLogAzura(); // simpan status "sudah dibaca"
+        StartCoroutine(RapikanChat(kontak));
 
         // Pemain membuka Manager_Boo saat lockdown
         if (IsLockdown && kontak.tipe == PhoneContactTipe.ManagerBoo && !booSudahDibuka)
@@ -542,12 +1251,44 @@ public class PhoneManager : MonoBehaviour
         );
     }
 
-    IEnumerator ScrollKeBawah()
+    // Hapus bubble paling lama selama isi chat melebihi area tampil, lalu scroll ke pesan terbaru
+    IEnumerator RapikanChat(PhoneContactSO kontak)
     {
-        yield return null;
+        yield return null; // tunggu bubble baru ter-layout
+        if (!ChatSedangDibuka(kontak) || containerPesan == null) yield break;
+
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(containerPesan);
-        if (scrollChat != null) scrollChat.verticalNormalizedPosition = 0f;
+
+        if (scrollChat != null)
+        {
+            RectTransform area = scrollChat.viewport != null
+                ? scrollChat.viewport
+                : scrollChat.GetComponent<RectTransform>();
+            ContactState s = state[kontak];
+
+            while (containerPesan.rect.height > area.rect.height)
+            {
+                Transform tertua = null;
+                int aktif = 0;
+                foreach (Transform child in containerPesan)
+                {
+                    if (!child.gameObject.activeSelf) continue;
+                    aktif++;
+                    if (tertua == null) tertua = child;
+                }
+                if (aktif <= 1) break; // sisakan minimal 1 bubble
+
+                tertua.gameObject.SetActive(false); // langsung hilang dari layout
+                Destroy(tertua.gameObject);
+
+                if (hapusRiwayatSaatPenuh && s.history.Count > 0) s.history.RemoveAt(0);
+
+                LayoutRebuilder.ForceRebuildLayoutImmediate(containerPesan);
+            }
+
+            scrollChat.verticalNormalizedPosition = 0f;
+        }
     }
 
     bool ChatSedangDibuka(PhoneContactSO kontak)
@@ -564,7 +1305,7 @@ public class PhoneManager : MonoBehaviour
         if (ChatSedangDibuka(kontak))
         {
             BuatBubble(line);
-            StartCoroutine(ScrollKeBawah());
+            StartCoroutine(RapikanChat(kontak));
         }
         else if (!dariAldo)
         {
@@ -574,15 +1315,12 @@ public class PhoneManager : MonoBehaviour
         if (!dariAldo)
         {
             if (sfxPesanMasuk != null) audioSource.PlayOneShot(sfxPesanMasuk);
-            UpdateBadge();
             if (panelInbox != null && panelInbox.activeInHierarchy) RenderInbox();
         }
-
-        //if (kontak.tipe == PhoneContactTipe.AzuraCorp) SimpanLogAzura();
     }
 
     // Pesan dari kontak sistem: masuk riwayat + toast di HUD
-    void KirimPesanSistem(PhoneContactSO kontak, string teks)
+    void KirimPesanSistem(PhoneContactSO kontak, string teks, bool kesalahan = false)
     {
         if (kontak == null || !state.ContainsKey(kontak))
         {
@@ -593,7 +1331,10 @@ public class PhoneManager : MonoBehaviour
         TambahPesan(kontak, teks, false);
 
         if (!ChatSedangDibuka(kontak) && PhoneNotifHUD.Instance != null)
-            PhoneNotifHUD.Instance.Tampilkan(kontak, teks);
+        {
+            if (kesalahan) PhoneNotifHUD.Instance.TampilkanKesalahan(kontak, teks);
+            else PhoneNotifHUD.Instance.Tampilkan(kontak, teks);
+        }
     }
 
     // ==========================================
@@ -707,14 +1448,16 @@ public class PhoneManager : MonoBehaviour
     void MulaiLockdown()
     {
         IsLockdown = true;
+        PerbaruiBlokirInput();
 
         foreach (var go in matikanSaatLockdown)
             if (go != null) go.SetActive(false);
 
-        onLockdownMulai?.Invoke();
+        // Panggilan dihentikan, tanpa pindah halaman (inbox dipaksa di bawah)
+        AkhiriPanggilan(false);
 
-        // Jika HP sedang terbuka, paksa kembali ke inbox (chat lain tidak boleh dibuka)
-        if (panelPhone != null && panelPhone.activeSelf) TampilkanInbox();
+        // Jika HP sedang terbuka, paksa kembali ke inbox (halaman lain tidak boleh dibuka)
+        if (panelPhone != null && panelPhone.activeSelf) TampilkanInboxArah(0);
 
         TerapkanLockdownUI();
     }
@@ -732,6 +1475,14 @@ public class PhoneManager : MonoBehaviour
         if (panelInbox != null && panelInbox.activeInHierarchy) RenderInbox();
 
         List<string> daftar = AmbilBarisBoo();
+        if (daftar.Count == 0)
+        {
+            Debug.LogWarning("Manager_Boo belum punya baris pesan di Stages asset-nya.");
+            semuaPesanBooTerkirim = true;
+            spamCoroutine = null;
+            yield break;
+        }
+
         int total = kirimBarisSekali ? daftar.Count : maksPesanSpam;
         float interval = intervalSpamAwal;
 
@@ -775,11 +1526,10 @@ public class PhoneManager : MonoBehaviour
         if (eventBooDipanggil) return;
         eventBooDipanggil = true;
 
-        onManagerBooDibuka?.Invoke();
         OnManagerBooDibuka?.Invoke();
     }
 
-    // Teks pesan diambil dari stages asset Manager_Boo; kalau kosong pakai cadangan
+    // Teks pesan diambil dari stages asset Manager_Boo
     List<string> AmbilBarisBoo()
     {
         List<string> hasil = new List<string>();
@@ -792,52 +1542,7 @@ public class PhoneManager : MonoBehaviour
                     hasil.Add(l.teks);
         }
 
-        if (hasil.Count == 0)
-        {
-            foreach (string c in pesanSpamCadangan)
-                if (!string.IsNullOrEmpty(c)) hasil.Add(c);
-        }
-
-        if (hasil.Count == 0) hasil.Add("...");
         return hasil;
-    }
-
-    // ==========================================
-    // --- SIMPAN / MUAT LOG AZURA ---
-    // ==========================================
-
-    void SimpanLogAzura()
-    {
-        if (kontakAzura == null || !state.ContainsKey(kontakAzura)) return;
-
-        ContactState s = state[kontakAzura];
-        LogTersimpan data = new LogTersimpan { unread = s.unread };
-        foreach (ChatLine l in s.history)
-            data.baris.Add(new BarisTersimpan { teks = l.teks, dariAldo = l.dariAldo });
-
-        try { File.WriteAllText(PathLogAzura, JsonUtility.ToJson(data)); }
-        catch (System.Exception e) { Debug.LogWarning("Gagal simpan log Azura: " + e.Message); }
-    }
-
-    void MuatLogAzura()
-    {
-        if (kontakAzura == null || !File.Exists(PathLogAzura)) return;
-
-        try
-        {
-            LogTersimpan data = JsonUtility.FromJson<LogTersimpan>(File.ReadAllText(PathLogAzura));
-            if (data == null) return;
-
-            ContactState s = state[kontakAzura];
-            s.history.Clear();
-            foreach (BarisTersimpan b in data.baris)
-                s.history.Add(new ChatLine { teks = b.teks, dariAldo = b.dariAldo });
-            s.unread = data.unread;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning("Gagal muat log Azura: " + e.Message);
-        }
     }
 
     // ==========================================
@@ -866,7 +1571,7 @@ public class PhoneManager : MonoBehaviour
             tombolBalas.SetInteractable(adaBalasan && !sedangMengetik);
         }
         if (teksInput != null && !sedangMengetik)
-            teksInput.text = placeholderInput;
+            teksInput.text = "";
     }
 
     void MulaiBalas()
@@ -896,7 +1601,7 @@ public class PhoneManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
 
         // Kirim: pindah dari kotak input ke bubble kanan
-        teksInput.text = placeholderInput;
+        teksInput.text = "";
         if (sfxKirim != null) audioSource.PlayOneShot(sfxKirim);
         TambahPesan(kontak, isi, true);
 
@@ -912,17 +1617,5 @@ public class PhoneManager : MonoBehaviour
         StartCoroutine(JalankanKontak(kontak, true));
 
         SegarkanTombolBalas();
-    }
-
-    void UpdateBadge()
-    {
-        if (badgeNotif == null) return;
-
-        bool adaUnread = false;
-        foreach (var kv in state)
-        {
-            if (kv.Value.unread) { adaUnread = true; break; }
-        }
-        badgeNotif.SetActive(adaUnread);
     }
 }

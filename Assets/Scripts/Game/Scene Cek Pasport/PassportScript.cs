@@ -25,13 +25,24 @@ public class PassportScript : MonoBehaviour
     public List<NamePool> dataName;
     public PassportSchema currentData;
 
-    void Awake()
+void Awake()
+{
+    if (Instance == null)
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        Instance = this;
+        GameEvent.GenerateNewPassportData += GenerateData;
     }
+    else Destroy(gameObject);
+}
+
+void OnDestroy()
+{
+    if (Instance == this)
+    {
+        GameEvent.GenerateNewPassportData -= GenerateData;
+        Instance = null;
+    }
+}
 
     public void UpdateViewPassport(PassportSchema data)
     {
@@ -41,16 +52,6 @@ public class PassportScript : MonoBehaviour
         textExp.text = data.expiryDate.ToString("dd/MM/yyyy");
         textSex.text = data.sex;
         textBod.text = data.bodOwner;
-    }
-
-    void OnEnable()
-    {
-        GameEvent.GenerateNewPassportData += GenerateData;
-    }
-
-    void OnDisable()
-    {
-        GameEvent.GenerateNewPassportData -= GenerateData;
     }
 
     void GenerateData()

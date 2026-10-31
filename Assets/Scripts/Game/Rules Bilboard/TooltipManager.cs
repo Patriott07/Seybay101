@@ -25,6 +25,17 @@ public class TooltipManager : MonoBehaviour
     [Tooltip("Jarak minimal tooltip dari tepi layar (unit canvas)")]
     public Vector2 marginLayar = new Vector2(10f, 10f);
 
+    [Header("Debug")]
+    [Tooltip("Tampilkan di Console saat tooltip ditampilkan atau ditolak, beserta alasannya.")]
+    public bool logDebug = true;
+
+    [Header("Canvas Tooltip")]
+    [Tooltip("Jika canvas bukan Overlay, tooltip dirender di canvas Overlay khusus supaya selalu di atas semua kamera, termasuk Camera 2 (Overlay Camera).")]
+    public bool pakaiCanvasOverlayKhusus = true;
+    public int sortingOrderOverlay = 5000;
+
+    private GameObject overlayCanvasGO;
+
     private RectTransform panel;
     private RectTransform canvasRect;
     private Camera kameraCanvas;
@@ -55,6 +66,11 @@ public class TooltipManager : MonoBehaviour
         }
 
         canvas = canvas.rootCanvas;
+
+        // Canvas Screen Space - Camera milik kamera 1 akan tertutup Camera 2 saat Desk View terbuka.
+        if (pakaiCanvasOverlayKhusus && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            canvas = BuatCanvasOverlay(canvas);
+
         canvasRect = (RectTransform)canvas.transform;
         kameraCanvas = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 
@@ -82,8 +98,34 @@ public class TooltipManager : MonoBehaviour
         go.SetActive(false);
     }
 
+    // Canvas Overlay khusus tooltip. Pengaturan skala disalin dari canvas asli agar ukuran tooltip sama.
+    Canvas BuatCanvasOverlay(Canvas asli)
+    {
+        overlayCanvasGO = new GameObject("Tooltip Canvas (Overlay)");
+
+        Canvas c = overlayCanvasGO.AddComponent<Canvas>();
+        c.renderMode = RenderMode.ScreenSpaceOverlay;
+        c.sortingOrder = sortingOrderOverlay;
+
+        CanvasScaler scaler = overlayCanvasGO.AddComponent<CanvasScaler>();
+        CanvasScaler scalerAsli = asli.GetComponent<CanvasScaler>();
+
+        if (scalerAsli != null)
+        {
+            scaler.uiScaleMode = scalerAsli.uiScaleMode;
+            scaler.referenceResolution = scalerAsli.referenceResolution;
+            scaler.screenMatchMode = scalerAsli.screenMatchMode;
+            scaler.matchWidthOrHeight = scalerAsli.matchWidthOrHeight;
+            scaler.scaleFactor = scalerAsli.scaleFactor;
+            scaler.referencePixelsPerUnit = scalerAsli.referencePixelsPerUnit;
+        }
+
+        return c;
+    }
+
     void OnDestroy()
     {
+        if (overlayCanvasGO != null) Destroy(overlayCanvasGO);
         fadeTween?.Kill();
         if (Instance == this) Instance = null;
     }
@@ -94,7 +136,19 @@ public class TooltipManager : MonoBehaviour
 
     public void Show(object owner, Collider2D objek, string isiTeks, Sprite iconSprite, SisiTooltip sisiPilihan, float jarakDariObjek, bool pindahOtomatisJikaPenuh = false)
     {
-        if (panel == null || objek == null) return;
+        if (panel == null || objek == null)
+        {
+            Debug.LogWarning("[TooltipManager] Show() ditolak: panel atau objek null. " +
+                             "Kemungkinan Awake gagal (Canvas / Prefab Tooltip belum diisi), lihat error merah di awal Play.", this);
+            return;
+        }
+
+        // Object ber-DeskViewTrigger yang sedang di Desk View dan tooltip-nya dimatikan
+        if (DilarangDiDesk(objek))
+        {
+            if (logDebug) Debug.Log("[TooltipManager] Show() ditolak: " + objek.name + " sedang di Desk View dan tooltip-nya dimatikan.", this);
+            return;
+        }
 
         pemilik = owner;
         target = objek;
@@ -120,6 +174,13 @@ public class TooltipManager : MonoBehaviour
 
         canvasGroup.alpha = 0f;
         fadeTween = canvasGroup.DOFade(1f, durasiFade).SetUpdate(true);
+
+        if (logDebug)
+            Debug.Log("[TooltipManager] tooltip ditampilkan untuk " + objek.name +
+                      " | posisi panel=" + panel.anchoredPosition +
+                      " | ukuran panel=" + panel.rect.size +
+                      " | mode canvas=" + canvas.renderMode +
+                      " | kamera=" + (CariKamera() != null ? CariKamera().name : "TIDAK ADA"), this);
     }
 
     public void Hide(object owner)
@@ -138,6 +199,31 @@ public class TooltipManager : MonoBehaviour
     }
 
     // ==========================================
+    // --- DESK VIEW ---
+    // ==========================================
+
+    // True jika object ber-DeskViewTrigger sedang di Desk View dan tooltip-nya dimatikan.
+    // Object tanpa DeskViewTrigger (mis. Rules & Guide yang permanen di scene Camera 2) tidak terpengaruh.
+    static bool DilarangDiDesk(Collider2D c)
+    {
+        if (c == null) return false;
+
+        DeskViewTrigger trigger = c.GetComponentInParent<DeskViewTrigger>();
+        return trigger != null && trigger.SedangDiDesk && !trigger.tooltipAktifDiDeskView;
+    }
+
+    void SembunyikanPaksa()
+    {
+        tampil = false;
+        pemilik = null;
+        target = null;
+
+        fadeTween?.Kill();
+        canvasGroup.alpha = 0f;
+        panel.gameObject.SetActive(false);
+    }
+
+    // ==========================================
     // --- POSISI ---
     // ==========================================
 
@@ -153,6 +239,14 @@ public class TooltipManager : MonoBehaviour
             panel.gameObject.SetActive(false);
             return;
         }
+
+        // Object baru masuk Desk View saat tooltip sedang tampil
+        if (DilarangDiDesk(target))
+        {
+            SembunyikanPaksa();
+            return;
+        }
+
         UpdatePosisi();
     }
 
@@ -219,10 +313,24 @@ public class TooltipManager : MonoBehaviour
     // Pilih kamera yang benar-benar merender objek (bukan sekadar Camera.main)
     Camera CariKamera()
     {
-        if (kameraDunia != null) return kameraDunia;
-
-        Vector3 pusat = target.bounds.center;
         int layerBit = 1 << target.gameObject.layer;
+        Vector3 pusat = target.bounds.center;
+
+        // Saat Desk View terbuka, objek yang dilihat Camera 2 harus diproyeksikan dengan Camera 2.
+        // Ini diutamakan di atas field 'Kamera Dunia' (yang biasanya berisi kamera utama).
+        if (DeskViewController.IsViewOpen)
+        {
+            Camera dc = DeskViewController.AktifView.deskCamera;
+
+            if (dc != null && dc.enabled && (dc.cullingMask & layerBit) != 0)
+            {
+                Vector3 vpDesk = dc.WorldToViewportPoint(pusat);
+                if (vpDesk.z > 0f && vpDesk.x >= 0f && vpDesk.x <= 1f && vpDesk.y >= 0f && vpDesk.y <= 1f)
+                    return dc;
+            }
+        }
+
+        if (kameraDunia != null) return kameraDunia;
 
         Camera terbaik = null;
         float depthTerbaik = float.MinValue;

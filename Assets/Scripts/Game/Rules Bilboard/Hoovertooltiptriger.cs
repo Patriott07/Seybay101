@@ -3,7 +3,8 @@ using UnityEngine;
 
 // Pasang di objek yang ingin punya tooltip (paspor, tiket, dll). Berdiri sendiri, tidak mengubah HoverEfek.
 // Alur: mouse di objek -> tunggu 'delayTampil' detik -> tooltip muncul di samping objek.
-// Tooltip hilang kalau: mouse keluar, objek diklik/di-inspect, HP terbuka, atau game di-pause.
+// Tooltip hilang kalau: mouse keluar, objek diklik/di-inspect, HP terbuka, game di-pause,
+// atau objek (ber-DeskViewTrigger) sedang di Desk View dan tooltip-nya dimatikan.
 [RequireComponent(typeof(Collider2D))]
 public class HoverTooltipTrigger : MonoBehaviour
 {
@@ -31,9 +32,16 @@ public class HoverTooltipTrigger : MonoBehaviour
     [Tooltip("Jarak tooltip dari tepi objek (unit canvas)")]
     public float jarakDariObjek = 15f;
 
+    [Header("Debug")]
+    [Tooltip("Tampilkan di Console langkah-langkah tooltip dan alasan jika tertahan.")]
+    public bool logDebug = true;
+
+    private string alasanTerakhir;
+
     private Collider2D col;
     private InspectableObject inspect;
     private Draggable draggable;
+    private DeskViewTrigger deskTrigger;
 
     private bool hovering;
     private bool suppressed;    // true setelah objek diklik, sampai mouse keluar
@@ -44,6 +52,7 @@ public class HoverTooltipTrigger : MonoBehaviour
     {
         col = GetComponent<Collider2D>();
         inspect = GetComponent<InspectableObject>();
+        deskTrigger = GetComponent<DeskViewTrigger>();
         draggable = GetComponent<Draggable>();
         if (draggable == null) draggable = GetComponentInParent<Draggable>();
     }
@@ -59,6 +68,12 @@ public class HoverTooltipTrigger : MonoBehaviour
     {
         hovering = true;
         suppressed = false;
+        Log("mouse masuk, hitung mundur " + delayTampil + " detik");
+    }
+
+    void Log(string pesan)
+    {
+        if (logDebug) Debug.Log("[Tooltip] " + name + ": " + pesan, this);
     }
 
     void OnMouseExit()
@@ -79,7 +94,8 @@ public class HoverTooltipTrigger : MonoBehaviour
     {
         if (!hovering) return;
 
-        // Sedang inspect / HP terbuka / pause -> sembunyikan
+        // Sedang inspect / HP terbuka / pause / di Desk View (jika dimatikan) -> sembunyikan.
+        // Begitu kondisi ini hilang dan mouse masih di objek, hitung mundur dimulai lagi.
         if (Terhalang())
         {
             Batalkan();
@@ -93,12 +109,30 @@ public class HoverTooltipTrigger : MonoBehaviour
             tunggu = StartCoroutine(TungguLaluTampil());
     }
 
+    // Objek ber-DeskViewTrigger yang sedang di Desk View dan tooltip-nya dimatikan.
+    // Objek tanpa DeskViewTrigger (mis. Rules & Guide di scene Camera 2) tidak terpengaruh.
+    bool DilarangDiDesk =>
+        deskTrigger != null && deskTrigger.SedangDiDesk && !deskTrigger.tooltipAktifDiDeskView;
+
     bool Terhalang()
     {
-        if (inspect != null && inspect.GetIsInspect()) return true;
-        if (PhoneManager.IsPhoneOpen) return true;
-        if (Time.timeScale == 0f) return true;
-        return false;
+        string alasan = null;
+
+        if (inspect != null && inspect.GetIsInspect())
+            alasan = "panel buku sedang terbuka (BookPanelController.IsPanelOpen = true)";
+        else if (PhoneManager.IsPhoneOpen)
+            alasan = "HP terbuka (PhoneManager.IsPhoneOpen = true)";
+        else if (Time.timeScale == 0f)
+            alasan = "Time.timeScale = 0 (game di-pause)";
+        else if (DilarangDiDesk)
+            alasan = "objek sedang di Desk View dan tooltip-nya dimatikan";
+
+        // Log hanya saat alasan berubah, supaya Console tidak penuh
+        if (hovering && alasan != alasanTerakhir && alasan != null)
+            Log("TERTAHAN: " + alasan);
+
+        alasanTerakhir = alasan;
+        return alasan != null;
     }
 
     IEnumerator TungguLaluTampil()
@@ -119,6 +153,7 @@ public class HoverTooltipTrigger : MonoBehaviour
         string isi = belumDiMeja ? teksBelumDiMeja : teksTooltip;
         Sprite ikon = belumDiMeja ? iconBelumDiMeja : iconTooltip;
 
+        Log("memanggil TooltipManager.Show(\"" + isi + "\")");
         TooltipManager.Instance.Show(this, col, isi, ikon, sisi, jarakDariObjek, pindahSisiOtomatis);
         tampil = true;
     }
