@@ -1,0 +1,141 @@
+{
+  "project": {
+    "name": "Ideation WPEG3",
+    "languages": [
+      "figma"
+    ],
+    "frameworks": [],
+    "description": "Figma design file: Ideation WPEG3",
+    "analyzedAt": "2026-10-31T15:33:14.372Z",
+    "gitCommitHash": ""
+  },
+  "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+  "figmaVersion": "2416295837074840846",
+  "nodes": [
+    {
+      "id": "page:0:1",
+      "type": "page",
+      "name": "Page 1",
+      "summary": "Page 1",
+      "tags": [
+        "page"
+      ],
+      "complexity": "simple",
+      "figmaMeta": {
+        "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+        "nodeId": "0:1",
+        "figmaType": "CANVAS"
+      }
+    },
+    {
+      "id": "screen:96:710",
+      "type": "screen",
+      "name": "Modular card wireframe",
+      "summary": "Modular card wireframe",
+      "tags": [
+        "screen"
+      ],
+      "complexity": "simple",
+      "figmaMeta": {
+        "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+        "nodeId": "96:710",
+        "figmaType": "FRAME",
+        "dimensions": {
+          "width": 401,
+          "height": 576
+        },
+        "thumbnailUrl": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1c685f1e-73de-41c8-bc3c-ffde65c81d29"
+      }
+    },
+    {
+      "id": "screen:96:737",
+      "type": "screen",
+      "name": "Editorial asymmetric wireframe",
+      "summary": "Editorial asymmetric wireframe",
+      "tags": [
+        "screen"
+      ],
+      "complexity": "simple",
+      "figmaMeta": {
+        "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+        "nodeId": "96:737",
+        "figmaType": "FRAME",
+        "dimensions": {
+          "width": 401,
+          "height": 576
+        },
+        "thumbnailUrl": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/548d6631-7132-4588-9afc-34d74dbfdaa0"
+      }
+    },
+    {
+      "id": "screen:96:761",
+      "type": "screen",
+      "name": "Orderly stacked wireframe",
+      "summary": "Orderly stacked wireframe",
+      "tags": [
+        "screen"
+      ],
+      "complexity": "simple",
+      "figmaMeta": {
+        "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+        "nodeId": "96:761",
+        "figmaType": "FRAME",
+        "dimensions": {
+          "width": 401,
+          "height": 576
+        },
+        "thumbnailUrl": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e060972c-8627-4f22-9b53-5ee3d049c692"
+      }
+    },
+    {
+      "id": "screen:158:1591",
+      "type": "screen",
+      "name": "Modular card wireframe",
+      "summary": "Modular card wireframe",
+      "tags": [
+        "screen"
+      ],
+      "complexity": "simple",
+      "figmaMeta": {
+        "fileKey": "bszwtkLDTvAr3yy1BmguUW",
+        "nodeId": "158:1591",
+        "figmaType": "FRAME",
+        "dimensions": {
+          "width": 401,
+          "height": 576
+        },
+        "thumbnailUrl": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fa39a7db-93b6-4fd6-97da-92dfa236c404"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "page:0:1",
+      "target": "screen:96:710",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "page:0:1",
+      "target": "screen:96:737",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "page:0:1",
+      "target": "screen:96:761",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "page:0:1",
+      "target": "screen:158:1591",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

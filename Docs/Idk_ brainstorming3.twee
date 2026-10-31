@@ -1,0 +1,340 @@
+:: StoryTitle
+Idk, brainstorming
+
+
+:: StoryData
+{
+  "ifid": "232CC657-D624-4249-ADCE-33B2CF140B6C",
+  "format": "SugarCube",
+  "format-version": "2.37.3",
+  "start": "Seybay",
+  "tag-colors": {
+    "Data": "none",
+    "Main-Data": "green",
+    "System": "blue",
+    "Event-Caller": "purple"
+  },
+  "zoom": 1
+}
+
+
+:: Audio [System] {"position":"775,450","size":"100,100"}
+[[While talk]]
+[[While Reject]]
+[[While Accept]]
+[[Pitch Changer berdasarkan Expression/Mood]]
+
+
+:: Auto Generate Looks [System] {"position":"350,1450","size":"100,100"}
+
+
+
+:: Background NPC [Main-Data System] {"position":"200,475","size":"100,100"}
+Berguna untuk menyimpan parameter-parameter penting dalam merancang sebuah naratif generatif. 
+
+Hasilnya akan 
+[[Generatif Conversation]]
+
+
+:: Chat While Accepted [Event-Caller] {"position":"625,1025","size":"100,100"}
+
+
+
+:: Chat While Reject [Event-Caller] {"position":"925,825","size":"100,100"}
+
+
+
+:: Chat While Spawn [Event-Caller] {"position":"800,1025","size":"100,100"}
+
+
+
+:: Chat/Conversation [System] {"position":"700,675","size":"100,100"}
+[[Chat While Spawn]]
+[[Chat While Reject]]
+[[Chat While Accepted]]
+[[While Player Do So long for checking]]
+[[While Interupt]]
+
+
+
+:: Costum Events [Main-Data Event-Caller] {"position":"275,1200","size":"100,100"}
+
+
+
+:: Costum Koper [Main-Data] {"position":"525,1200","size":"100,100"}
+
+
+
+:: Custom Bubble Chat [Main-Data] {"position":"125,1325","size":"100,100"}
+
+
+
+:: Custom Document [Main-Data] {"position":"425,1325","size":"100,100"}
+
+
+
+:: Custom Kesalahan [Main-Data] {"position":"400,1200","size":"100,100"}
+
+
+
+:: Custom NPC [System] {"position":"275,1050","size":"100,100"}
+[[Passport Data]]
+[[NPC Identification]]
+[[Custom Bubble Chat]]
+[[Custom Document]]
+[[Custom Kesalahan]]
+[[Costum Events]]
+[[Costum Koper]]
+
+
+
+
+:: Dynamic By Interaction [System] {"position":"1200,125","size":"100,100"}
+[[Interupt]]
+[[Giving Bribe]]
+[[While Accepted]] 
+[[While Rejected]]
+[[While Talk]]
+
+
+:: Dynamic Conversation By Expresiion/Mood [System] {"position":"1200,250","size":"100,100"}
+
+
+
+:: Event Approved [Event-Caller] {"position":"750,175","size":"100,100"}
+
+
+
+:: Event Rejected [Event-Caller] {"position":"625,125","size":"100,100"}
+
+
+
+:: Expresion Changer [System] {"position":"1050,200","size":"100,100"}
+[[Dynamic Conversation By Expresiion/Mood]] 
+[[Dynamic By Interaction]] 
+
+
+:: Expresion/Mood [System Main-Data] {"position":"775,325","size":"100,100"}
+[[Expresion Changer]]
+
+
+:: First Bubble {"position":"2650,350","size":"100,100"}
+kalimat pengantar
+age_groups + moods
+
+
+:: First Bubble Spawn Bubble {"position":"2700,100","size":"100,100"}
+World Issue/Internal Issue NPC/Menyapa (base on mood) + Arktype (Opsional)
+
+
+
+:: Fouty Bubble {"position":"2950,725","size":"100,100"}
+Untuk kalimat opsional penguat (bikin player dilema parah)
+ Internal Situation + World + Aktype + Mood => Dialog
+
+
+:: Generatif Conversation [Main-Data System] {"position":"175,725","size":"100,100"}
+[[Chat/Conversation]] 
+
+
+:: Giving Bribe [Event-Caller] {"position":"1450,250","size":"100,100"}
+
+
+
+:: Interupt [Event-Caller] {"position":"1450,125","size":"100,100"}
+
+
+
+:: Interupt (Membagi 4 Bubble) {"position":"2525,300","size":"100,100"}
+[[First Bubble]]
+[[Second Bubble]]
+[[Third Bubble]]
+[[Fouty Bubble]]
+
+
+:: Koper [System] {"position":"650,525","size":"100,100"}
+
+
+
+:: Layer 1 Archtype {"position":"1950,200","size":"100,100"}
+[[Layer 2 Issue/Pelanggaran]]
+
+
+
+:: Layer 2 Issue/Pelanggaran {"position":"1950,325","size":"100,100"}
+[[Layer 3 Taktik]]
+
+
+:: Layer 3 Taktik {"position":"1950,450","size":"100,100"}
+[[Layer 4 Latar Belakang]]
+
+
+:: Layer 4 Latar Belakang {"position":"1950,575","size":"100,100"}
+
+
+
+:: Manual Generate Looks [System] {"position":"200,1450","size":"100,100"}
+
+
+
+:: Membagi Bubble By Interaction {"position":"2375,225","size":"100,100"}
+[[Spawn (Membagi 2 Bubble)]]
+[[While NPC Accepted]]
+[[While NPC Rejected]]
+[[Interupt (Membagi 4 Bubble)]]
+
+
+
+:: NPC Identification [System] {"position":"275,1325","size":"100,100"}
+[[Auto Generate Looks]]
+[[Manual Generate Looks]]
+
+
+:: NPC System Generative {"position":"475,400","size":"100,100"}
+[[Background NPC]]
+[[Ticket]]
+[[Passport]]
+[[Chat/Conversation]]
+[[Koper]]
+[[Expresion/Mood]]
+[[Audio]]
+[[Stamp]]
+
+
+:: Passport [Main-Data System] {"position":"325,575","size":"100,100"}
+
+
+
+:: Passport Data [Main-Data] {"position":"125,1200","size":"100,100"}
+
+
+
+:: Pitch Changer berdasarkan Expression/Mood [System] {"position":"1150,425","size":"100,100"}
+
+
+
+:: Second Bubble {"position":"2750,475","size":"100,100"}
+topik utama
+npc arketipe + issue + mood => dialogue
+
+
+:: Second Bubble Spawn Bubble {"position":"2825,125","size":"100,100"}
+Arktype + ??
+
+
+:: Seybay {"position":"350,300","size":"100,100"}
+[[NPC System Generative]]
+[[WordBank]]
+[[Custom NPC]]
+
+
+:: Spawn (Membagi 2 Bubble) {"position":"2525,150","size":"100,100"}
+[[First Bubble Spawn Bubble]] 
+[[Second Bubble Spawn Bubble]] 
+
+
+:: Stamp [System] {"position":"600,250","size":"100,100"}
+[[Event Rejected]]
+[[Event Approved]]
+
+
+:: Third Bubble {"position":"2850,600","size":"100,100"}
+Kalimat taktik
+Arketype + Taktik 
+
+
+
+:: Ticket [System] {"position":"475,575","size":"100,100"}
+
+
+
+:: What i should do {"position":"2250,175","size":"100,100"}
+Tentukan semua archetype dan sifat khas masing-masing.
+Buat 5–10 issue utama.
+Tulis beberapa respons untuk setiap archetype.
+Tambahkan aturan mood dan umur setelah dialog dasarnya terasa natural.
+Baru kembangkan sistem taktik, suap, dan world event.
+
+[[Membagi Bubble By Interaction]]
+
+
+:: While Accept [Event-Caller] {"position":"1025,325","size":"100,100"}
+
+
+
+:: While Accepted [Event-Caller] {"position":"1450,375","size":"100,100"}
+
+
+
+:: While Interupt [Event-Caller] {"position":"500,900","size":"100,100"}
+
+
+
+:: While NPC Accepted {"position":"2500,600","size":"100,100"}
+
+
+
+:: While NPC Rejected {"position":"2625,675","size":"100,100"}
+
+
+
+:: While Player Do So long for checking [Event-Caller] {"position":"950,1025","size":"100,100"}
+
+
+
+:: While Reject [Event-Caller] {"position":"1100,550","size":"100,100"}
+
+
+
+:: While Rejected [Event-Caller] {"position":"1450,500","size":"100,100"}
+
+
+
+:: While Talk [Event-Caller] {"position":"1450,625","size":"100,100"}
+
+
+
+:: While talk [Event-Caller] {"position":"950,600","size":"100,100"}
+
+
+
+:: WordBank [System] {"position":"1800,50","size":"100,100"}
+Rumus Conversation : Arctype + Pelanggaran/Issue + Taktik + Latar Belakang + Current Situation
+
+[[Layer 1 Archtype]]
+[[npc_profiles.json]]
+[[What i should do]]
+
+
+:: dialogues1.json {"position":"2250,300","size":"100,100"}
+kumpulan kalimat berdasarkan archetype dan issue
+
+
+
+:: dialogues2.json {"position":"2250,425","size":"100,100"}
+
+
+
+:: dialogues3.json {"position":"2250,550","size":"100,100"}
+
+
+
+:: dialogues4.json {"position":"2250,675","size":"100,100"}
+
+
+
+:: issues.json {"position":"2100,375","size":"100,100"}
+masalah yang dibahas: izin kedaluwarsa, dokumen palsu, dan sebagainya.
+[[speech_rules.json]]
+
+
+:: npc_profiles.json {"position":"2100,250","size":"100,100"}
+siapa NPC-nya: archetype, gender, age, personality, mood.
+[[issues.json]]
+
+
+:: speech_rules.json {"position":"2100,500","size":"100,100"}
+[[dialogues1.json]]
+[[dialogues2.json]]
+[[dialogues3.json]]
+[[dialogues4.json]]
