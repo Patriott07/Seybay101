@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Game/AlphaPreDay1.unity
     guid: 38bfa1bc39ad4454ab70f8a79af9e22a
   - enabled: 1
+    path: Assets/Scenes/Khabib Serius/Day 1 FIx.unity
+    guid: 22457bb5519e9ee48baed075ed326262
+  - enabled: 1
     path: Assets/Scenes/Story/Preday.unity
     guid: 4853398fd5fc73c439c44806c536cc71
   - enabled: 1
@@ -59,6 +62,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game/AlphaRecapDay2.unity
     guid: bb46d54d758769141a25ee4422b4b612
+  - enabled: 0
+    path: Assets/Scenes/Khabib Serius/Home.unity
+    guid: f837d3f93141832419827af628703e9c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

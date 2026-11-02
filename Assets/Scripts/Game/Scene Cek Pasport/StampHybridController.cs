@@ -1,95 +1,113 @@
-
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Schema.data;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StampHybridController : MonoBehaviour
 {
     [Header("Hubungan Objek")]
     public InspectableObject scriptTiket;
-
-    // --- BARIS BARU: Referensi ke NPC Manager ---
     public NpcEntranceManager npcManager;
+
+    [Header("Dua Stempel")]
+    public StampItem stampApprove;
+    public StampItem stampReject;
+    public KeyCode tombolApprove = KeyCode.A;
+    public KeyCode tombolReject = KeyCode.D;
+
+    [Header("Pilih Stempel")]
+    [Tooltip("Seberapa naik stempel yang sedang terpilih dari posisi rak.")]
+    public float angkatSaatTerpilih = 0.4f;
+    public float durasiGantiStempel = 0.15f;
+    [Tooltip("Pengali warna untuk stempel yang tidak terpilih (lebih gelap).")]
+    public Color warnaTidakTerpilih = new Color(0.55f, 0.55f, 0.55f, 1f);
+    [Tooltip("Sorting order stempel saat di-drag / menghantam, agar di atas kertas.")]
+    public int sortingOrderSaatDiangkat = 60;
 
     [Header("Efek Tinta")]
     public GameObject approveMarkPrefab;
     public GameObject rejectMarkPrefab;
     public float kecepatanAnimasi = 8f;
     public Transform locationStamp;
-
-    private Vector3 posisiAwal;
+    [Tooltip("Stempel dianggap kena kertas jika dilepas dalam radius ini dari locationStamp.")]
+    public float radiusTerimaStempel = 1.5f;
     public Camera cam;
-    private bool sedangDiproses = false;
 
-    private SpriteRenderer spriteRenderer;
-    private int layerAwal;
+    [Header("Tutup Camera 2 (Desk View)")]
+    [Tooltip("Tutup Desk View otomatis setelah stempel selesai.")]
+    public bool tutupDeskOtomatis = true;
+    [Tooltip("Jeda setelah stempel kembali ke rak, agar tinta sempat terlihat, sebelum Camera 2 ditutup.")]
+    public float jedaSebelumTutupDesk = 0.4f;
+    [Tooltip("Jeda setelah Camera 2 tertutup sebelum UsirNpc dipanggil. UsirNpc sudah punya jeda tiket sendiri.")]
+    public float jedaSebelumNpcPergi = 0.1f;
+    [Tooltip("Batas waktu menunggu Camera 2 tertutup. Jika lewat, NPC tetap diproses.")]
+    public float batasTungguDeskView = 5f;
+    [Tooltip("Batas waktu menunggu tiket sampai ke NPC sebelum stempel boleh dipakai lagi.")]
+    public float batasTungguNpcPergi = 5f;
 
-    private bool isMoving;
-    private float elapsedTime = 0f;
-    private Transform startPos;
-
-    [SerializeField]
-    Transform stampleDecisionHolder;
-    Transform targetPos;
-    [SerializeField] Transform targetOne, targetTwo;
+    [Header("Pengaman Back")]
+    public Button tombolBack;
 
     [Header("Pengaturan Notify Mistake")]
     public float jarakGerakX = 5f;
     public float durasiGerak = 0.5f;
     public float waktuBerhenti = 2f;
+    [Range(0f, 1f)] public float peluangNotifMistake = 0.33f;
 
     [SerializeField]
     Transform notifyMistakeOBJ;
 
-    private Vector2 notifyMistakeOBJStartPos; // Diubah jadi Vector2 untuk UI
+    Vector2 notifyMistakeOBJStartPos;
+    StampItem terpilih;
+    bool sedangDiproses = false;
+
+    public bool SedangDiproses => sedangDiproses;
+    public StampItem Terpilih => terpilih;
+
+    void SetBack(bool aktif)
+    {
+        if (tombolBack != null)
+            tombolBack.interactable = aktif;
+    }
 
     void Start()
     {
+        if (cam == null) cam = Camera.main;
+
         if (notifyMistakeOBJ != null)
         {
-            // Ambil posisi Anchor UI
             RectTransform rect = notifyMistakeOBJ.GetComponent<RectTransform>();
             if (rect != null)
-            {
                 notifyMistakeOBJStartPos = rect.anchoredPosition;
-            }
         }
 
-        // cam = Camera.main;
-        posisiAwal = transform.position;
+        if (stampApprove == null || stampReject == null)
+        {
+            Debug.LogError("Stamp Approve / Stamp Reject belum diisi di StampHybridController!", this);
+            enabled = false;
+            return;
+        }
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        layerAwal = spriteRenderer.sortingOrder;
+        stampApprove.Init(this, true);
+        stampReject.Init(this, false);
+        Pilih(stampApprove, true);
     }
 
     void Update()
     {
-        // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
-        // #800020
-        if (isMoving)
-        {
-            elapsedTime += Time.deltaTime;
-            float percentageComplete = elapsedTime / 0.3f;
+        if (sedangDiproses) return;
+        if (terpilih != null && terpilih.SedangDrag) return;
 
-            stampleDecisionHolder.position = Vector2.Lerp(
-                startPos.position,
-                targetPos.position,
-                percentageComplete
-            );
-
-            if (percentageComplete >= 1f)
-            {
-                isMoving = false;
-            }
-        }
-        // #800020
-        // Moving stample holder to right(visible) if the stample is dragged, move toward the otherwise position if not dragged;
+        if (Input.GetKeyDown(tombolApprove)) Pilih(stampApprove);
+        else if (Input.GetKeyDown(tombolReject)) Pilih(stampReject);
     }
 
     void OnEnable()
     {
-        GameEvent.DeleteMarkTicket += DeleteMarkTicket; // to delete approve/disapprove mark from a used ticket
+        GameEvent.DeleteMarkTicket += DeleteMarkTicket;
     }
 
     void OnDisable()
@@ -97,80 +115,54 @@ public class StampHybridController : MonoBehaviour
         GameEvent.DeleteMarkTicket -= DeleteMarkTicket;
     }
 
-    // Tambahkan OnMouseDown untuk trigger klik pertama kali
-    void OnMouseDown()
+    void OnDrawGizmosSelected()
     {
-        if (sedangDiproses)
-            return;
-
-        targetPos = targetOne;
-        startPos = targetTwo;
-        elapsedTime = 0f; // Reset waktu agar animasi jalan perlahan dari awal
-        isMoving = true;
+        if (locationStamp == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(locationStamp.position, radiusTerimaStempel);
     }
 
-    // Bersihkan OnMouseDrag, cukup untuk menggeser objek
-    void OnMouseDrag()
+    // ================== PILIH STEMPEL ==================
+
+    public void Pilih(StampItem item, bool instan = false)
     {
-        // Debug.Log("DOWN");
+        if (item == null) return;
+        if (item == terpilih && !instan) return;
 
-        if (sedangDiproses)
-            return;
-
-        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-        transform.position = mousePos;
+        terpilih = item;
+        stampApprove.SetTerpilih(item == stampApprove, instan);
+        stampReject.SetTerpilih(item == stampReject, instan);
     }
 
-    void OnMouseUp()
+    // ================== DIPANGGIL OLEH StampItem SAAT DILEPAS ==================
+
+    public void LepasStempel(StampItem item)
     {
-        targetPos = targetTwo;
-        startPos = targetOne;
-        // target pos set ke luar layar supaya tidak visible
-        elapsedTime = 0f; // Reset waktu lagi untuk animasi pulangnya
-        isMoving = true;
+        if (sedangDiproses) return;
 
-        if (sedangDiproses)
-            return;
+        // DokumenSiapDiklik false = NPC belum selesai masuk atau sudah diusir (sedang pergi),
+        // jadi tidak boleh dinilai lagi.
+        bool npcSiap = npcManager == null || npcManager.DokumenSiapDiklik;
 
-        if (!GameManager.Instance.isNpcInFront)
+        if (!GameManager.Instance.isNpcInFront || !npcSiap || !DiAtasKertas(item))
         {
-            transform.position = posisiAwal;
+            item.KembaliKeRak();
             return;
         }
 
-        Collider2D[] hits = Physics2D.OverlapPointAll(transform.position);
-        bool dilepasDiZona = false;
-
-        foreach (Collider2D hit in hits)
-        {
-            if (hit.CompareTag("ZoneYes"))
-            {
-                StartCoroutine(SiklusAnimasiKeputusan(true, hit.transform.position));
-                dilepasDiZona = true;
-                Manager_Chat.Instance.ClearHistory();
-                // lets check here
-                CheckRule(true);
-
-                break;
-            }
-            else if (hit.CompareTag("ZoneNo"))
-            {
-                StartCoroutine(SiklusAnimasiKeputusan(false, hit.transform.position));
-                dilepasDiZona = true;
-                Manager_Chat.Instance.ClearHistory();
-                // lets check here
-                CheckRule(false);
-                break;
-            }
-        }
-
-        if (!dilepasDiZona)
-        {
-            transform.position = posisiAwal;
-        }
+        bool isApprove = item.IsApprove;
+        StartCoroutine(SiklusAnimasiKeputusan(item, isApprove));
+        Manager_Chat.Instance.ClearHistory();
+        CheckRule(isApprove);
     }
 
+    bool DiAtasKertas(StampItem item)
+    {
+        if (locationStamp == null) return false;
+        return Vector2.Distance(item.transform.position, locationStamp.position) <= radiusTerimaStempel;
+    }
+
+    // ================== NOTIFY MISTAKE ==================
 
     void notifyMistake()
     {
@@ -179,101 +171,90 @@ public class StampHybridController : MonoBehaviour
             RectTransform rect = notifyMistakeOBJ.GetComponent<RectTransform>();
             if (rect != null)
             {
-                // Hentikan animasi sebelumnya jika sedang berjalan agar tidak tumpang tindih
                 rect.DOKill();
-                // Pastikan mulai dari posisi awal
                 rect.anchoredPosition = notifyMistakeOBJStartPos;
 
                 Sequence seq = DOTween.Sequence();
-                
-                // Gerak ke kanan khusus UI (DOAnchorPosX)
                 seq.Append(rect.DOAnchorPosX(notifyMistakeOBJStartPos.x + jarakGerakX, durasiGerak));
-                
-                // Berhenti
                 seq.AppendInterval(waktuBerhenti);
-                
-                // Balik ke kiri (posisi awal)
                 seq.Append(rect.DOAnchorPosX(notifyMistakeOBJStartPos.x, durasiGerak));
             }
         }
     }
 
+    // ================== ANIMASI STEMPEL ==================
 
-
-    IEnumerator SiklusAnimasiKeputusan(bool isApprove, Vector3 posisiZona)
+    IEnumerator SiklusAnimasiKeputusan(StampItem stamp, bool isApprove)
     {
         AudioManager.Instance.PlaySfxMenuToggle();
         sedangDiproses = true;
+        SetBack(false);
 
-        // cek apakah di scene ada ticket
-        // GameEvent.OnPassportModeCall?.Invoke();
+        SpriteRenderer sr = stamp.Renderer;
+        stamp.transform.DOKill();
 
-        transform.position = posisiZona;
-        scriptTiket.PaksaZoomIn();
+        sr.sortingOrder = 60;
 
-        yield return new WaitForSeconds(0.5f);
-
-        // 1. Gerakan awal dari tombol kembali ke posisiAwal (Lerp manual Anda)
-        float time = 0;
-        Vector3 titikDiTombol = transform.position;
-        while (time < 1)
-        {
-            time += Time.deltaTime * kecepatanAnimasi;
-            transform.position = Vector3.Lerp(titikDiTombol, posisiAwal, time);
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(0.1f);
-
-        // Ubah layer agar berada di atas kertas
-        spriteRenderer.sortingOrder = 60;
-
-        // Tentukan titik target stempel di atas kertas
         Vector3 targetTerbang = locationStamp.position + new Vector3(0f, 0f, -1f);
         Vector3 posisiAncangAncang = targetTerbang + new Vector3(0f, 1.5f, 0f);
 
-        // Pindah ke posisi ancang-ancang di atas kertas
-        transform.position = posisiAncangAncang;
+        yield return stamp.transform
+            .DOMove(posisiAncangAncang, 1f / kecepatanAnimasi)
+            .SetEase(Ease.OutQuad)
+            .WaitForCompletion();
+
         yield return new WaitForSeconds(0.1f);
 
-        // 2. GERAKAN "SMASH" (Membanting ke bawah dengan DOTween)
-        yield return transform
+        yield return stamp.transform
             .DOMove(targetTerbang, 0.15f)
             .SetEase(Ease.InQuad)
             .WaitForCompletion();
 
-        // --- 💥 EFEK IMPACT / HANTAMAN ---
-        // Efek penyok/membal kecil saat stempel menghantam kertas
-        transform.DOPunchScale(transform.localScale + new Vector3(0.3f, -0.3f, 0f), 0.15f, 10, 1);
+        stamp.transform.DOPunchScale(
+            stamp.transform.localScale + new Vector3(0.3f, -0.3f, 0f), 0.15f, 10, 1);
 
-        // Munculkan Tinta Stempel
         GameObject prefabTinta = isApprove ? approveMarkPrefab : rejectMarkPrefab;
-        GameObject cetakan = Instantiate(
-            prefabTinta,
-            locationStamp.position,
-            Quaternion.identity,
-            locationStamp
-        );
 
-        cetakan.transform.localPosition = new Vector3(0f, 0f, -0.1f);
-        cetakan.GetComponent<SpriteRenderer>().sortingOrder = 51;
+        if (prefabTinta != null)
+        {
+            GameObject cetakan = Instantiate(
+                prefabTinta,
+                locationStamp.position,
+                Quaternion.identity,
+                locationStamp
+            );
 
-        // Efek pop tinta muncul basah
-        // cetakan.transform.localScale = Vector3.zero;
-        // cetakan.transform.DOScale(1f, 0.1f).SetEase(Ease.OutBack);
+            cetakan.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+            cetakan.GetComponent<SpriteRenderer>().sortingOrder = 51;
+        }
+        else
+        {
+            Debug.LogWarning("Prefab tinta (Approve/Reject Mark) belum diisi!");
+        }
 
-        // Tahan sebentar di bawah
         yield return new WaitForSeconds(0.4f);
 
-        // 3. Tarik balik stempel ke posisi semula
-        yield return transform.DOMove(posisiAwal, 0.25f).SetEase(Ease.OutQuad).WaitForCompletion();
+        yield return stamp.transform
+            .DOMove(stamp.PosisiIstirahat, 0.25f)
+            .SetEase(Ease.OutQuad)
+            .WaitForCompletion();
 
-        // Kembalikan layer sorting
-        spriteRenderer.sortingOrder = layerAwal;
+        sr.sortingOrder = stamp.LayerAwal;
 
-        yield return new WaitForSeconds(0.3f);
-        scriptTiket.PaksaZoomOut();
-        yield return new WaitForSeconds(0.5f);
+        // ===== TUTUP CAMERA 2 OTOMATIS =====
+
+        if (tutupDeskOtomatis)
+        {
+            yield return new WaitForSeconds(jedaSebelumTutupDesk);
+            yield return TutupDeskViewDanTunggu();
+            yield return new WaitForSeconds(jedaSebelumNpcPergi);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.8f);
+        }
+
+        // ===== NPC DIPROSES =====
 
         if (isApprove)
             AudioManager.Instance.PlaySfxApprove();
@@ -283,6 +264,11 @@ public class StampHybridController : MonoBehaviour
         if (npcManager != null)
         {
             npcManager.UsirNpc(isApprove);
+
+            float batas = Time.unscaledTime + batasTungguNpcPergi;
+
+            while (GameManager.Instance.isNpcInFront && Time.unscaledTime < batas)
+                yield return null;
         }
         else
         {
@@ -292,11 +278,64 @@ public class StampHybridController : MonoBehaviour
         }
 
         sedangDiproses = false;
+        SetBack(true);
+    }
+
+    IEnumerator TutupDeskViewDanTunggu()
+    {
+        if (!DeskViewController.IsViewOpen)
+            yield break;
+
+        float batas = Time.unscaledTime + batasTungguDeskView;
+
+        // Tutup hanya sekali agar tidak spam selama transisi.
+        DeskViewController.AktifView.Tutup();
+
+        while (DeskViewController.IsViewOpen && Time.unscaledTime < batas)
+            yield return null;
+
+        if (DeskViewController.IsViewOpen)
+            Debug.LogWarning(
+                "[Stamp] Desk View belum tertutup setelah batas waktu, NPC tetap diproses."
+            );
     }
 
     void DeleteMarkTicket()
     {
-        Destroy(locationStamp.GetChild(0).gameObject);
+        if (locationStamp != null && locationStamp.childCount > 0)
+            Destroy(locationStamp.GetChild(0).gameObject);
+    }
+
+    // ================== CHECK RULE ==================
+
+    // Cek paspor vs tiket. Mengembalikan jumlah kesalahan dan mengisi daftar alasan.
+    int CekDokumen(PassportSchema passport, BoardingPassSchema ticket, List<string> alasan)
+    {
+        int salah = 0;
+
+        // 1. Nama / nomor dokumen paspor harus sama dengan tiket
+        if (passport.ownerName != ticket.passengerName
+            || passport.documentNumber != ticket.idPassengerCard)
+        {
+            salah++;
+            alasan.Add("Nama/ID paspor tidak cocok dengan tiket");
+        }
+
+        // 2. Paspor tidak boleh kedaluwarsa (tahun game 2045)
+        if (passport.expiryDate.Year < 2045)
+        {
+            salah++;
+            alasan.Add("Paspor kedaluwarsa");
+        }
+
+        // 3. Tanggal keberangkatan tiket harus di tahun 2045
+        if (ticket.departureDate.Year != 2045)
+        {
+            salah++;
+            alasan.Add("Tanggal tiket tidak valid");
+        }
+
+        return salah;
     }
 
     void CheckRule(bool isApprove)
@@ -310,19 +349,11 @@ public class StampHybridController : MonoBehaviour
         );
 
         int _mistakeCount = 0;
+        List<string> alasan = new List<string>();
 
         switch (currentDay)
         {
             case 1:
-                /// <summary>
-                /// 1. Ticket must same with passport data (name, id)
-                /// 2. Makesure passport is not a expired
-                /// 3. Makesure people bring ticket date thats normal
-                /// its 2045th
-                /// </summary>
-                /// <summary>
-                ///  Lets prepare some data compare
-                /// </summary>
                 PassportSchema passport = PassportScript.Instance.currentData;
                 if (passport == null)
                     return;
@@ -330,70 +361,48 @@ public class StampHybridController : MonoBehaviour
                 if (ticket == null)
                     return;
 
-                bool _ticketIsMatchPassport = true;
-                bool _ticketIsNotExpired = true;
-                bool _validTicketDate = true;
-
-                // rule 1
-                if (
-                    passport.ownerName != ticket.passengerName
-                    || passport.documentNumber != ticket.idPassengerCard
-                )
-                {
-                    _mistakeCount++;
-                    _ticketIsMatchPassport = false;
-                }
-
-                // rule 2
-                if (passport.expiryDate.Year < 2045)
-                {
-                    _mistakeCount++;
-                    _ticketIsNotExpired = false;
-                }
-
-                // rule 3
-                if (ticket.departureDate.Year != 2045)
-                {
-                    _mistakeCount++;
-                    _validTicketDate = false;
-                }
+                _mistakeCount += CekDokumen(passport, ticket, alasan);
                 break;
 
             case 2:
-                /// <summary>
-                /// Day 2: Check passport + koper items
-                /// </summary>
                 PassportSchema passport2 = PassportScript.Instance.currentData;
                 BoardingPassSchema ticket2 = TicketScript.Instance.currentData;
-                if (passport2 != null && ticket2 != null)
-                {
-                    if (passport2.ownerName != ticket2.passengerName
-                        || passport2.documentNumber != ticket2.idPassengerCard)
-                        _mistakeCount++;
-                    if (passport2.expiryDate.Year < 2045)
-                        _mistakeCount++;
-                    if (ticket2.departureDate.Year != 2045)
-                        _mistakeCount++;
-                }
 
-                // Check koper: barang terlarang yang masih belum disita
+                if (passport2 != null && ticket2 != null)
+                    _mistakeCount += CekDokumen(passport2, ticket2, alasan);
+
                 if (LuggageManager.Instance != null && LuggageManager.Instance.isSystemActive)
                 {
-                    int illegalItemsInKoper = LuggageManager.Instance.JumlahBarangTerlarangBelumDisita();
-                    _mistakeCount += illegalItemsInKoper;
+                    int illegalItemsInKoper =
+                        LuggageManager.Instance.JumlahBarangTerlarangBelumDisita();
+
+                    if (illegalItemsInKoper > 0)
+                    {
+                        _mistakeCount += illegalItemsInKoper;
+                        alasan.Add("Barang terlarang lolos: " + illegalItemsInKoper);
+                    }
                 }
                 break;
+
             default:
                 break;
         }
 
         int penalty = _mistakeCount * 5;
-        Debug.Log($"Penalty : {penalty}");
-        Debug.Log($"Mistake : {_mistakeCount}");
+
+        // Trust yang hilang saat approve salah = penalty x jumlah kesalahan (5 x n^2):
+        // 1 salah = 5, 2 salah = 20, 3 salah = 45. Ubah ke `penalty` saja jika ingin linear (5 x n).
+        int trustHilang = penalty * _mistakeCount;
+
+        string detailSalah = alasan.Count > 0
+            ? string.Join("\n", alasan.Select(a => "- " + a))
+            : null;
+
+        Debug.Log($"Mistake : {_mistakeCount} | Penalty : {penalty} | Trust hilang : {trustHilang}"
+                  + (detailSalah != null ? "\n" + detailSalah : ""));
 
         if (isApprove)
         {
-            // cek stamp sebagai benar
             if (_mistakeCount == 0)
             {
                 EconomyManager.Instance.TambahUang();
@@ -401,19 +410,16 @@ public class StampHybridController : MonoBehaviour
             }
             else
             {
-                if (Random.Range(1, 3) == 3)
-                {
-                    // ShowMistake() a function that notify player if he make a mistake!!!
-                }
-                
+                if (Random.value < peluangNotifMistake)
+                    notifyMistake();
+
                 EconomyManager.Instance.KurangiUang(3 * _mistakeCount);
-                EconomyManager.Instance.KurangiTrust(penalty * _mistakeCount);
-                PhoneManager.Instance.TambahViolation("wrong_accept");
+                EconomyManager.Instance.KurangiTrust(trustHilang);
+                PhoneManager.Instance.TambahViolation("wrong_accept", detailSalah, trustHilang);
             }
         }
         else
         {
-            // cek stamp sebagai salah
             if (_mistakeCount > 0)
             {
                 EconomyManager.Instance.TambahUang();
@@ -423,7 +429,8 @@ public class StampHybridController : MonoBehaviour
             {
                 EconomyManager.Instance.KurangiUang(5);
                 EconomyManager.Instance.KurangiTrust(5);
-                PhoneManager.Instance.TambahViolation("wrong_reject");
+                PhoneManager.Instance.TambahViolation(
+                    "wrong_reject", "- Dokumen valid tetapi ditolak", 5);
             }
         }
     }

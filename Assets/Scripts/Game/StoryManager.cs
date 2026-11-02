@@ -53,13 +53,23 @@ public class StoryManager : MonoBehaviour
     }
 
     void Start()
+{
+    currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
+    
+    // --- PENGAMAN UTAMA UNTUK SCENE TANPA STORY (SEPERTI MAIN MENU) ---
+    if (currentStory == null)
     {
-        currentDay = GameManager.Instance != null ? GameManager.Instance.GetCurrentDay() : 1;
-        // LoadStoryData(currentDay);
-        // Pastikan memanggil ShowTypingText() agar Event Listener terpasang sebelum data dimuat
-        ShowTypingText();
-     
+        // Pastikan tidak ada kunci interaksi yang aktif di scene non-story
+        InteractionLock.UnlockAll();
+        return; // Keluar agar tidak menjalankan fungsi story maupun Lock()
     }
+
+    // Pastikan memanggil ShowTypingText() agar Event Listener terpasang sebelum data dimuat
+    ShowTypingText();
+
+    // Kunci interaksi global HANYA saat benar-benar ada story berjalan
+    InteractionLock.Lock(this);
+}
 
     public void LoadStoryData(int day)
     {
@@ -187,6 +197,10 @@ public class StoryManager : MonoBehaviour
         typingText.OnAllComplete -= OnPreDayAllComplete;
         typingText.OnLineStoryData -= OnLineStoryDataHandler;
         StopCurrentAudio();
+
+        // ---> TAMBAHAN: Buka kunci interaksi saat story selesai secara normal
+        InteractionLock.Unlock(this);
+
         if (isLoadSceneInEnd)
             SceneManager.LoadScene(mainDeskSceneName);
     }
@@ -256,6 +270,9 @@ public class StoryManager : MonoBehaviour
         if (typingText != null)
             typingText.SkipAll();
         StopCurrentAudio();
+
+        // ---> TAMBAHAN: Buka kunci interaksi seketika saat player menekan tombol Skip
+        InteractionLock.Unlock(this);
     }
 
     public void SetupDailyFlow()
@@ -268,6 +285,10 @@ public class StoryManager : MonoBehaviour
         ShowTypingText();
         yield return new WaitUntil(() => typingText != null && typingText.IsComplete());
         yield return new WaitForSeconds(0.5f);
+        
+        // ---> TAMBAHAN: Buka kunci interaksi sebelum pindah scene di DailyFlow
+        InteractionLock.Unlock(this);
+
         if (isLoadSceneInEnd)
             SceneManager.LoadScene(mainDeskSceneName);
     }
