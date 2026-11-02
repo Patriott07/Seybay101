@@ -1,32 +1,16 @@
 {
   "layerExpresion": [
-    {
-      "expressionName": "PANICKED",
-      "ageGroups": [
-        {
-          "ageGroupName": "CHILD",
-          "lines": [
-            {"dialog" : "Aku.. tidak tahu", "continue_bubble" : true},
-            {"dialog" : "Hahh?", "continue_bubble" : true},
-            {"dialog" : "...", "continue_bubble" : true},
-            {"dialog" : "Aku tidak mengerti", "continue_bubble" : true}
-          ]
-        },
-        {
-          "ageGroupName": "ADULT",
-          "lines": [
-            {"dialog" : "Selesaikan masalah ini sekarang", "continue_bubble" : true},
-            {"dialog" : "Saya tidak punya waktu untuk ini", "continue_bubble" : true}
-          ]
-        },
-        {
-          "ageGroupName": "ELDERLY",
-          "lines": [
-            {"dialog" : "Selesaikan masalah ini sekarang", "continue_bubble" : true},
-            {"dialog" : "Saya tidak punya waktu untuk ini", "continue_bubble" : true}
-          ]
-        }
-      ]
-    }
+    {"expressionName":"SAD","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Saya takut semuanya akan menjadi lebih buruk.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya hanya ingin menyelesaikan ini dengan tenang.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya sudah terlalu tua untuk masalah seperti ini.","continue_bubble":true}]}]},
+    {"expressionName":"ANGRY","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Kenapa Anda tidak mau mendengarkan saya?","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Ini tidak adil. Periksa dokumen saya dengan benar.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya tidak akan diperlakukan seperti penjahat.","continue_bubble":true}]}]},
+    {"expressionName":"NEUTRAL","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Baik, saya akan menunggu.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Silakan lanjutkan pemeriksaannya.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya akan mengikuti prosedur yang berlaku.","continue_bubble":true}]}]},
+    {"expressionName":"ANXIOUS","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Apakah saya boleh lewat sekarang?","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya khawatir waktu saya hampir habis.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Tolong jangan biarkan saya menunggu terlalu lama.","continue_bubble":true}]}]},
+    {"expressionName":"PLEADING","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Tolong bantu saya, Pak.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya mohon, beri saya kesempatan untuk menjelaskan.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya memohon belas kasihan Anda.","continue_bubble":true}]}]},
+    {"expressionName":"ARROGANT","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Keluarga saya bukan orang sembarangan.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Anda tahu dengan siapa Anda sedang berurusan?","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya sudah melewati pemeriksaan seperti ini berkali-kali.","continue_bubble":true}]}]},
+    {"expressionName":"COLDSHY","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Saya tidak ingin membuat masalah.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya akan menjawab seperlunya.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya lebih suka diam dan mengikuti aturan.","continue_bubble":true}]}]},
+    {"expressionName":"FEARFUL","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Jangan kirim saya kembali.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya takut keputusan ini membahayakan keluarga saya.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya takut tidak akan selamat jika harus kembali.","continue_bubble":true}]}]},
+    {"expressionName":"SICK","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Saya merasa tidak enak badan.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Saya sedang sakit, tetapi saya harus tetap berangkat.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Tubuh saya tidak sekuat dulu.","continue_bubble":true}]}]},
+    {"expressionName":"CONFUSED","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Saya tidak mengerti apa yang salah.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Bisa jelaskan bagian mana yang bermasalah?","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya mungkin salah memahami formulirnya.","continue_bubble":true}]}]},
+    {"expressionName":"TAUNTING","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Anda tidak bisa menahan saya selamanya.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Kita lihat siapa yang akan menyesal nanti.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya sudah melihat petugas seperti Anda sebelumnya.","continue_bubble":true}]}]},
+    {"expressionName":"RELIEVED","ageGroups":[{"ageGroupName":"CHILD","lines":[{"dialog":"Terima kasih, saya kira saya tidak bisa lewat.","continue_bubble":true}]},{"ageGroupName":"ADULT","lines":[{"dialog":"Syukurlah, pemeriksaannya selesai.","continue_bubble":true}]},{"ageGroupName":"ELDERLY","lines":[{"dialog":"Saya lega masih diberi kesempatan berangkat.","continue_bubble":true}]}]}
   ]
 }

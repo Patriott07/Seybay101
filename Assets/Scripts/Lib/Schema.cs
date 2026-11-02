@@ -437,13 +437,13 @@ namespace Schema.data
     public class Layer3Entry
     {
         public string tacticName;
-        public List<AgeGroupData3> ageGroups;
+        public List<ArktypeData3> arktypes;
     }
 
     [System.Serializable]
-    public class AgeGroupData3
+    public class ArktypeData3
     {
-        public string ageGroupName;
+        public string arktype;
         public List<DialogueLine> lines;
     }
 

@@ -7,34 +7,34 @@
           "arktype": "THE_ELITE",
           "moods": [
             {
-              "moodName": "ANGRY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Kau tahu berapa banyak orang yang bisa kehilangan pekerjaan karena keputusanmu?", "continue_bubble": true},
-                {"dialog": "Saya harap Anda memahami dampak keputusan ini.", "continue_bubble": true}
-              ]
-            },
-            {
-              "moodName": "SAD",
-              "lines": [
-                {"dialog": "Entahlah... mungkin keluarga saya memang harus kelaparan hari ini.", "continue_bubble": true},
-                {"dialog": "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk.", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
         },
         {
-          "arktype": "THE_WORKER",
+          "arktype": "CIVILIAN",
           "moods": [
             {
-              "moodName": "ANGRY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Kalau saya tidak masuk kerja hari ini, keluarga saya tidak dapat jatah makanan!", "continue_bubble": true}
-              ]
-            },
-            {
-              "moodName": "DEPRESSED",
-              "lines": [
-                {"dialog": "Entahlah... maybe keluarga saya memang harus kelaparan hari ini.", "continue_bubble": true}
+                {
+                  "dialog": "Pak Aldo, Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -43,15 +43,106 @@
           "arktype": "THE_DEPENDENT",
           "moods": [
             {
-              "moodName": "FEARFUL",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Kalau saya tidak bisa lewat, siapa yang akan membelikan obat untuk saya?", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
             {
-              "moodName": "SAD",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Saya cuma ingin pulang sebelum keadaan menjadi lebih buruk.", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, secara rasional, Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak, Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Keluargamu pasti sedang kelaparan, Aldo. Aku bisa membantu makanan mereka jika kau meloloskan urusanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -65,9 +156,88 @@
           "arktype": "THE_ELITE",
           "moods": [
             {
-              "moodName": "ANGRY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Kesehatan keluarga ini menjadi tanggung jawab saya utuh.", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -76,9 +246,52 @@
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "SICK",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Saya tidak bisa bekerja jika keluarga sakit.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Keluargamu sedang sakit, bukan? Aku tahu cara mendapatkan obat untuk mereka kalau kau mau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -92,9 +305,142 @@
           "arktype": "THE_ELITE",
           "moods": [
             {
-              "moodName": "ARROGANT",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Mutasi adalah keberanian yang wajar untuk kemajuan.", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_WORKER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak, Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Kau ingin keluargamu aman dari mutasi, kan? Aku punya akses yang bisa membantu, dengan satu imbalan kecil.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -105,12 +451,145 @@
       "situationName": "ALDOSICK",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "SICK",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Sakit kepala lagi Pak, saya butuh istirahat.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Kau sendiri sedang sakit, Aldo. Aku bisa menyediakan obat dan waktu istirahat kalau pemeriksaanku dipercepat.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -121,12 +600,145 @@
       "situationName": "ALDOSLEEPY",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "SLEEPY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Saya butuh istirahat sebentar Pak, baru bisa kerja.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Kau terlihat hampir tertidur. Biarkan aku membuat urusan ini cepat selesai dan kau tidak akan menyesal.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -137,12 +749,145 @@
       "situationName": "ALDOHUNGRY",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "HUNGRY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Saya tidak maki sejak pagi, permintaan makanan segera!", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Kau pasti belum makan. Aku bisa membayar makananmu setelah kau menerima tawaranku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -156,9 +901,88 @@
           "arktype": "THE_ELITE",
           "moods": [
             {
-              "moodName": "ARROGANT",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Mutasi adalah bagian dari evolusi yang wajar.", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -167,9 +991,52 @@
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "FEARFUL",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Apa yang terjadi dengan tubuh saya Pak?", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Perubahan itu pasti membuatmu takut. Aku punya jalur untuk membantumu, tetapi kau harus berpihak kepadaku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -180,12 +1047,145 @@
       "situationName": "NORMALTEMPERATURE",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
               "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Suhu di ruangan ini cukup nyaman untuk bekerja.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Keadaan sedang tenang, Aldo. Ini kesempatan yang baik untuk kita membuat kesepakatan tanpa keributan.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -196,18 +1196,145 @@
       "situationName": "HOTTEMPERATURE",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "ANXIOUS",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Suhu di sini terlalu panas, saya kesulitan fokus.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
             {
-              "moodName": "ANGRY",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Panik ini karena suhu, tolong kurangi pemanasan!", "continue_bubble": true}
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Panas ini membuat semua orang kehilangan fokus. Terima tawaranku dan kita bisa segera keluar dari ruangan ini.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -218,12 +1345,145 @@
       "situationName": "UNNORMALTEMPERATURE",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "CONFUSED",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Suhu ini aneh-aneh Pak, apakah ada masalah?", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Kondisi ruangan ini tidak aman untukmu. Aku bisa mengurus jalan keluar, asal kau membantuku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -234,12 +1494,145 @@
       "situationName": "NORMALPOLUTION",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
               "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Level polusi hari ini normal saja Pak.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Udara masih cukup baik sekarang. Jangan biarkan kesempatan ini lewat; kita bisa menyelesaikan urusan ini secara pribadi.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]
@@ -250,12 +1643,145 @@
       "situationName": "UNNORMALPOLUTION",
       "arktypes": [
         {
+          "arktype": "THE_ELITE",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "CIVILIAN",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Pak Aldo, Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_DEPENDENT",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, tolong dengarkan saya. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "ACADEMIA",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, secara rasional, Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, secara rasional, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_LOYALIST",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Petugas Aldo, Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Petugas Aldo, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "arktype": "THE_WORKER",
           "moods": [
             {
-              "moodName": "ANXIOUS",
+              "moodName": "NEUTRAL",
               "lines": [
-                {"dialog": "Polusi di sini sangat tinggi, saya takut kesakitan.", "continue_bubble": true}
+                {
+                  "dialog": "Pak, Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Pak, Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_ENFORCER",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, saya akan bicara terus terang. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "arktype": "THE_MARGINAL",
+          "moods": [
+            {
+              "moodName": "NEUTRAL",
+              "lines": [
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Polusi akan segera memburuk. Aku bisa memberimu perlindungan dan bantuan untuk keluargamu jika kau meloloskanku.",
+                  "continue_bubble": true
+                },
+                {
+                  "dialog": "Aldo, kita sama-sama tahu dunia ini tidak adil. Bantuan itu bisa menjadi milikmu setelah kau memberi saya jalan.",
+                  "continue_bubble": true
+                }
               ]
             }
           ]

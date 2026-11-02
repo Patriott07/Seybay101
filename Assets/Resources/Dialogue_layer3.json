@@ -2,366 +2,654 @@
   "layerData": [
     {
       "tacticName": "BEG",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Anda sebaiknya mempertimbangkan kembali keputusan itu.", "continue_bubble": true},
-            {"dialog": "Keputusan Anda bisa membawa konsekuensi yang tidak diinginkan.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Saya harap Anda memahami konsekuensi dari keputusan tersebut.", "continue_bubble": true},
-            {"dialog": "Saya akan mempertanyakan keputusan ini melalui jalur resmi.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Jangan salahkan saya kalau masalah ini menjadi lebih besar!", "continue_bubble": true},
-            {"dialog": "Saya tidak akan diam saja jika diperlakukan seperti ini.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Anda tidak bisa memperlakukan saya semena-mena!", "continue_bubble": true},
-            {"dialog": "Saya akan melaporkan perlakuan ini.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Anda yakin ingin membuat masalah dengan saya?", "continue_bubble": true},
-            {"dialog": "Jangan sampai keputusan ini merugikan kita berdua.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Tolong jangan paksa saya melakukan sesuatu yang buruk!", "continue_bubble": true},
-            {"dialog": "Saya akan mencari bantuan jika Anda terus memaksa.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Saya sarankan Anda mempertimbangkan risiko tindakan tersebut.", "continue_bubble": true},
-            {"dialog": "Perilaku ini akan saya catat dalam laporan.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Anda sedang membahayakan kepentingan perusahaan!", "continue_bubble": true},
-            {"dialog": "Saya akan memastikan tindakan ini diketahui atasan.", "continue_bubble": true}
+            {
+              "dialog": "Tolong pertimbangkan kembali keputusan Anda. Saya tidak ingin masalah ini menjadi lebih besar.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]
     },
     {
       "tacticName": "LIE",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Saya yakin terjadi kesalahpahaman.", "continue_bubble": true},
-            {"dialog": "Informasi itu pasti tidak sesuai dengan keadaan sebenarnya.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Sepertinya ada kekeliruan dalam pencatatan data.", "continue_bubble": true},
-            {"dialog": "Berdasarkan informasi yang saya miliki, semuanya sudah sesuai.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Saya rasa dokumen itu masih berlaku.", "continue_bubble": true},
-            {"dialog": "Mungkin ada kesalahan saat dokumen ini diperiksa.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Saya tidak tahu apa yang Anda maksud.", "continue_bubble": true},
-            {"dialog": "Seingat saya, tidak ada masalah dengan dokumen itu.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Anda pasti salah melihat sesuatu.", "continue_bubble": true},
-            {"dialog": "Saya tidak tahu apa-apa soal itu.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Saya... saya tidak tahu soal itu.", "continue_bubble": true},
-            {"dialog": "Bukannya semuanya sudah benar?", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Informasi yang Anda sampaikan perlu diverifikasi kembali.", "continue_bubble": true},
-            {"dialog": "Saya tidak menemukan dasar untuk tuduhan tersebut.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Tidak mungkin ada pelanggaran dalam urusan ini.", "continue_bubble": true},
-            {"dialog": "Pasti ada kesalahpahamam mengenai prosedur perusahaan.", "continue_bubble": true}
+            {
+              "dialog": "Saya yakin ada kesalahpahaman pada dokumen itu. Mungkin kita bisa memeriksanya lagi.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]
     },
     {
       "tacticName": "BARGAIN",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Kita pasti bisa mencapai kesepakatan yang menguntungkan kedua pihak.", "continue_bubble": true},
-            {"dialog": "Bagaimana jika kita menyelesaikan ini tanpa memperpanjang urusan?", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Apakah ada alternatif yang dapat kita pertimbangkan?", "continue_bubble": true},
-            {"dialog": "Mungkin kita bisa mencari solusi yang sesuai prosedur.", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Apa ada cara lain supaya masalah ini bisa selesai, Pak?", "continue_bubble": true},
-            {"dialog": "Saya bersedia melakukan apa yang diperlukan untuk memperbaikinya.", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Bisakah kita mencari jalan tengah?", "continue_bubble": true},
-            {"dialog": "Apa yang bisa saya lakukan agar masalah ini selesai?", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Kita bisa saling membantu, bukan?", "continue_bubble": true},
-            {"dialog": "Saya yakin kita bisa menemukan kesepakatan.", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Apa ada cara lain yang bisa kita lakukan?", "continue_bubble": true},
-            {"dialog": "Saya akan mencoba mencari solusi, asal Anda memberi saya kesempatan.", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Mari kita lihat apakah ada penyelesaian yang diperbolehkan.", "continue_bubble": true},
-            {"dialog": "Apakah tersedia prosedur alternatif untuk kasus ini?", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Kita harus menemukan solusi yang tetap menguntungkan perusahaan.", "continue_bubble": true},
-            {"dialog": "Saya yakin ada cara untuk menyelesaikan ini tanpa melanggar aturan.", "continue_bubble": true}
+            {
+              "dialog": "Kita bisa mencari jalan tengah yang menguntungkan kedua pihak.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]
     },
     {
       "tacticName": "THREATEN",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Anda sebaiknya mempertimbangkan kembali keputusan itu.", "continue_bubble": true},
-            {"dialog": "Keputusan Anda bisa membawa konsekuensi yang tidak diinginkan.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Saya harap Anda memahami konsekuensi dari keputusan tersebut.", "continue_bubble": true},
-            {"dialog": "Saya akan mempertanyakan keputusan ini melalui jalur resmi.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Jangan salahkan saya kalau masalah ini menjadi lebih besar!", "continue_bubble": true},
-            {"dialog": "Saya tidak akan diam saja jika diperlakukan seperti ini.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Anda tidak bisa memperlakukan me semena-mena!", "continue_bubble": true},
-            {"dialog": "Saya akan melaporkan perlakuan ini.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Anda yakin ingin membuat masalah dengan saya?", "continue_bubble": true},
-            {"dialog": "Jangan sampai keputusan ini merugikan kita berdua.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Tolong jangan paksa saya melakukan sesuatu yang buruk!", "continue_bubble": true},
-            {"dialog": "Saya akan mencari bantuan jika Anda terus memaksa.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Saya sarankan Anda mempertimbangkan risiko tindakan tersebut.", "continue_bubble": true},
-            {"dialog": "Perilaku ini akan saya catat dalam laporan.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Anda sedang membahayakan kepentingan perusahaan!", "continue_bubble": true},
-            {"dialog": "Saya akan memastikan tindakan ini diketahui atasan.", "continue_bubble": true}
+            {
+              "dialog": "Anda sebaiknya mempertimbangkan konsekuensi jika menolak saya.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]
     },
     {
       "tacticName": "COOPERATE",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Baik, mari kita selesaikan urusan ini.", "continue_bubble": true},
-            {"dialog": "Silakan lanjutkan pemeriksaannya.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Tentu. Saya siap memberikan informasi yang diperlukan.", "continue_bubble": true},
-            {"dialog": "Silakan periksa dokumen saya satu per satu.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Baik, Pak. Saya akan mengikuti prosedurnya.", "continue_bubble": true},
-            {"dialog": "Silakan periksa. Saya ingin urusan ini cepat selesai.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Baik, saya mengerti.", "continue_bubble": true},
-            {"dialog": "Silakan. Saya akan membantu sebisa mungkin.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Baiklah, saya akan mengikuti pemeriksaan.", "continue_bubble": true},
-            {"dialog": "Silakan periksa, saya tidak ingin memperpanjang masalah.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Baik. Saya akan mengikuti arahan Anda.", "continue_bubble": true},
-            {"dialog": "Oke, saya akan melakukan apa yang Anda minta.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Silakan lanjutkan sesuai prosedur.", "continue_bubble": true},
-            {"dialog": "Saya siap memberikan keterangan yang dibutuhkan.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Tentu. Saya mendukung prosedur perusahaan.", "continue_bubble": true},
-            {"dialog": "Saya akan mengikuti semua instruksi yang berlaku.", "continue_bubble": true}
+            {
+              "dialog": "Baik, saya akan mengikuti prosedur dan membantu pemeriksaan Anda.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]
     },
     {
       "tacticName": "BRIBE",
-      "ageGroups": [
+      "arktypes": [
         {
-          "ageGroupName": "THE_ELITE",
+          "arktype": "THE_ELITE",
           "lines": [
-            {"dialog": "Mungkin ada sesuatu yang bisa membuat urusan kita lebih mudah.", "continue_bubble": true},
-            {"dialog": "Saya yakin kita bisa mencapai kesepakatan secara pribadi.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the elite; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "ACADEMIA",
+          "arktype": "ACADEMIA",
           "lines": [
-            {"dialog": "Saya memiliki sesuatu yang mungkin bisa membantu menyelesaikan masalah ini.", "continue_bubble": true},
-            {"dialog": "Apakah Anda bersedia mempertimbangkan tawaran pribadi?", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai academia; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_WORKER",
+          "arktype": "THE_WORKER",
           "lines": [
-            {"dialog": "Pak, saya punya sedikit sesuatu. Bisa kita bicarakan?", "continue_bubble": true},
-            {"dialog": "Saya tidak punya banyak, tapi mungkin ini bisa membantu.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the worker; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "CIVILIAN",
+          "arktype": "CIVILIAN",
           "lines": [
-            {"dialog": "Bagaimana kalau saya memberikan sesuatu sebagai gantinya?", "continue_bubble": true},
-            {"dialog": "Mungkin kita bisa menyelesaikan ini dengan cara lain.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai civilian; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_MARGINAL",
+          "arktype": "THE_MARGINAL",
           "lines": [
-            {"dialog": "Saya rasa kita tidak perlu membuat masalah ini menjadi resmi.", "continue_bubble": true},
-            {"dialog": "Ada sesuatu untuk Anda, kalau kita bisa saling memahami.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the marginal; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_DEPENDENT",
+          "arktype": "THE_DEPENDENT",
           "lines": [
-            {"dialog": "Saya punya sedikit barang. Apa ini bisa membantu?", "continue_bubble": true},
-            {"dialog": "Saya tidak punya banyak, tapi tolong pertimbangkan ini.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the dependent; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_ENFORCER",
+          "arktype": "THE_ENFORCER",
           "lines": [
-            {"dialog": "Apakah Anda sedang menawarkan imbalan di luar prosedur?", "continue_bubble": true},
-            {"dialog": "Saya perlu memastikan apakah tawaran ini melanggar kebijakan.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the enforcer; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         },
         {
-          "ageGroupName": "THE_LOYALIST",
+          "arktype": "THE_LOYALIST",
           "lines": [
-            {"dialog": "Saya ingin memberikan sesuatu sebagai bentuk dukungan.", "continue_bubble": true},
-            {"dialog": "Mungkin bantuan kecil ini bisa mempermudah urusan kita.", "continue_bubble": true}
+            {
+              "dialog": "Mungkin ada bantuan kecil yang bisa membuat urusan ini lebih mudah bagi kita.",
+              "continue_bubble": true
+            },
+            {
+              "dialog": "Saya berbicara sebagai the loyalist; mohon dengarkan tawaran saya.",
+              "continue_bubble": true
+            }
           ]
         }
       ]

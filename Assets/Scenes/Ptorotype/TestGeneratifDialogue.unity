@@ -387,6 +387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1347688033}
   - component: {fileID: 1347688035}
+  - component: {fileID: 1347688036}
   - component: {fileID: 1347688034}
   m_Layer: 0
   m_Name: NPC Setting
@@ -417,7 +418,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347688032}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e17ec706dc2ce24787c1b0f566f68a0, type: 3}
   m_Name: 
@@ -446,6 +447,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a08689a4b734cfe44b56f54207422e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1347688036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347688032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1f8a86f76e5c36429f96ad3bd074f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcContext:
+    ageGroup: 0
+    currentMood: 0
+    arktypeNPC: 0
+    currentIssue: 1
+    tactic: 0
+    worldState: 0
+    internalSituation: 0
+  seed: 1001
+  runOnStart: 0
+  jsonFileLayer1: {fileID: 4900000, guid: ea9705877238aa24188f764d18f9685f, type: 3}
+  jsonFileLayer2: {fileID: 4900000, guid: bd93efeefebd1ff48af27af800591545, type: 3}
+  jsonFileLayer3: {fileID: 4900000, guid: bdf065ec244b71b4697604ec7edd637b, type: 3}
+  jsonFileLayer4: {fileID: 4900000, guid: e5a68f0f96927364f860617140bf947e, type: 3}
+  showDebugButton: 1
+  debugButtonRect:
+    serializedVersion: 2
+    x: 24
+    y: 24
+    width: 260
+    height: 56
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

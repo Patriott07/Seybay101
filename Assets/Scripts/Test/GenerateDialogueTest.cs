@@ -163,12 +163,11 @@ public class GenerateDialogueTest : MonoBehaviour
         if (dialogLayer3.Count > 0)
         {
             var firstEntry = dialogLayer3[0];
-            Debug.Log($"Layer 3 - Tactic: {firstEntry.tacticName}, Total age groups: {firstEntry.ageGroups.Count}");
+            Debug.Log($"Layer 3 - Tactic: {firstEntry.tacticName}, Total arktypes: {firstEntry.arktypes.Count}");
         }
 
         // Example: Get first dialogue from Layer 4
-        // Using the same structure as Layer 3:
-        // Layer4Entry -> situationName + List<ArktypeData4> -> each has ageGroupName + List<MoodData4> -> each has moodName + List<DialogueLine>
+        // Layer4Entry -> situationName + List<ArktypeData4> -> each has arktype + List<MoodData4> -> each has moodName + List<DialogueLine>
         if (dialogLayer4.Count > 0)
         {
             var firstEntry = dialogLayer4[0];
